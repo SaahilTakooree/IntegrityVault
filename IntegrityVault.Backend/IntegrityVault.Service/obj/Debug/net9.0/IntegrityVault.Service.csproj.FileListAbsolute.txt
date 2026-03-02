@@ -1,0 +1,17 @@
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\bin\Debug\net9.0\IntegrityVault.Service.deps.json
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\bin\Debug\net9.0\IntegrityVault.Service.dll
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\bin\Debug\net9.0\IntegrityVault.Service.pdb
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\bin\Debug\net9.0\IntegrityVault.Common.dll
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\bin\Debug\net9.0\IntegrityVault.Repository.dll
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\bin\Debug\net9.0\IntegrityVault.Common.pdb
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\bin\Debug\net9.0\IntegrityVault.Repository.pdb
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\obj\Debug\net9.0\IntegrityVault.Service.csproj.AssemblyReference.cache
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\obj\Debug\net9.0\IntegrityVault.Service.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\obj\Debug\net9.0\IntegrityVault.Service.AssemblyInfoInputs.cache
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\obj\Debug\net9.0\IntegrityVault.Service.AssemblyInfo.cs
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\obj\Debug\net9.0\IntegrityVault.Service.csproj.CoreCompileInputs.cache
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\obj\Debug\net9.0\Integrit.8F3D59BF.Up2Date
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\obj\Debug\net9.0\IntegrityVault.Service.dll
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\obj\Debug\net9.0\refint\IntegrityVault.Service.dll
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\obj\Debug\net9.0\IntegrityVault.Service.pdb
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\obj\Debug\net9.0\ref\IntegrityVault.Service.dll

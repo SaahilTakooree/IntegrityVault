@@ -1,0 +1,324 @@
+[
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/Auth",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "authLoginDTO",
+        "Type": "IntegrityVault.Common.DTOs.AuthLoginDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.HospitalController",
+    "Method": "GetAllHospital",
+    "RelativePath": "api/Hospital",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.HospitalController",
+    "Method": "CreateHospital",
+    "RelativePath": "api/Hospital",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "createHospitalDTO",
+        "Type": "IntegrityVault.Common.DTOs.CreateHospitalDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.HospitalController",
+    "Method": "GetHospitalById",
+    "RelativePath": "api/Hospital/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.HospitalController",
+    "Method": "UpdateHospital",
+    "RelativePath": "api/Hospital/{id}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "updateHospitalDTO",
+        "Type": "IntegrityVault.Common.DTOs.UpdateHospitalDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.HospitalController",
+    "Method": "DeleteHospital",
+    "RelativePath": "api/Hospital/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.UserController",
+    "Method": "GetAllUsers",
+    "RelativePath": "api/User",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.UserController",
+    "Method": "GetUserById",
+    "RelativePath": "api/User/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.UserController",
+    "Method": "DeleteUser",
+    "RelativePath": "api/User/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.UserController",
+    "Method": "CreateAdmin",
+    "RelativePath": "api/User/admin",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "createAdminDTO",
+        "Type": "IntegrityVault.Common.DTOs.CreateAdminDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.UserController",
+    "Method": "UpdateAdmin",
+    "RelativePath": "api/User/admin/{id}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "updateAdminDTO",
+        "Type": "IntegrityVault.Common.DTOs.UpdateAdminDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.UserController",
+    "Method": "CreateDoctor",
+    "RelativePath": "api/User/doctor",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "createDoctorDTO",
+        "Type": "IntegrityVault.Common.DTOs.CreateDoctorDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.UserController",
+    "Method": "UpdateDoctor",
+    "RelativePath": "api/User/doctor/{id}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "updateDoctorDTO",
+        "Type": "IntegrityVault.Common.DTOs.UpdateDoctorDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.UserController",
+    "Method": "CreateExternalProvider",
+    "RelativePath": "api/User/externalprovider",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "createExternalProviderDTO",
+        "Type": "IntegrityVault.Common.DTOs.CreateExternalProviderDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.UserController",
+    "Method": "UpdateExternalProvider",
+    "RelativePath": "api/User/externalprovider/{id}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "updateExternalProviderDTO",
+        "Type": "IntegrityVault.Common.DTOs.UpdateExternalProviderDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.UserController",
+    "Method": "CreatePatient",
+    "RelativePath": "api/User/patient",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "createPatientDTO",
+        "Type": "IntegrityVault.Common.DTOs.CreatePatientDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.UserController",
+    "Method": "UpdatePatient",
+    "RelativePath": "api/User/patient/{id}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "updatePatientDTO",
+        "Type": "IntegrityVault.Common.DTOs.UpdatePatientDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.UserController",
+    "Method": "CreateSuperAdmin",
+    "RelativePath": "api/User/superadmin",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "createSuperAdminDTO",
+        "Type": "IntegrityVault.Common.DTOs.CreateSuperAdminDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.UserController",
+    "Method": "UpdateSuperAdmin",
+    "RelativePath": "api/User/superadmin/{id}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "updateSuperAdminDTO",
+        "Type": "IntegrityVault.Common.DTOs.UpdateSuperAdminDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

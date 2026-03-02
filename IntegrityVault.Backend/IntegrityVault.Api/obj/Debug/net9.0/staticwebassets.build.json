@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "mS41OXUP0NjpSt2VpdTkRKuny6v+xQRLK/84gqyU43k=",
+  "Source": "IntegrityVault.Api",
+  "BasePath": "_content/IntegrityVault.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

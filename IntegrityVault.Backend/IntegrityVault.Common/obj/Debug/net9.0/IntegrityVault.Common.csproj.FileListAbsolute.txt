@@ -1,0 +1,12 @@
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Common\bin\Debug\net9.0\IntegrityVault.Common.deps.json
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Common\bin\Debug\net9.0\IntegrityVault.Common.dll
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Common\bin\Debug\net9.0\IntegrityVault.Common.pdb
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Common\obj\Debug\net9.0\IntegrityVault.Common.csproj.AssemblyReference.cache
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Common\obj\Debug\net9.0\IntegrityVault.Common.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Common\obj\Debug\net9.0\IntegrityVault.Common.AssemblyInfoInputs.cache
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Common\obj\Debug\net9.0\IntegrityVault.Common.AssemblyInfo.cs
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Common\obj\Debug\net9.0\IntegrityVault.Common.csproj.CoreCompileInputs.cache
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Common\obj\Debug\net9.0\IntegrityVault.Common.dll
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Common\obj\Debug\net9.0\refint\IntegrityVault.Common.dll
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Common\obj\Debug\net9.0\IntegrityVault.Common.pdb
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Common\obj\Debug\net9.0\ref\IntegrityVault.Common.dll

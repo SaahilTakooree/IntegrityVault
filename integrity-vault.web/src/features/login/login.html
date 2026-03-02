@@ -1,0 +1,51 @@
+ <!-- Container for the sign up form. -->
+<div class="auth_container">
+    <div class="auth_container_left">
+        <img src="" alt="Integrity Vault Logo">
+        <h2>IntegrityVault</h2>
+    </div>
+
+    <!-- Sign up form with unique form and class. -->
+    <form class="form" #loginForm="ngForm" (ngSubmit)="onSubmit()">
+        <h2>Login</h2> <!-- Heading for the login form. -->
+        <!-- Loginfield for all input. -->
+        <div class="auth_input_field">
+            <!-- First row. -->
+            <div class="input_row">
+                <!-- Fist column with email input field and error span. -->
+                <div class="input_col">
+                    <input 
+                        type="email"
+                        class="input_field"
+                        placeholder="Email"
+                        name="email"
+                        [(ngModel)]="email"
+                        required
+                    >
+                </div>
+            </div>
+            <!-- Second row. -->
+            <div class="input_row">
+                <!-- Fist column with password input field and error span. -->
+                <div class="input_col">
+                    <input
+                        type="password"
+                        class="input_field"
+                        placeholder="Password"
+                        name="password"
+                        [(ngModel)]="password"
+                        required
+                    >
+                    @if (errorMessage)
+                    {
+                        <span class="error_message"> {{ errorMessage }}</span>
+                    }
+                </div>
+            </div>
+        </div>
+        <!-- Submission button section. -->
+        <div class="submit_box">
+            <button type="submit" class="submit_field">Login</button>
+        </div>
+    </form>
+</div>

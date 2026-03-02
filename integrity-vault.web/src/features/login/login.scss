@@ -1,0 +1,150 @@
+.auth_container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  .auth_container_left {
+    flex: 4;
+    max-width: 45%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-right: 1rem;
+
+    h2 {
+      font-size: 2rem;
+      color: #870b58; 
+      margin: 1rem;
+      font-weight: 700;
+    }
+
+    img {
+      width: 10rem;
+      height: 10rem;
+    }
+  }
+
+  .form {
+    flex: 5;
+    max-width: 55%;
+    background-color: #f1f4f8; 
+    box-shadow: 0.2rem 0.1rem 0.2rem 0.2rem #870b58; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 3% 7%;
+    border-radius: 1rem;
+
+    h2 {
+      margin-bottom: 1rem;
+      text-align: center;
+      font-size: 3rem;
+    }
+  }
+
+  @media screen and (max-width: 900px) {
+    flex-direction: column;
+    height: auto;
+    min-height: 100%;
+
+    .auth_container_left {
+      max-height: 30%;
+
+      h2 {
+        font-size: 1rem;
+        text-align: center;
+        font-weight: 500;
+        display: block;
+      }
+    }
+
+    .auth_container_left,
+    .form {
+      flex: unset;
+      max-width: 100%;
+      min-height: auto;
+      margin-left: 1%;
+    }
+  }
+}
+
+.auth_input_field {
+  width: 100%;
+}
+
+.input_row {
+  display: flex;
+  margin-bottom: 1rem;
+  justify-content: space-evenly;
+
+  .input_col {
+    flex: 1;
+    margin: 0.8rem;
+
+    .input_field {
+      height: 2.5rem;
+      width: 100%;
+      background: #c8cdd9;
+      border: none;
+      border-radius: 1rem;
+      padding-left: 1rem;
+      box-sizing: border-box;
+      outline: none;
+      font-size: 1rem;
+
+      &::placeholder {
+        color: #aaaeb8; 
+        transition: ease 0.3s;
+      }
+
+      &:hover,
+      &:focus {
+        border: 0.1rem solid #870b58;
+        transition: ease 0.3s;
+      }
+
+      &:hover::placeholder,
+      &:focus::placeholder {
+        color: #7783a0;
+      }
+    }
+  }
+}
+
+.error_message {
+  color: #e4003a; 
+  font-weight: 400;
+  font-size: 14px;
+  padding-left: 20px;
+  cursor: default;
+  display: block;
+}
+
+.submit_box {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+
+  .submit_field {
+    margin: 15px 55px;
+    width: 80%;
+    cursor: pointer;
+    background: #c8cdd9; 
+    height: 40px;
+    border-radius: 50px;
+    border: none;
+    padding-left: 15px;
+    box-sizing: border-box;
+    font-size: 20px;
+
+    &:hover {
+      background: #aaaeb8; 
+    }
+  }
+}
