@@ -35,6 +35,10 @@ namespace IntegrityVault.Common.Entities
         [StringLength(90, MinimumLength = 40, ErrorMessage = "IPFS CID must be at least 40 characters.")]
         public required string IPFS_CID{ get; set; }
 
+        // Track how many times this record has been updated.
+        [Required]
+        public int CurrentVersion { get; set; } = 0;
+
         // Date on which the medical record was created.
         [Required]
         public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
@@ -45,5 +49,8 @@ namespace IntegrityVault.Common.Entities
 
         // Navigation property representing all accessed logs associated with this medical record.
         public virtual ICollection<RecordAccessLog> AccessLogs { get; set; } = new HashSet<RecordAccessLog>();
+
+        // Navigation propety representing the full update history of this medical record.
+        public virtual ICollection<MedicalRecordAuditLog> AuditLogs { get; set; } = new HashSet<MedicalRecordAuditLog>();
     }
 }

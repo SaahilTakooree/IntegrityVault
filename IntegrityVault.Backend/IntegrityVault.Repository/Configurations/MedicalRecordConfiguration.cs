@@ -40,16 +40,26 @@ namespace IntegrityVault.Repository.Configurations
                     "LEN(IPFS_CID) >= 40"); // Ensures tha each length of each CID is equal to or more than 40 characters long.
             });
 
+            //Configure the CurrentVersion Property.
+            entity.Property(m => m.CurrentVersion)
+                .IsRequired()
+                .HasDefaultValue(0); // Default to 0.
+            entity.ToTable(t =>
+            {
+                t.HasCheckConstraint("CK_MedicalRecord_CurrentVersion_NonNegative",
+                    "CurrentVersion >= 0");
+            });
+
             // Configure the CreatedAt property.
             entity.Property(m => m.CreatedAt)
                 .IsRequired() // Make the CreatedAt column not null.
-                .HasColumnType("date") // Set the column type to data.
+                .HasColumnType("datetime2") // Set the column type to data.
                 .HasDefaultValueSql("GETUTCDATE()"); // Sets the default value of CreatedAt to the current UTC date and time.
 
             // Configure the UpdatedAt property.
             entity.Property(m => m.UpdatedAt)
                 .IsRequired() // Make the UpdatedAt column not null.
-                .HasColumnType("date") // Set the column type to data.
+                .HasColumnType("datetime2") // Set the column type to data.
                 .HasDefaultValueSql("GETUTCDATE()"); // Sets the default value of CreatedAt to the current UTC date and time.
         }
     }

@@ -159,13 +159,15 @@ namespace IntegrityVault.Repository.Migrations
                     PatientID = table.Column<int>(type: "int", nullable: false),
                     DoctorID = table.Column<int>(type: "int", nullable: false),
                     IPFS_CID = table.Column<string>(type: "nvarchar(90)", maxLength: 90, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "date", nullable: false, defaultValueSql: "GETUTCDATE()"),
-                    UpdatedAt = table.Column<DateTime>(type: "date", nullable: false, defaultValueSql: "GETUTCDATE()")
+                    CurrentVersion = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MedicalRecords", x => x.ID);
                     table.CheckConstraint("CK_Medical_Record_IPFS_CID_Length", "LEN(IPFS_CID) >= 40");
+                    table.CheckConstraint("CK_MedicalRecord_CurrentVersion_NonNegative", "CurrentVersion >= 0");
                     table.ForeignKey(
                         name: "FK_MedicalRecords_Doctors_DoctorID",
                         column: x => x.DoctorID,
@@ -178,6 +180,40 @@ namespace IntegrityVault.Repository.Migrations
                         principalTable: "Patients",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MedicalRecordAuditLogs",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RecordID = table.Column<int>(type: "int", nullable: false),
+                    UpdatedByDoctorID = table.Column<int>(type: "int", nullable: false),
+                    PreviousIPFS_CID = table.Column<string>(type: "nvarchar(90)", maxLength: 90, nullable: false),
+                    NewIPFS_CID = table.Column<string>(type: "nvarchar(90)", maxLength: 90, nullable: false),
+                    Version = table.Column<int>(type: "int", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MedicalRecordAuditLogs", x => x.ID);
+                    table.CheckConstraint("CK_AuditLog_CIDs_Must_Differ", "PreviousIPFS_CID <> NewIPFS_CID");
+                    table.CheckConstraint("CK_AuditLog_NewIPFS_CID_Length", "LEN(NewIPFS_CID) >= 40");
+                    table.CheckConstraint("CK_AuditLog_PreviousIPFS_CID_Length", "LEN(PreviousIPFS_CID) >= 40");
+                    table.CheckConstraint("CK_AuditLog_Version_Positive", "Version >= 1");
+                    table.ForeignKey(
+                        name: "FK_MedicalRecordAuditLogs_Doctors_UpdatedByDoctorID",
+                        column: x => x.UpdatedByDoctorID,
+                        principalTable: "Doctors",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MedicalRecordAuditLogs_MedicalRecords_RecordID",
+                        column: x => x.RecordID,
+                        principalTable: "MedicalRecords",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -214,6 +250,17 @@ namespace IntegrityVault.Repository.Migrations
                 table: "Hospitals",
                 column: "WalletAddress",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MedicalRecordAuditLogs_RecordID_Version",
+                table: "MedicalRecordAuditLogs",
+                columns: new[] { "RecordID", "Version" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MedicalRecordAuditLogs_UpdatedByDoctorID",
+                table: "MedicalRecordAuditLogs",
+                column: "UpdatedByDoctorID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MedicalRecords_DoctorID",
@@ -261,6 +308,9 @@ namespace IntegrityVault.Repository.Migrations
 
             migrationBuilder.DropTable(
                 name: "ExternalProviders");
+
+            migrationBuilder.DropTable(
+                name: "MedicalRecordAuditLogs");
 
             migrationBuilder.DropTable(
                 name: "RecordAccessLogs");

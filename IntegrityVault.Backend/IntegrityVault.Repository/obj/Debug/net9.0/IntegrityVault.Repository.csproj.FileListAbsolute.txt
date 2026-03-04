@@ -15,3 +15,4 @@ C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backen
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Repository\obj\Debug\net9.0\IntegrityVault.Repository.pdb
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Repository\obj\Debug\net9.0\IntegrityVault.Repository.genruntimeconfig.cache
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Repository\obj\Debug\net9.0\ref\IntegrityVault.Repository.dll
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Repository\obj\Debug\net9.0\IntegrityVault.Repository.sourcelink.json

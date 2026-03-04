@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IntegrityVault.Repository.Migrations
 {
     [DbContext(typeof(IntegrityVaultDbContext))]
-    [Migration("20260301175308_InitialCreate")]
+    [Migration("20260303130044_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -64,8 +64,13 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("date")
+                        .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<int>("CurrentVersion")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<int>("DoctorID")
                         .HasColumnType("int");
@@ -80,7 +85,7 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("date")
+                        .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.HasKey("ID");
@@ -91,7 +96,60 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.ToTable("MedicalRecords", null, t =>
                         {
+                            t.HasCheckConstraint("CK_MedicalRecord_CurrentVersion_NonNegative", "CurrentVersion >= 0");
+
                             t.HasCheckConstraint("CK_Medical_Record_IPFS_CID_Length", "LEN(IPFS_CID) >= 40");
+                        });
+                });
+
+            modelBuilder.Entity("IntegrityVault.Common.Entities.MedicalRecordAuditLog", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("NewIPFS_CID")
+                        .IsRequired()
+                        .HasMaxLength(90)
+                        .HasColumnType("nvarchar(90)");
+
+                    b.Property<string>("PreviousIPFS_CID")
+                        .IsRequired()
+                        .HasMaxLength(90)
+                        .HasColumnType("nvarchar(90)");
+
+                    b.Property<int>("RecordID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<int>("UpdatedByDoctorID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("UpdatedByDoctorID");
+
+                    b.HasIndex("RecordID", "Version")
+                        .IsUnique();
+
+                    b.ToTable("MedicalRecordAuditLogs", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_AuditLog_CIDs_Must_Differ", "PreviousIPFS_CID <> NewIPFS_CID");
+
+                            t.HasCheckConstraint("CK_AuditLog_NewIPFS_CID_Length", "LEN(NewIPFS_CID) >= 40");
+
+                            t.HasCheckConstraint("CK_AuditLog_PreviousIPFS_CID_Length", "LEN(PreviousIPFS_CID) >= 40");
+
+                            t.HasCheckConstraint("CK_AuditLog_Version_Positive", "Version >= 1");
                         });
                 });
 
@@ -332,6 +390,25 @@ namespace IntegrityVault.Repository.Migrations
                     b.Navigation("Patient");
                 });
 
+            modelBuilder.Entity("IntegrityVault.Common.Entities.MedicalRecordAuditLog", b =>
+                {
+                    b.HasOne("IntegrityVault.Common.Entities.MedicalRecord", "Record")
+                        .WithMany("AuditLogs")
+                        .HasForeignKey("RecordID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("IntegrityVault.Common.Entities.Doctor", "UpdatedByDoctor")
+                        .WithMany()
+                        .HasForeignKey("UpdatedByDoctorID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Record");
+
+                    b.Navigation("UpdatedByDoctor");
+                });
+
             modelBuilder.Entity("IntegrityVault.Common.Entities.RecordAccessLog", b =>
                 {
                     b.HasOne("IntegrityVault.Common.Entities.User", "AccessedBy")
@@ -444,6 +521,8 @@ namespace IntegrityVault.Repository.Migrations
             modelBuilder.Entity("IntegrityVault.Common.Entities.MedicalRecord", b =>
                 {
                     b.Navigation("AccessLogs");
+
+                    b.Navigation("AuditLogs");
                 });
 
             modelBuilder.Entity("IntegrityVault.Common.Entities.Doctor", b =>

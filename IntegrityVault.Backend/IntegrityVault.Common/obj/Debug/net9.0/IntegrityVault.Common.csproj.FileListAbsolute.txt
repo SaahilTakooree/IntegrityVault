@@ -10,3 +10,4 @@ C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backen
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Common\obj\Debug\net9.0\refint\IntegrityVault.Common.dll
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Common\obj\Debug\net9.0\IntegrityVault.Common.pdb
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Common\obj\Debug\net9.0\ref\IntegrityVault.Common.dll
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Common\obj\Debug\net9.0\IntegrityVault.Common.sourcelink.json

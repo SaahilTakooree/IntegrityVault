@@ -14,6 +14,7 @@ namespace IntegrityVault.Repository.Contexts
         public DbSet<Admin> Admins { get; set; }
         public DbSet<SuperAdmin> SuperAdmins { get; set; }
         public DbSet<MedicalRecord> MedicalRecords { get; set; }
+        public DbSet<MedicalRecordAuditLog> MedicalRecordsAuditLogs { get; set; }
         public DbSet<RecordAccessLog> RecordAccessLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -26,6 +27,7 @@ namespace IntegrityVault.Repository.Contexts
             modelBuilder.ApplyConfiguration(new AdminConfiguration());
             modelBuilder.ApplyConfiguration(new SuperAdminConfiguration());
             modelBuilder.ApplyConfiguration(new MedicalRecordConfiguration());
+            modelBuilder.ApplyConfiguration(new MedicalRecordAuditLogConfiguration());
             modelBuilder.ApplyConfiguration(new RecordAccessLogConfiguration());
 
             base.OnModelCreating(modelBuilder);
