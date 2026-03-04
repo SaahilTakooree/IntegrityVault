@@ -1,0 +1,34 @@
+<!-- Only show the modal it is asked to. -->
+@if (show) {
+    <!-- Backdrop of the model. -->
+    <div class="iv-modal-backdrop" (click)="close()"></div>
+
+    <div class="iv-modal-wrapper">
+        <div class="iv-modal" (click)="$event.stopPropagation()">
+
+            <!-- Optional icon of the model. -->
+            <ng-content select="[icon]"></ng-content>
+
+            <!-- Title of the modal. -->
+            <h6 class="iv-modal-title">{{ title }}</h6>
+
+            <!-- Message of the model. -->
+            <p class="iv-modal-message">{{ message }}</p>
+
+            <div class="d-flex gap-2 justify-content-center">
+               @for (btn of buttons; track $index) {
+                <button
+                    class="btn"
+                    [ngClass]="'btn-' + (btn.style || ConfirmButtonStyle.Secondary)"
+                    (click)="onAction(btn.result)">
+                    {{ btn.label }}
+                </button>
+                } @empty {
+                <button class="btn btn-secondary" (click)="close()">
+                    Close
+                </button>
+                }
+            </div>
+        </div>
+    </div>
+}

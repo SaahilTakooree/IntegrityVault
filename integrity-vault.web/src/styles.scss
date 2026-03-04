@@ -1,1 +1,344 @@
-/* You can add global styles to this file, and also import other style files */
+// Import Bootstrap SCSS and customize variables.
+@use 'bootstrap/scss/bootstrap' as * with (
+  $primary: #0d9488,
+  $body-bg: #F3F4F6,
+  $body-color: #1F2937,
+  $border-color: #D1D5DB,
+  $card-bg: #FFFFFF,
+  $card-border-color: #E5E7EB,
+  $modal-content-bg: #F9FAFB,
+  $table-color: #1F2937,
+  $table-bg: #FFFFFF,
+  $table-border-color: #E5E7EB,
+  $input-bg: #F9FAFB,
+  $input-color: #1F2937,
+  $input-border-color: #D1D5DB,
+  $input-focus-border-color: #0d9488,
+  $input-placeholder-color: #6B7280,
+  $font-family-base: ('IBM Plex Sans', system-ui, sans-serif),
+  $font-size-base: 0.875rem
+);
+
+
+// Import Google Fonts for the project.
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono&display=swap');
+
+
+// Sidebar container styles.
+.iv-sidebar {
+  min-width: 180px;
+  max-width: 240px;
+  width: 220px;
+  min-height: 100vh;
+  background: $card-bg;
+  border-right: 1px solid $border-color;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: width 0.3s, left 0.3s;
+  z-index: 1;
+
+  // Sidebar toggle button inside sidebar.
+  .iv-sidebar-toggle {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    color: $body-color;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    i {
+      font-size: 1rem;
+      line-height: 1;
+    }
+    &:hover {
+      background: rgba($primary, 0.2);
+      color: $primary;
+    }
+    &:active {
+      background: rgba($primary, 0.3);
+    }
+  }
+
+  // Active sidebar menu link styles.
+  .nav-link.active {
+    background-color: $primary;
+    color: $body-bg;
+    border-radius: 0.25rem;
+    i {
+      color: $body-bg;
+    }
+  }
+
+  // Sidebar brand text styles.
+  .iv-brand {
+    font-size: 1rem;
+    font-weight: 700;
+    color: $primary;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+    cursor: default;
+  }
+  &.collapsed { // Collapsed sidebar adjustments.
+    width: 240px;
+    .iv-brand, .nav-link span {
+      display: none;
+    }
+  }
+
+  // Sidebar nav pointer cursor.
+  nav {
+    cursor: pointer;
+  }
+
+  // Style for the log out divider.
+  hr {
+    border-color: $border-color;
+  }
+
+  // Logout link styling.
+  .logout-link {
+    margin-top: auto; // push to bottom
+    color: $body-color;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+
+    i {
+      font-size: 1rem;
+    }
+
+    &:hover {
+      background: rgba($primary, 0.1);
+      color: $primary;
+    }
+}
+
+  // Responsive sidebar for smaller screens.
+  @media (max-width: 768px) {
+    position: fixed; 
+    top: 0;
+    left: -240px; 
+    width: 240px; 
+    transition: left 0.3s;
+    &.collapsed {
+      left: 0;
+    }
+  }
+}
+
+
+// Main content area.
+.iv-main {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  background: $body-bg;
+  color: $body-color;
+}
+
+
+// Top bar styles.
+.iv-topbar {
+  height: 60px;
+  background: $card-bg;
+  border-bottom: 1px solid $card-border-color;
+  padding: 0 1rem;
+
+  .badge {
+    color: $body-color;
+    background: rgba($primary, 0.1);
+  }
+
+  .btn {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    color: $body-color;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    i {
+      font-size: 1.2rem;
+    }
+    &:hover {
+      background: rgba($primary, 0.2);
+      color: $primary;
+    }
+    &:active {
+      background: rgba($primary, 0.3);
+    }
+  }
+}
+
+
+// Table general styles.
+.table {
+  --bs-table-bg: $table-bg;
+  --bs-table-color: $table-color;
+  --bs-table-border-color: $table-border-color;
+  --bs-table-hover-bg: rgba(0,0,0,0.03);
+
+  // Table header styling.
+  thead th {
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #94a3b8;
+  }
+
+  // Table cell styling.
+  td {
+    vertical-align: middle;
+  }
+}
+
+
+// Form controls and select elements.
+.form-control, .form-select {
+  background-color: $input-bg;
+  color: $input-color;
+  border-color: $input-border-color;
+
+  // Focus state styling.
+  &:focus {
+    background: $input-bg;
+    color: $input-color;
+    border-color: $primary;
+    box-shadow: 0 0 0 .2rem rgba($primary, .2);
+  }
+}
+
+// Form label styling
+.form-label {
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: #94a3b8;
+  margin-bottom: .3rem;
+}
+
+/* Modal backdrop */
+.iv-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  z-index: 1050;
+}
+
+/* Model wrapper. */
+.iv-modal-wrapper {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1051;
+}
+
+/* Modal box. */
+.iv-modal {
+  background: var(--bs-body-bg);
+  border-radius: .5rem;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, .15);
+  animation: ivFadeIn .2s ease-out;
+}
+
+/* Icon spacing. */
+.iv-modal-icon {
+  font-size: 2.5rem;
+}
+
+/* Model animation. */
+@keyframes ivFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Close button styling.
+.btn-close {
+  filter: invert(1) brightness(1.4);
+  background-color: $primary;
+}
+
+// Verify dropzone styling.
+.iv-verify-dropzone {
+  border: 2px dashed $border-color;
+  border-radius: .5rem;
+  background: rgba($primary, 0.03);
+  transition: border-color .2s, background .2s;
+  cursor: pointer;
+  &:hover, &.dragover {
+    border-color: $primary;
+    background: rgba($primary, 0.07);
+  }
+}
+
+// Verify result messages.
+.iv-verify-result {
+  border-radius: .5rem;
+  &-success {
+    background: rgba(16,185,129,.1);
+    border: 1px solid rgba(16,185,129,.3);
+    color: #34d399;
+  }
+  &-fail {
+    background: rgba(239,68,68,.1);
+    border: 1px solid rgba(239,68,68,.3);
+    color: #f87171;
+  }
+}
+
+// Record accordion styling.
+.iv-record-accordion {
+  .accordion-button {
+    background: $card-bg;
+    color: $body-color;
+    box-shadow: none;
+    &:not(.collapsed) {
+      background: rgba($primary, .08);
+      color: $primary;
+    }
+    &::after {
+      filter: invert(1) brightness(.7);
+    }
+  }
+  .accordion-body {
+    background: $body-bg;
+    font-size: .8125rem;
+    color: #94a3b8;
+  }
+}
+
+// Monospaced font utility.
+.font-mono {
+  font-family: $font-family-base;
+  font-size: .75rem;
+}
+
+// Teal text utility.
+.text-teal {
+  color: $primary !important;
+}

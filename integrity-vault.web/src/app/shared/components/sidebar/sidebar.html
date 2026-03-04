@@ -1,0 +1,43 @@
+<!-- Sidebar container with collapse support. -->
+<aside class="iv-sidebar d-flex flex-column p-3" [class.collapsed]="isCollapsed">
+
+  <!-- Top section with brand logo and sidebar toggle. -->
+  <div class="d-flex align-items-center mb-2 justify-content-between">
+    <div class="d-flex align-items-center gap-2">
+      <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+        <path d="M16 2L4 8v8c0 7.18 5.14 13.9 12 15.5C22.86 29.9 28 23.18 28 16V8L16 2Z" fill="#0d9488"/>
+        <path d="M11 16l3.5 3.5L21 13" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="iv-brand">IntegrityVault</span>
+    </div>
+
+    <!-- Sidebar close button for small screens. -->
+    <button class="iv-sidebar-toggle d-md-none" (click)="onClose()">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+  
+  <!-- Sidebar menu items. -->
+  <nav class="nav flex-column gap-1 flex-grow-1">
+    @for (item of sidebarItems; track $index) {
+      <a class="nav-link d-flex align-items-center gap-2"
+        [class.active]="activeLink === item.link"
+         (click)="item.link && navigate(item.link)">
+         @if (item.icon) {
+           <i class="{{ item.icon }}"></i>
+         }
+         {{ item.label }}
+      </a>
+    } @empty {
+      <span class="text-muted px-2">No menu items available</span>
+    }
+  </nav>
+
+  <!-- Divider line. -->
+  <hr>
+
+  <!-- Logout link at the bottom. -->
+  <a class="nav-link d-flex align-items-center gap-2 logout-link">
+    <i class="bi bi-box-arrow-left"></i> Logout
+  </a>
+</aside>

@@ -1,0 +1,14 @@
+<!-- Topbar container. -->
+<div class="iv-topbar d-flex align-items-center justify-content-between px-4">
+
+<!-- Sidebar toggle button. -->
+    <button class="btn btn-light d-md-none" (click)="toggleSidebar.emit()">
+        <i class="bi bi-list"></i>
+    </button>
+
+    <!-- Right-side content. -->
+    <div class="d-flex align-items-center gap-3">
+        <span class="badge px-3 py-2 text-dark">{{ message }}</span>
+        <ng-content></ng-content>
+    </div>
+</div>
