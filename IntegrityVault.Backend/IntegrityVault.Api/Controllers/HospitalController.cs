@@ -14,7 +14,6 @@ namespace IntegrityVault.Api.Controllers
     {
         // Specifies that this method will handle HTTP Get requests.
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetAllHospital() // Method for get the complete list of all hospital.
         {
             try
@@ -85,6 +84,7 @@ namespace IntegrityVault.Api.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}."); // Returning a 500 Internal Server Error with the exception message.
             }
         }
+
 
         // Specifies that this method will handle HTTP Put requests.
         [HttpPatch("{id:int}")]

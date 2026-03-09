@@ -40,6 +40,12 @@ namespace IntegrityVault.Repository.Configurations
                 .WithOne(u => u.Hospital) // Each User has one Hospital.
                 .HasForeignKey(u => u.HospitalID) // HospitalID is the foreign key in the Users Tabel
                 .OnDelete(DeleteBehavior.SetNull); // If Hospital is deleted, Set User.HospitalID to NULL.
+
+            // Configure one-to-many relationship with IpAddress.
+            entity.HasMany(h => h.IpAddresses)
+                .WithOne(ip => ip.Hospital)
+                .HasForeignKey(ip => ip.HospitalID)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

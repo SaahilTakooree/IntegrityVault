@@ -5,6 +5,7 @@ using IntegrityVault.Common.Entities; // Import the entity class for Hospital.
 using IntegrityVault.Common.Helpers; // Import helper functions.
 using IntegrityVault.Common.DTOs; // Import the data transfer objects (DTOs) used in the service layer.
 
+
 // Declaring the namespace where this service implementation resides.
 namespace IntegrityVault.Service.Implementations
 {
@@ -59,7 +60,13 @@ namespace IntegrityVault.Service.Implementations
                 // Check if the wallet already exists.
                 if (await DoesWalletAddressExist(createHospitalDTO.WalletAddress) != null) // Checking if a hospital with the same wallet already exists.
                 {
-                    throw new InvalidOperationException($"A user with the email '{createHospitalDTO.WalletAddress}' already exists."); // Throwing an error if the wallet address is already taken.
+                    throw new InvalidOperationException($"A Hospital with the wallet address '{createHospitalDTO.WalletAddress}' already exists."); // Throwing an error if the wallet address is already taken.
+                }
+
+                // Require at least one IP on creation.
+                if (createHospitalDTO.IpAddresses.Count == 0)
+                {
+                    throw new InvalidOperationException("At least one IP address is required when creating a hospital.");
                 }
 
                 // Create the hospital.
@@ -87,7 +94,13 @@ namespace IntegrityVault.Service.Implementations
                 // Check if the wallet already exists.
                 if (updateHospitalDTO.WalletAddress is not null && await DoesWalletAddressExist(updateHospitalDTO.WalletAddress) != null) // Checking if a hospital with the same wallet already exists.
                 {
-                    throw new InvalidOperationException($"A user with the email '{updateHospitalDTO.WalletAddress}' already exists."); // Throwing an error if the wallet address is already taken.
+                    throw new InvalidOperationException($"Hospital with wallet address '{updateHospitalDTO.WalletAddress}' already exists."); // Throwing an error if the wallet address is already taken.
+                }
+
+                // Require at least one IP on when creating.
+                if (updateHospitalDTO.IpAddresses is not null && updateHospitalDTO.IpAddresses.Count == 0)
+                {
+                    throw new InvalidOperationException("A hospital must have at least one IP address.");
                 }
 
                 return await _hospitalRepository.UpdateHospitalAsync(id, updateHospitalDTO);
@@ -131,7 +144,8 @@ namespace IntegrityVault.Service.Implementations
             {
                 ID = hospital.ID,
                 Name = hospital.Name,
-                WalletAddress = hospital.WalletAddress
+                WalletAddress = hospital.WalletAddress,
+                IpAddresses = hospital.IpAddresses.Select(ip => ip.IpAddress).ToList()
             };
         }
 
@@ -149,7 +163,7 @@ namespace IntegrityVault.Service.Implementations
             }
             catch (Exception ex) // Catch any exceptions that may occur during the check.
             {
-                throw new InvalidOperationException($"Error checking if email exists: {ex.Message}."); // Wrap the exception and throwing it with a custom message for wallet address existence check failure.
+                throw new InvalidOperationException($"Error checking if wallet address exists: {ex.Message}."); // Wrap the exception and throwing it with a custom message for wallet address existence check failure.
             }
         }
     }

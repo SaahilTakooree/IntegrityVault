@@ -18,7 +18,9 @@ namespace IntegrityVault.Repository.Implementations
             try
             {
                 // Fetch all hospitals from the Hospitals table asynchronously and converting to a list.
-                return await _context!.Hospitals.ToListAsync();
+                return await _context!.Hospitals
+                    .Include(h => h.IpAddresses)
+                    .ToListAsync();
             }
             catch (Exception ex) // Catch any general exceptions during data fetching.
             {
@@ -34,7 +36,9 @@ namespace IntegrityVault.Repository.Implementations
             try
             {
                 // Finding the Hospital by ID asynchronously, returning null if not found.
-                return await _context!.Hospitals.FirstOrDefaultAsync(h => h.ID == id);
+                return await _context!.Hospitals
+                    .Include(h => h.IpAddresses)
+                    .FirstOrDefaultAsync(h => h.ID == id);
             }
             catch (Exception ex) // Catch any general exceptions during data fetching.
             {
@@ -54,7 +58,10 @@ namespace IntegrityVault.Repository.Implementations
                 var hospital = new Hospital
                 {
                     Name = createHospitalDTO.Name,
-                    WalletAddress = createHospitalDTO.WalletAddress
+                    WalletAddress = createHospitalDTO.WalletAddress,
+                    IpAddresses = createHospitalDTO.IpAddresses // Map each IP string from the DTO into a HospitalIpAddress entity.
+                        .Select(ip => new HospitalIpAddress { IpAddress = ip })
+                        .ToList()
                 };
 
                 // Save changes and return true if successful.
@@ -82,12 +89,39 @@ namespace IntegrityVault.Repository.Implementations
             try
             {
                 // Fetch the hospital from the Hospital table using EF Core TPT navigation.
-                var hospitals = await _context.Hospitals.FirstOrDefaultAsync(h => h.ID == id) ?? throw new InvalidOperationException($"Hospital with ID {id} was not found.");
+                var hospitals = await _context.Hospitals
+                    .Include(h => h.IpAddresses)
+                    .FirstOrDefaultAsync(h => h.ID == id)
+                    ?? throw new InvalidOperationException($"Hospital with ID {id} was not found.");
 
                 // Apply the base user fields.
-                if (updateHospitalDTO.Name is not null) hospitals.Name = updateHospitalDTO.Name;
-                if (updateHospitalDTO.WalletAddress is not null) hospitals.WalletAddress = updateHospitalDTO.WalletAddress;
+                if (updateHospitalDTO.Name is not null)
+                {
+                    hospitals.Name = updateHospitalDTO.Name;
+                }
 
+                if (updateHospitalDTO.WalletAddress is not null)
+                {
+                    hospitals.WalletAddress = updateHospitalDTO.WalletAddress;
+                }
+
+                if (updateHospitalDTO.IpAddresses is not null)
+                {
+                    var current = hospitals.IpAddresses.Select(x => x.IpAddress).ToHashSet();
+                    var desired = updateHospitalDTO.IpAddresses.ToHashSet();
+
+                    var toAdd = desired.Except(current);
+                    var toRemove = current.Except(desired);
+
+                    foreach (var ip in toRemove)
+                    {
+                        var entry = hospitals.IpAddresses.First(x => x.IpAddress == ip);
+                        _context.HospitalIpAddresses.Remove(entry);
+                    }
+
+                    foreach (var ip in toAdd)
+                        hospitals.IpAddresses.Add(new HospitalIpAddress { HospitalID = id, IpAddress = ip });
+                }
 
                 await _context.SaveChangesAsync();
                 return true;
@@ -105,6 +139,22 @@ namespace IntegrityVault.Repository.Implementations
             {
                 Console.WriteLine($"General error while updating hospital {id}: {ex.Message}.");  // Log a general error message.
                 throw new InvalidOperationException($"Unexpected error while updating hospital admins with ID {id}. {ex.Message}"); // Throw a custom exception for general errors during hospital updating.
+            }
+        }
+
+
+        // Check if an incoming IP is authorised for a specific hospital.
+        public async Task<bool> IsIpAuthorisedAsync(int hospitalId, string ipAddress)
+        {
+            try
+            {
+                return await _context.HospitalIpAddresses
+                    .AnyAsync(ip => ip.HospitalID == hospitalId && ip.IpAddress == ipAddress);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error while checking IP authorisation: {ex.Message}.");
+                throw new InvalidOperationException($"Error checking IP authorisation. {ex.Message}");
             }
         }
 

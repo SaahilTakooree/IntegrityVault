@@ -7,6 +7,7 @@ namespace IntegrityVault.Repository.Contexts
     public class IntegrityVaultDbContext(DbContextOptions<IntegrityVaultDbContext> options) : DbContext(options)
     {
         public DbSet<Hospital> Hospitals { get; set; }
+        public DbSet<HospitalIpAddress> HospitalIpAddresses { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
@@ -20,6 +21,7 @@ namespace IntegrityVault.Repository.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new HospitalConfiguration());
+            modelBuilder.ApplyConfiguration(new HospitalIpAddressConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new PatientConfiguration());
             modelBuilder.ApplyConfiguration(new DoctorConfiguration());

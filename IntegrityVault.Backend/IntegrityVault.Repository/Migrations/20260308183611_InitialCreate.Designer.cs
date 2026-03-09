@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IntegrityVault.Repository.Migrations
 {
     [DbContext(typeof(IntegrityVaultDbContext))]
-    [Migration("20260303130044_InitialCreate")]
+    [Migration("20260308183611_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -52,6 +52,30 @@ namespace IntegrityVault.Repository.Migrations
                         {
                             t.HasCheckConstraint("CK_Hospitals_WalletAddress_Length", "LEN(WalletAddress) = 42");
                         });
+                });
+
+            modelBuilder.Entity("IntegrityVault.Common.Entities.HospitalIpAddress", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int>("HospitalID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("HospitalID", "IpAddress")
+                        .IsUnique();
+
+                    b.ToTable("HospitalIpAddresses", (string)null);
                 });
 
             modelBuilder.Entity("IntegrityVault.Common.Entities.MedicalRecord", b =>
@@ -236,7 +260,7 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.ToTable("Users", null, t =>
                         {
-                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
+                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
 
                             t.HasCheckConstraint("CK_Users_Email_Format", "Email LIKE '%_@__%.__%'");
 
@@ -254,7 +278,7 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.ToTable("Admins", null, t =>
                         {
-                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
+                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
 
                             t.HasCheckConstraint("CK_Users_Email_Format", "Email LIKE '%_@__%.__%'");
 
@@ -288,7 +312,7 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.ToTable("Doctors", null, t =>
                         {
-                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
+                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
 
                             t.HasCheckConstraint("CK_Users_Email_Format", "Email LIKE '%_@__%.__%'");
 
@@ -306,7 +330,7 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.ToTable("ExternalProviders", null, t =>
                         {
-                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
+                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
 
                             t.HasCheckConstraint("CK_Users_Email_Format", "Email LIKE '%_@__%.__%'");
 
@@ -343,7 +367,7 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.ToTable("Patients", null, t =>
                         {
-                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
+                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
 
                             t.HasCheckConstraint("CK_Users_Email_Format", "Email LIKE '%_@__%.__%'");
 
@@ -361,7 +385,7 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.ToTable("SuperAdmins", null, t =>
                         {
-                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
+                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
 
                             t.HasCheckConstraint("CK_Users_Email_Format", "Email LIKE '%_@__%.__%'");
 
@@ -369,6 +393,17 @@ namespace IntegrityVault.Repository.Migrations
 
                             t.HasCheckConstraint("Ck_User_Role", "[Role] IN (0, 1, 2, 3, 4)");
                         });
+                });
+
+            modelBuilder.Entity("IntegrityVault.Common.Entities.HospitalIpAddress", b =>
+                {
+                    b.HasOne("IntegrityVault.Common.Entities.Hospital", "Hospital")
+                        .WithMany("IpAddresses")
+                        .HasForeignKey("HospitalID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Hospital");
                 });
 
             modelBuilder.Entity("IntegrityVault.Common.Entities.MedicalRecord", b =>
@@ -515,6 +550,8 @@ namespace IntegrityVault.Repository.Migrations
 
             modelBuilder.Entity("IntegrityVault.Common.Entities.Hospital", b =>
                 {
+                    b.Navigation("IpAddresses");
+
                     b.Navigation("Users");
                 });
 

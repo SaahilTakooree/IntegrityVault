@@ -10,9 +10,9 @@ C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backen
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\obj\Debug\net9.0\IntegrityVault.Service.AssemblyInfoInputs.cache
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\obj\Debug\net9.0\IntegrityVault.Service.AssemblyInfo.cs
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\obj\Debug\net9.0\IntegrityVault.Service.csproj.CoreCompileInputs.cache
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\obj\Debug\net9.0\IntegrityVault.Service.sourcelink.json
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\obj\Debug\net9.0\Integrit.8F3D59BF.Up2Date
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\obj\Debug\net9.0\IntegrityVault.Service.dll
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\obj\Debug\net9.0\refint\IntegrityVault.Service.dll
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\obj\Debug\net9.0\IntegrityVault.Service.pdb
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\obj\Debug\net9.0\ref\IntegrityVault.Service.dll
-C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Service\obj\Debug\net9.0\IntegrityVault.Service.sourcelink.json

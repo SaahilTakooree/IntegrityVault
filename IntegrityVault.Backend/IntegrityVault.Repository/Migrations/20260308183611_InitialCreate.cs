@@ -27,6 +27,26 @@ namespace IntegrityVault.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "HospitalIpAddresses",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    HospitalID = table.Column<int>(type: "int", nullable: false),
+                    IpAddress = table.Column<string>(type: "nvarchar(45)", maxLength: 45, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HospitalIpAddresses", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_HospitalIpAddresses_Hospitals_HospitalID",
+                        column: x => x.HospitalID,
+                        principalTable: "Hospitals",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -42,7 +62,7 @@ namespace IntegrityVault.Repository.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.ID);
-                    table.CheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
+                    table.CheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
                     table.CheckConstraint("Ck_User_Role", "[Role] IN (0, 1, 2, 3, 4)");
                     table.CheckConstraint("CK_Users_Email_Format", "Email LIKE '%_@__%.__%'");
                     table.CheckConstraint("CK_Users_Password_Length", "LEN(Password) >= 7");
@@ -246,6 +266,12 @@ namespace IntegrityVault.Repository.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_HospitalIpAddresses_HospitalID_IpAddress",
+                table: "HospitalIpAddresses",
+                columns: new[] { "HospitalID", "IpAddress" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Hospitals_WalletAddress",
                 table: "Hospitals",
                 column: "WalletAddress",
@@ -308,6 +334,9 @@ namespace IntegrityVault.Repository.Migrations
 
             migrationBuilder.DropTable(
                 name: "ExternalProviders");
+
+            migrationBuilder.DropTable(
+                name: "HospitalIpAddresses");
 
             migrationBuilder.DropTable(
                 name: "MedicalRecordAuditLogs");

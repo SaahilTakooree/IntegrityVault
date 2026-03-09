@@ -707,6 +707,7 @@
       },
       "CreateHospitalDTO": {
         "required": [
+          "ipAddresses",
           "name",
           "walletAddress"
         ],
@@ -718,6 +719,13 @@
           },
           "walletAddress": {
             "type": "string",
+            "nullable": true
+          },
+          "ipAddresses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "nullable": true
           }
         },
@@ -912,6 +920,13 @@
           },
           "walletAddress": {
             "type": "string",
+            "nullable": true
+          },
+          "ipAddresses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "nullable": true
           }
         },

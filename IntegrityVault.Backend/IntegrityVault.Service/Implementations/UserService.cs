@@ -482,7 +482,8 @@ namespace IntegrityVault.Service.Implementations
                     Username = user.Username,
                     Email = user.Email,
                     Role = user.Role,
-                    JoinDate = user.JoinDate
+                    JoinDate = user.JoinDate,
+                    HospitalID = user.HospitalID
                 },
                 UserRole.ExternalProvider => new ExternalProviderDTO
                 {
@@ -490,7 +491,8 @@ namespace IntegrityVault.Service.Implementations
                     Username = user.Username,
                     Email = user.Email,
                     Role = user.Role,
-                    JoinDate = user.JoinDate
+                    JoinDate = user.JoinDate,
+                    HospitalID = user.HospitalID
                 },
                 // Fallback for any unhandled roles.
                 _ => new UserDTO
