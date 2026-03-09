@@ -1,0 +1,35 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <!-- Section title displayed on the left. -->
+    <h5 class="mb-0 fw-semibold">
+        {{ title }}
+    </h5>
+    <!-- Add button used to create a new record. -->
+    <button class="btn btn-primary btn-sm" [disabled]="addDisable" (click)="addClicked.emit()">
+        <i class="bi bi-plus-lg me-1"></i>
+        {{ addLabel }}
+    </button>
+</div>
+
+@if (warningMessage && addDisable) {
+    <!-- Warning alret container -->
+    <div class="alert small d-flex align-items-center gap-2 mb-3" style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:#fbbf24;border-radius:.5rem">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        {{ warningMessage }}
+        <!-- Optional action button ashown if a warning action label exist. -->
+        @if (warningActionLabel) {
+            <button class="btn btn-link btn-sm ms-auto p-0" style="color:#fbbf24" (click)="warningAction.emit()">
+                {{ warningActionLabel }}
+            </button>
+        }
+    </div>
+}
+
+<!-- Entity to create the action table. -->
+<app-entity-table
+    [columns]="columns"
+    [rows]="rows"
+    [emptyIcon]="emptyIcon"
+    [emptyMessage]="emptyMessage"
+    (editRow)="editRow.emit($event)"
+    (deleteRow)="deleteRow.emit($event)">
+</app-entity-table>

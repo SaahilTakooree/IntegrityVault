@@ -1,0 +1,70 @@
+<div class="card border-0">
+    <!-- Make the table horizontally scrollable on smaller screens. -->
+    <div class="table-responsive">
+        <!-- Bootstrap styled table. -->
+        <table class="table table-hover mb-0">
+
+            <!-- Table header. -->
+            <thead>
+                <tr>
+                    <!-- Loop through each column definition to create table header. -->
+                    @for (column of columns; track column.key) {
+                        <th>
+                            <!-- Display the column header label. -->
+                            {{ column.label }}
+                        </th>
+                    }
+                    <!-- Extra header column for action buttons. -->
+                    <th>
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+
+            <!-- Table body. -->
+            <tbody>
+                <!-- If there are no rows, display an empty state message. -->
+                @if (rows.length === 0) {
+                    <!-- Span across all columns including the Action column. -->
+                    <td [attr.colspan]="columns.length+1" class="text-center py-5 text-secondary">
+                        <i class="d-block mb-2" [ngClass]="emptyIcon" style="font-size:2rem"></i>
+                        {{ emptyMessage }}
+                    </td>
+                } @else {
+                    <!-- Loop through each row of data. -->
+                    @for (row of rows; track $index) {
+                        <tr>
+                            <!-- Loop through each column definition to render the cell values. -->
+                            @for (column of columns; track column.key) {
+                                <td 
+                                    [class.font-mono]="column.mono"
+                                    [class.fw-medium]="column.key === 'name'"
+                                    [style.max-width]="column.truncate ? '160px' : null"
+                                    [style.overflow]="column.truncate ? 'hidden' : null"
+                                    [style.text-overflow]="column.truncate ? 'ellipsis' : null"
+                                    [style.white-space]="column.truncate ? 'nowrap' : null"
+                                >
+                                    <!-- Render the formatted value using the helper method. -->
+                                    {{ getValue(row, column.key) }}
+                                </td>
+                            }
+                            <!--Column containing row action buttons.  -->
+                            <td>
+                                <div class="d-flex gap-1">
+                                    <!-- Edit button that emtis the selected row. -->
+                                    <button class="btn btn-sm btn-outline-secondary" (click)="editRow.emit(row)">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <!-- Delete button that emits the selected rows. -->
+                                    <button class="btn btn-sm btn-outline-danger" (click)="deleteRow.emit(row)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                           </td> 
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table> 
+    </div>
+</div>

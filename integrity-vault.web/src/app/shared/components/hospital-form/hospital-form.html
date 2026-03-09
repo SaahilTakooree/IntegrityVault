@@ -1,0 +1,87 @@
+<div class="row g-3">
+    <!-- If the full hospital form needs to be shown. -->
+    @if (mode === 'full') {
+        <!-- Hospital name field. -->
+        <div class="col-12">
+            <label class="form-label">
+                Hospital Name
+                <span class="text-danger">*</span>
+            </label>
+            <input type="text" class="form-control" [(ngModel)]="form.name" (ngModelChange)="onFieldChange()"
+                placeholder="e.g. City General Hospital" [class.is-invalid]="errors.name"
+            >
+            <div class="invalid-feedback">{{ errors.name }}</div>
+        </div>
+
+        <!-- Hospital wallet address. -->
+        <div class="col-12">
+            <label class="form-label">Wallet Address <span class="text-danger">*</span></label>
+            <input type="text" class="form-control font-mono" [(ngModel)]="form.walletAddress"
+                (ngModelChange)="onFieldChange()" placeholder="0x..." [class.is-invalid]="errors.walletAddress"
+            >
+            <div class="invalid-feedback">{{ errors.walletAddress }}</div>
+        </div>
+    }
+
+    <!-- Ip address modify section all hospital form can have. -->
+    <div class="col-12">
+        <!-- Label for the section. -->
+        <label class="form-label">
+            IP Addresses
+            <span class="text-danger">*</span>
+        </label>
+
+        <!-- Table the contains the ip address and actions. -->
+        <div class="table-responsive">
+            <table class="table table-sm table-bordered mb-2">
+                <tbody>
+                    @for (ip of form.ipAddresses; track $index; let i = $index) {
+                        <tr>
+                            <td>
+                                @if (canEditIps) {
+                                    <input type="text" class="form-control form-control-sm font-mono border-0 p-0" [value]="ip"
+                                        (input)="onIpChange(i, $event)" (blur)="onFieldChange()" placeholder="e.g. 203.0.113.5"
+                                        [class.is-invalid]="isDuplicateIp(i)"
+                                    >
+                                @if (isDuplicateIp(i)) {
+                                    <div class="invalid-feedback d-block" style="font-size:0.75rem">Duplicate IP address.</div>
+                                }
+                                } @else {
+                                    <!-- display when not allowed to edit IPs. -->
+                                    <span class="font-mono small">{{ ip }}</span>
+                                }
+                            </td>
+                            @if (canEditIps) {
+                                <td class="text-center align-middle">
+                                    <button type="button" class="btn btn-sm btn-outline-danger" [disabled]="form.ipAddresses.length === 1" (click)="removeIpRow(i)">
+                                        <i class="bi bi-dash"></i>
+                                    </button>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Only show Add IP button when editing is allowed. -->
+        @if (canEditIps) {
+            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="addIpRow()">
+                <i class="bi bi-plus"></i> Add IP
+            </button>
+        }
+
+        @if (errors.ipAddresses) {
+        <div class="text-danger small mt-1">{{ errors.ipAddresses }}</div>
+        }
+    </div>
+
+    <!-- API  error. -->
+    @if (errors.api) {
+        <div class="col-12">
+            <div class="text-danger small">
+                {{ errors.api }}
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,184 @@
+<div class="row g-3">
+  <!-- Username field -->
+  <div class="col-12">
+    <label class="form-label">Username <span class="text-danger">*</span></label>
+    <input type="text" class="form-control" [(ngModel)]="form.username" (ngModelChange)="onFieldChange()"
+        placeholder="e.g. jdoe" [class.is-invalid]="errors.username">
+    <div class="invalid-feedback">{{ errors.username }}</div>
+  </div>
+  <!-- Email field. -->
+  <div class="col-md-6">
+    <label class="form-label">Email <span class="text-danger">*</span></label>
+    <input type="email" class="form-control" [(ngModel)]="form.email" (ngModelChange)="onFieldChange()"
+        placeholder="user@hospital.com" [class.is-invalid]="errors.email">
+    <div class="invalid-feedback">{{ errors.email }}</div>
+  </div>
+  <!-- Password field. -->
+  <div class="col-md-6">
+    <!-- Edit mode: show toggle switch label row -->
+    @if (isEditMode) {
+      <div class="d-flex align-items-center gap-2 mb-2">
+        <label class="form-label mb-0">Password</label>
+        <div class="form-check form-switch mb-0">
+          <input class="form-check-input" type="checkbox" role="switch"
+            [(ngModel)]="changePassword" (ngModelChange)="onChangePasswordToggle()"
+            id="changePasswordToggle">
+          <label class="form-check-label text-secondary small" for="changePasswordToggle">
+            Change password
+          </label>
+        </div>
+      </div>
+    } @else {
+      <label class="form-label">Password <span class="text-danger">*</span></label>
+    }
+    <!-- Password input to always shown in create mode, only shown when toggle is ON in edit mode -->
+    @if (!isEditMode || changePassword) {
+      <div class="input-group" [class.is-invalid]="errors.password">
+        <input [type]="showPassword ? 'text' : 'password'" class="form-control"
+          [(ngModel)]="form.password" (ngModelChange)="onFieldChange()"
+          placeholder="Min. 7 characters" [class.is-invalid]="errors.password">
+        <button class="btn btn-outline-secondary" type="button" (click)="showPassword = !showPassword">
+            <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+        </button>
+      </div>
+      @if (errors.password) {
+        <div class="text-danger small mt-1">{{ errors.password }}</div>
+      }
+    }
+  </div>
+
+  <!-- Whether to show the hospital input field or not. -->
+  @if (showHospitalSelect) {
+    <div class="col-12">
+      <label class="form-label">Assign to Hospital <span class="text-danger">*</span></label>
+      <select class="form-select" [(ngModel)]="form.hospitalID" (ngModelChange)="onFieldChange()"
+          [class.is-invalid]="errors.hospitalId">
+          <option [ngValue]="null" disabled selected>Select a hospital...</option>
+          @for (hospital of hospitals; track hospital.id) {
+              <option [ngValue]="hospital.id">{{ hospital.name }}</option>
+          }
+      </select>
+      <div class="invalid-feedback">{{ errors.hospitalId }}</div>
+    </div>
+  }
+
+  <!-- Doctor fields. -->
+  @if (role === userRole.Doctor) {
+    <ng-container>
+      <!-- Doctor first name field. -->
+      <div class="col-md-4">
+        <label class="form-label">
+          First Name
+          <span class="text-danger">*</span>
+        </label>
+        <input type="text" class="form-control" [(ngModel)]="form.firstName" (ngModelChange)="onFieldChange()"
+          placeholder="First Name" [class.is-invalid]="errors.firstName">
+          <div class="invalid-feedback">{{ errors.firstName }}</div>>
+      </div>
+      <!-- Doctor middle name field. -->
+      <div class="col-md-4">
+        <label class="form-label">
+          Middle Name
+        </label>
+        <input type="text" class="form-control" [(ngModel)]="form.middleName" (ngModelChange)="onFieldChange()"
+          placeholder="Optional" [class.is-invalid]="errors.middleName">
+        <div class="invalid-feedback">{{ errors.middleName }}</div>
+      </div>
+      <!-- Doctor last name field. -->
+      <div class="col-md-4">
+        <label class="form-label">
+          Last Name
+          <span class="text-danger">*</span>
+        </label>
+        <input type="text" class="form-control" [(ngModel)]="form.lastName" (ngModelChange)="onFieldChange()"
+          placeholder="Last Name" [class.is-invalid]="errors.lastName">
+        <div class="invalid-feedback">{{ errors.lastName }}</div>
+      </div>
+      <!-- Doctor specialty. -->
+      <div class="col-12">
+        <label class="form-label">
+          Specialty
+          <span class="text-danger">*</span>
+        </label>
+        <select class="form-select" [(ngModel)]="form.specialty" (ngModelChange)="onFieldChange()"
+          [class.is-invalid]="errors.specialty">
+          <option [ngValue]="null" disabled selected>Select a specialty...</option>
+          @for (specialty of getEnumKeys(doctorSpecialty); track specialty) {
+            <option [ngValue]="doctorSpecialty[specialty]">{{ specialty }}</option>
+          }
+        </select>
+        <div class="invalid-feedback">{{ errors.specialty }}</div>
+        </div>
+    </ng-container>
+  }
+
+  <!-- Patient fields -->
+  @if (role === userRole.Patient) {
+    <ng-container>
+      <!-- Patient first name. -->
+      <div class="col-md-4">
+        <label class="form-label">
+          First Name
+          <span class="text-danger">*</span>
+        </label>
+        <input type="text" class="form-control" [(ngModel)]="form.firstName" (ngModelChange)="onFieldChange()"
+          placeholder="First Name" [class.is-invalid]="errors.firstName">
+        <div class="invalid-feedback">{{ errors.firstName }}</div>
+      </div>
+      <!-- Patient middle name. -->
+      <div class="col-md-4">
+        <label class="form-label">
+          Middle Name
+        </label>
+        <input type="text" class="form-control" [(ngModel)]="form.middleName" (ngModelChange)="onFieldChange()"
+          placeholder="Optional" [class.is-invalid]="errors.middleName">
+        <div class="invalid-feedback">{{ errors.middleName }}</div>
+      </div>
+      <!-- Patient last name. -->
+      <div class="col-md-4">
+        <label class="form-label">
+          Last Name
+          <span class="text-danger">*</span>
+        </label>
+        <input type="text" class="form-control" [(ngModel)]="form.lastName" (ngModelChange)="onFieldChange()"
+          placeholder="Last Name" [class.is-invalid]="errors.lastName">
+        <div class="invalid-feedback">{{ errors.lastName }}</div>
+      </div>
+      <!-- Patient date of bith. -->
+      <div class="col-md-6">
+        <label class="form-label">
+          Date of Birth
+          <span class="text-danger">*</span>
+        </label>
+        <input type="date" class="form-control" [(ngModel)]="form.dateOfBirth" (ngModelChange)="onFieldChange()"
+                [class.is-invalid]="errors.dateOfBirth"
+            >
+            <div class="invalid-feedback">{{ errors.dateOfBirth }}</div>
+      </div>
+      <!-- Patient gender. -->
+      <div class="col-md-6">
+        <label class="form-label">
+          Gender
+          <span class="text-danger">*</span>
+        </label>
+        <select class="form-select" [(ngModel)]="form.gender" (ngModelChange)="onFieldChange()"
+          [class.is-invalid]="errors.gender">
+          <option [ngValue]="null" disabled selected>Select...</option>
+          @for (gender of getEnumKeys(patientGenders); track gender) {
+            <option [ngValue]="patientGenders[gender]">{{ gender }}</option>
+          }
+        </select>
+        <div class="invalid-feedback">{{ errors.gender }}</div>
+      </div>
+    </ng-container>
+  }
+
+  <!-- API error. -->
+  @if (errors.api) {
+    <div class="col-12">
+      <div class="text-danger small">
+        {{ errors.api }}
+      </div>
+    </div>
+  }
+</div>

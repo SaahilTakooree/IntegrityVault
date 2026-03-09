@@ -1,10 +1,11 @@
 <div class="d-flex" style="min-height:100vh">
+  <!-- Sidebar. -->
   <app-sidebar
     [activeLink]="activeLink"
     [sidebarItems]="[
       { label: 'Hospitals', icon: 'bi bi-building', link: 'hospitals' },
       { label: 'Admins', icon: 'bi bi-person-gear', link: 'admins' },
-      { label: 'Active Wallet', icon: 'bi bi-wallets', link: 'wallet' }
+      { label: 'Active Wallet', icon: 'bi-link-45deg', link: 'wallet' }
     ]"
     [isCollapsed]="isCollapsed"
     (closeSidebar)="toggleSidebar()"
@@ -18,163 +19,98 @@
 
     <div class="p-4">
 
-      <!-- HOSPITALS -->
-      <ng-container *ngIf="activeLink === 'hospitals'">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5 class="mb-0 fw-semibold">Hospitals</h5>
-          <button class="btn btn-primary btn-sm" (click)="openHospitalModal()"><i class="bi bi-plus-lg me-1"></i>Add Hospital</button>
-        </div>
-        <div class="card border-0">
-          <div class="table-responsive">
-            <table class="table table-hover mb-0">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Wallet Address</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngIf="hospitals.length === 0">
-                  <td colspan="4" class="text-center py-5 text-secondary">
-                    <i class="bi bi-building d-block mb-2" style="font-size:2rem"></i>No hospitals yet.
-                  </td>
-                </tr>
-                <tr *ngFor="let h of hospitals">
-                  <td class="font-mono">{{ h.id }}</td>
-                  <td class="fw-medium">{{ h.name }}</td>
-                  <td class="font-mono" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ h.walletAddress }}</td>
-                  <td>
-                    <div class="d-flex gap-1">
-                      <button class="btn btn-sm btn-outline-secondary" (click)="openHospitalModal(h)"><i class="bi bi-pencil"></i></button>
-                      <button class="btn btn-sm btn-outline-danger" (click)="openDeleteModal(h.name)"><i class="bi bi-trash"></i></button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+      <!-- ACTIVE WALLET -->
+      @if (activeLink === "wallet") {
+        <ng-container>
+          <h5 class="mb-4 fw-semibold">Active Wallet</h5>
+          <div class="card border-0 p-4" style="max-width:540px">
+            <p class="text-secondary small mb-3">Sets the hospital blockchain context for the entire system.</p>
+            <label class="form-label">Current Wallet Address</label>
+            <div class="input-group mb-4">
+              <input type="text" class="form-control font-mono" value="0x0000000000000000000000000000000000000000" readonly>
+              <button class="btn btn-outline-secondary" type="button"><i class="bi bi-clipboard"></i></button>
+            </div>
+            <label class="form-label">Switch Hospital Wallet</label>
+            <div class="input-group">
+              <select class="form-select">
+                <option value="" disabled selected>Select hospital...</option>
+                @for (hospital of hospitals; track $index) {
+                  <option [value]="hospital.walletAddress">{{ hospital.name }}</option>
+                }
+              </select>
+              <button class="btn btn-primary">Switch</button>
+            </div>
           </div>
-        </div>
-      </ng-container>
+        </ng-container>
+      }
+
+      @if(activeLink === "hospitals") {
+        <ng-container>
+          <app-entity-section
+            title="Hopsitals"
+            addLabel="Add Hopital"
+            emptyIcon="bi bi-building"
+            emptyMessage="No Hopsital Yet."
+            [columns]="hospitalColumns"
+            [rows]="hospitals"
+            (addClicked)="openHospitalModal()"
+            (editRow)="onEditHospital($event)"
+            (deleteRow)="onDeleteHospital($event)"
+          >
+          </app-entity-section>
+        </ng-container>
+      }
 
       <!-- ADMINS -->
-      <ng-container *ngIf="activeLink === 'admins'">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5 class="mb-0 fw-semibold">Admins</h5>
-          <button class="btn btn-primary btn-sm" [disabled]="noHospitals" (click)="openAdminModal()"><i class="bi bi-plus-lg me-1"></i>Add Admin</button>
-        </div>
-        <div class="alert small d-flex align-items-center gap-2 mb-3" *ngIf="noHospitals"
-             style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:#fbbf24;border-radius:.5rem">
-          <i class="bi bi-exclamation-triangle-fill"></i>
-          Create a hospital first before adding admins.
-          <button class="btn btn-link btn-sm ms-auto p-0" style="color:#fbbf24" (click)="onNavigate('hospitals')">Create Hospital</button>
-        </div>
-        <div class="card border-0">
-          <div class="table-responsive">
-            <table class="table table-hover mb-0">
-              <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Hospital</th><th>Joined</th><th>Actions</th></tr></thead>
-              <tbody>
-                <tr *ngIf="admins.length === 0">
-                  <td colspan="6" class="text-center py-5 text-secondary">
-                    <i class="bi bi-person-gear d-block mb-2" style="font-size:2rem"></i>No admins yet.
-                  </td>
-                </tr>
-                <tr *ngFor="let a of admins">
-                  <td class="font-mono">{{ a.id }}</td>
-                  <td>{{ a.username }}</td>
-                  <td>{{ a.email }}</td>
-                  <td>{{ a.hospitalName }}</td>
-                  <td>{{ a.joinDate | date:'mediumDate' }}</td>
-                  <td>
-                    <div class="d-flex gap-1">
-                      <button class="btn btn-sm btn-outline-secondary" (click)="openAdminModal(a)"><i class="bi bi-pencil"></i></button>
-                      <button class="btn btn-sm btn-outline-danger" (click)="openDeleteModal(a.username)"><i class="bi bi-trash"></i></button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </ng-container>
-
-      <!-- ACTIVE WALLET -->
-      <ng-container *ngIf="activeLink === 'wallet'">
-        <h5 class="mb-4 fw-semibold">Active Wallet</h5>
-        <div class="card border-0 p-4" style="max-width:540px">
-          <p class="text-secondary small mb-3">Sets the hospital blockchain context for the entire system. Only Super Admins can change this.</p>
-          <label class="form-label">Current Wallet Address</label>
-          <div class="input-group mb-4">
-            <input type="text" class="form-control font-mono" [value]="activeWallet" readonly>
-            <button class="btn btn-outline-secondary" type="button"><i class="bi bi-clipboard"></i></button>
-          </div>
-          <label class="form-label">Switch Hospital Wallet</label>
-          <div class="input-group">
-            <select class="form-select">
-              <option value="" disabled selected>Select hospital...</option>
-              <option *ngFor="let h of hospitals" [value]="h.walletAddress">{{ h.name }}</option>
-            </select>
-            <button class="btn btn-primary">Switch</button>
-          </div>
-          <div class="form-text text-secondary mt-2"><i class="bi bi-info-circle me-1"></i>Affects all active sessions.</div>
-        </div>
-      </ng-container>
-
+      @if (activeLink === 'admins') {
+        <ng-container>
+          <app-entity-section
+            title="Admins"
+            addLabel="Add Admin"
+            emptyIcon="bi bi-person-gear"
+            emptyMessage="No Admins Yet."
+            [columns]="adminColumns"
+            [rows]="admins"
+            [addDisable]="noHospitals"
+            warningMessage="Create a hospital first before adding admins."
+            warningActionLabel="Create Hospital"
+            (addClicked)="openAdminModal()"
+            (warningAction)="onNavigate('hospitals')"
+            (editRow)="onEditAdmin($event)"
+            (deleteRow)="onDeleteAdmin($event)"
+          >
+          </app-entity-section>
+        </ng-container>
+      }
     </div>
   </div>
 </div>
 
 <!-- Hospital Modal -->
-<div class="modal fade" [class.show]="showHospitalModal" [style.display]="showHospitalModal?'block':'none'" tabindex="-1" (click)="closeModals()">
-  <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">{{ editingHospital ? 'Edit Hospital' : 'Add Hospital' }}</h5>
-        <button class="btn-close" (click)="closeModals()"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row g-3">
-          <div class="col-12"><label class="form-label">Hospital Name <span class="text-danger">*</span></label><input type="text" class="form-control" placeholder="e.g. City General Hospital"></div>
-          <div class="col-12">
-            <label class="form-label">Wallet Address <span class="text-danger">*</span></label>
-            <input type="text" class="form-control font-mono" placeholder="0x...">
-            <div class="form-text text-secondary">Hardhat wallet representing this hospital on the blockchain.</div>
-          </div>
-          <div class="col-12"><label class="form-label">Physical Address</label><input type="text" class="form-control" placeholder="123 Medical Ave, City"></div>
-          <div class="col-12"><label class="form-label">Contact Number</label><input type="tel" class="form-control" placeholder="+1 555 000 0000"></div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-outline-secondary" (click)="closeModals()">Cancel</button>
-        <button class="btn btn-primary">{{ editingHospital ? 'Save Changes' : 'Create Hospital' }}</button>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="modal-backdrop fade show" *ngIf="showHospitalModal" (click)="closeModals()"></div>
+<app-entity-modal
+  [show]="showHospitalModal"
+  [title]="editingHospital ? 'Edit Hospital' : 'Add Hospital'"
+  [confirmLabel]="editingHospital ? 'Save Changes' : 'Create Hospital'"
+  (closed)="closeModals()"
+  (confirmed)="onHospitalConfirmed()">
+  <app-hospital-form
+    mode="full"
+    [initialValue]="hospitalInitialValue">
+  </app-hospital-form>
+</app-entity-modal>
 
-<!-- Admin Modal -->
-<div class="modal fade" [class.show]="showAdminModal" [style.display]="showAdminModal?'block':'none'" tabindex="-1" (click)="closeModals()">
-  <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">{{ editingAdmin ? 'Edit Admin' : 'Add Admin' }}</h5>
-        <button class="btn-close" (click)="closeModals()"></button>
-      </div>
-      <div class="modal-body">
-        <app-user-form role="admin" [hospitals]="hospitals" [showHospitalSelect]="true"></app-user-form>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-outline-secondary" (click)="closeModals()">Cancel</button>
-        <button class="btn btn-primary">{{ editingAdmin ? 'Save Changes' : 'Create Admin' }}</button>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="modal-backdrop fade show" *ngIf="showAdminModal" (click)="closeModals()"></div>
+<!-- Admin modal. -->
+<app-entity-modal
+  [show]="showAdminModal"
+  [title]="editingAdmin ? 'Edit Admin' : 'Add Admin'"
+  [confirmLabel]="editingAdmin ? 'Save Changes' : 'Create Admin'"
+  (closed)="closeModals()"
+  (confirmed)="onAdminConfirmed()">
+  <app-user-form [role]="UserRole.Admin" [hospitals]="hospitals" [showHospitalSelect]="true" [initialValue]="adminInitialValue"></app-user-form>
+</app-entity-modal>
 
-<!-- Delete Modal. -->
+
+<!-- Delete modal. -->
 <app-confirm-modal
   [show]="showDeleteModal"
   [title]="'Delete ' + deleteTarget + '?'"
