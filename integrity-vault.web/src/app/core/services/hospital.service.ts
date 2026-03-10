@@ -24,6 +24,11 @@ export class HospitalService {
         return this._http.get<IHospital[]>(`${this._apiUrl}`).pipe();
     }
 
+    // Fetch a specific hospital by their ID.
+    getHospitalById(id : number) : Observable<IHospital> {
+        return this._http.get<IHospital>(`${this._apiUrl}/${id}`).pipe();
+    }
+
     // Add a new hospital to the system.
     addHospital(hospital: IHospital): Observable<IHospital> {
         return this._http.post<IHospital>(`${this._apiUrl}`, hospital).pipe();

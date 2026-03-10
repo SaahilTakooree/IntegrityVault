@@ -8,7 +8,7 @@ export type UserFormValidationErrors = {
     middleName?: string;
     lastName?: string;
     specialty?: string;
-    dateOfBirth?: string;
+    dob?: string;
     gender?: string;
     api?: string;
 }

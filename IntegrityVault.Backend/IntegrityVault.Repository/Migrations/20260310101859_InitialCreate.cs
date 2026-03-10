@@ -62,7 +62,7 @@ namespace IntegrityVault.Repository.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.ID);
-                    table.CheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
+                    table.CheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
                     table.CheckConstraint("Ck_User_Role", "[Role] IN (0, 1, 2, 3, 4)");
                     table.CheckConstraint("CK_Users_Email_Format", "Email LIKE '%_@__%.__%'");
                     table.CheckConstraint("CK_Users_Password_Length", "LEN(Password) >= 7");
@@ -138,7 +138,7 @@ namespace IntegrityVault.Repository.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     MiddleName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    DOB = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DOB = table.Column<DateOnly>(type: "date", nullable: false),
                     Gender = table.Column<byte>(type: "tinyint", maxLength: 3, nullable: false)
                 },
                 constraints: table =>

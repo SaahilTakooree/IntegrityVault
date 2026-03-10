@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IntegrityVault.Repository.Migrations
 {
     [DbContext(typeof(IntegrityVaultDbContext))]
-    [Migration("20260308183611_InitialCreate")]
+    [Migration("20260310101859_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -260,7 +260,7 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.ToTable("Users", null, t =>
                         {
-                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
+                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
 
                             t.HasCheckConstraint("CK_Users_Email_Format", "Email LIKE '%_@__%.__%'");
 
@@ -278,7 +278,7 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.ToTable("Admins", null, t =>
                         {
-                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
+                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
 
                             t.HasCheckConstraint("CK_Users_Email_Format", "Email LIKE '%_@__%.__%'");
 
@@ -312,7 +312,7 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.ToTable("Doctors", null, t =>
                         {
-                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
+                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
 
                             t.HasCheckConstraint("CK_Users_Email_Format", "Email LIKE '%_@__%.__%'");
 
@@ -330,7 +330,7 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.ToTable("ExternalProviders", null, t =>
                         {
-                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
+                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
 
                             t.HasCheckConstraint("CK_Users_Email_Format", "Email LIKE '%_@__%.__%'");
 
@@ -344,8 +344,8 @@ namespace IntegrityVault.Repository.Migrations
                 {
                     b.HasBaseType("IntegrityVault.Common.Entities.User");
 
-                    b.Property<DateTime>("DOB")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("DOB")
+                        .HasColumnType("date");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -367,7 +367,7 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.ToTable("Patients", null, t =>
                         {
-                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
+                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
 
                             t.HasCheckConstraint("CK_Users_Email_Format", "Email LIKE '%_@__%.__%'");
 
@@ -385,7 +385,7 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.ToTable("SuperAdmins", null, t =>
                         {
-                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
+                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
 
                             t.HasCheckConstraint("CK_Users_Email_Format", "Email LIKE '%_@__%.__%'");
 

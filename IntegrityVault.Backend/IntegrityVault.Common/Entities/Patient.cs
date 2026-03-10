@@ -25,7 +25,7 @@ namespace IntegrityVault.Common.Entities
 
         // Patient's date of birth. It is required.
         [Required]
-        public required DateTime DOB { get; set; }
+        public required DateOnly DOB { get; set; }
 
         // Patient' gender. It is required.
         [Required]

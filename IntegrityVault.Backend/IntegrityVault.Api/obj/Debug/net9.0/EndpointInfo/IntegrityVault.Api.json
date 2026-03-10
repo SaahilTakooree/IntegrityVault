@@ -772,7 +772,7 @@
           },
           "dob": {
             "type": "string",
-            "format": "date-time"
+            "format": "date"
           },
           "gender": {
             "$ref": "#/components/schemas/PatientGender"
@@ -966,7 +966,7 @@
           },
           "dob": {
             "type": "string",
-            "format": "date-time",
+            "format": "date",
             "nullable": true
           },
           "gender": {

@@ -33,7 +33,7 @@ namespace IntegrityVault.Common.DTOs
         public string FirstName { get; set; } = string.Empty!;
         public string? MiddleName { get; set; }
         public string LastName { get; set; } = string.Empty!;
-        public DateTime DOB { get; set; }
+        public DateOnly DOB { get; set; }
         public PatientGender Gender { get; set; }
     }
 
@@ -80,7 +80,7 @@ namespace IntegrityVault.Common.DTOs
         public required string FirstName { get; set; }
         public string? MiddleName { get; set; }
         public required string LastName { get; set; }
-        public DateTime DOB { get; set; }
+        public DateOnly DOB { get; set; }
         public PatientGender Gender { get; set; }
     }
 
@@ -128,7 +128,7 @@ namespace IntegrityVault.Common.DTOs
         public string? FirstName { get; set; }
         public string? MiddleName { get; set; }
         public string? LastName { get; set; }
-        public DateTime? DOB { get; set; }
+        public DateOnly? DOB { get; set; }
         public PatientGender? Gender { get; set; }
     }
 

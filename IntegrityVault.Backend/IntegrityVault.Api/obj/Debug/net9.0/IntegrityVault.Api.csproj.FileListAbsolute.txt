@@ -174,10 +174,10 @@ C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backen
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\staticwebassets\msbuild.buildMultiTargeting.IntegrityVault.Api.props
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\staticwebassets\msbuild.buildTransitive.IntegrityVault.Api.props
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\staticwebassets.pack.json
-C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\Integrit.BC6E3215.Up2Date
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\IntegrityVault.Api.dll
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\refint\IntegrityVault.Api.dll
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\IntegrityVault.Api.pdb
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\IntegrityVault.Api.genruntimeconfig.cache
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\ref\IntegrityVault.Api.dll
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt

@@ -26,10 +26,15 @@ export class EntityTableComponent<T extends object> {
     @Output() editRow = new EventEmitter<T>(); // Output event emitter triggered when a row edit action is requested.
     @Output() deleteRow = new EventEmitter<T>(); // Output event emitter triggered when a row delete action is requested.
 
+    
     // Helper function used to extract and format a value from a row based.
-    getValue(row : T, key : keyof T) : string {
+    getValue(row : T, column: IColumnDefinition<T>) : string {
         // Retrieve the value from the row using the provided key.
-        const value = row[key];
+        const value = row[column.key];
+
+        // If a transform function is defined on the column, use it.
+        if (column.transform)
+            return column.transform(value);
         
         // If the value is a Date object, convert it to a readable locale date string.
         if (value instanceof Date) 

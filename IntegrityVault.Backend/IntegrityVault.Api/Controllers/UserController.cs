@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc; // Import ASP.Net Core MVC library for building APIs.
 using IntegrityVault.Service.Interfaces; // Import the interface for the user service layer.
 using IntegrityVault.Common.DTOs; // Import the DTOs for User.
+using System.Text.Json; // Import System.Text.Json for explicit runtime - type serialization of derived DTOs.
 
 
 // Declaring the namespace where this controller belongs.
@@ -18,7 +19,9 @@ namespace IntegrityVault.Api.Controllers
             try
             {
                 var result = await _userService.GetAllUsersAsync(); // Calling the GetAllUserAsync method from the injected service to get a list of all user.
-                return Ok(result); // Returning a 200 OK response with the list of user DTOs.
+                var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }; // Match the global camelCase policy.
+                var serialised = result.Select(u => JsonSerializer.SerializeToElement(u, u!.GetType(), options)); // Serialise each DTO using its runtime type to preserve derived properties.
+                return Ok(serialised);
             }
             catch (InvalidOperationException ex)
             {

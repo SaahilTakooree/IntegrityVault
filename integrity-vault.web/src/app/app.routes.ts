@@ -1,11 +1,12 @@
 import { Routes } from '@angular/router';
 import { Login } from './features/auth/login/login';
 import { SuperadminDashboardComponent } from './features/dashboards/super-admin/super-admin';
+import { AdminDashboardComponent } from './features/dashboards/admin/admin';
 
 export const routes: Routes = [
     {
     path: '',
-    redirectTo: 'superadmin',
+    redirectTo: 'admin',
     pathMatch: 'full' // important for full URL match
   },
   {
@@ -15,5 +16,9 @@ export const routes: Routes = [
   {
     path: 'superadmin',
     component: SuperadminDashboardComponent
+  },
+  {
+    path: 'admin',
+    component: AdminDashboardComponent
   }
 ]

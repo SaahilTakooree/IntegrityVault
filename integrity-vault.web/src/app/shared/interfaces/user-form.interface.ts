@@ -19,6 +19,6 @@ export interface IUserForm {
   specialty: DoctorSpecialty | null;
 
   // Patient only fields.
-  dateOfBirth: string;
+  dob: string;
   gender: PatientGender | null;
 }

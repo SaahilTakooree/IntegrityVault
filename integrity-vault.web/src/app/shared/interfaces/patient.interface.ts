@@ -11,10 +11,10 @@ export interface IPatient {
     password : string; // Password of the patient stored as a string.
     joinDate : Date; // Join date of the patient stored as date.
     role: UserRole; // Role assigned to the patient.
-    hospitalIDD: number; // Hospital that the patient is assigned to.
+    hospitalID: number; // Hospital that the patient is assigned to.
     firstName: string; // First name of the patient.
     middleName?: string; // Optional middle name of the patient.
     lastName: string; // Last name of the patient.
-    dateOfBirth: string;  // Patient's date of birth in ISO date string format.
+    dob: string;  // Patient's date of birth in ISO date string format.
     gender: PatientGender; // Patient's gender.
 }

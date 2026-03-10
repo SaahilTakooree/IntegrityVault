@@ -6,7 +6,7 @@ import { UserRole } from "../../enums/user-role.enum"; // Import the UserRole ty
 import { DoctorSpecialty } from "../../enums/doctor-specialty.enum"; // Import the specialty type a doctor can be.
 import { PatientGender } from "../../enums/patient-gender.enum"; // Import the gender which a patient can be.
 import { IHospital } from "../../interfaces/hospital.interface"; // Import the Hospital interface describing the structure of the hospital object.
-import { IUserForm } from "../../interfaces/user.interface"; // Import the user interface.
+import { IUserForm } from "../../interfaces/user-form.interface"; // Import the user interface.
 import { UserFormOutput } from "../../interfaces/user-form-output.interface"; // Import the form output interface.
 import { UserFormValidationErrors } from "../../types/user-form-validation-errors.type"; // Import all possible error types.
 import { validateUserForm } from "../../utils/user-form.validator"; // Import the validation function.
@@ -27,6 +27,7 @@ export class UserFormComponent implements OnChanges{
   // Inputs: data coming into the component.
   @Input() role : UserRole = UserRole.Admin; // Speicifes the role of the user being created or edited
   @Input() hospitals : IHospital[] | null = null; // List of hopistla avaliable for selection in the form.
+  @Input() defaultHospitalID : number | null = null; // The default ID that the user belongs to.
   @Input() showHospitalSelect : boolean = false; // Determines whether the hospital section dropdown should be visible.
   @Input() initialValue : IUserForm | null | undefined = undefined; // Initial value to populate the form when editing.
   @Input() apiError : string | null = null; // API errors that might happen when creating or updating the user.
@@ -52,6 +53,9 @@ export class UserFormComponent implements OnChanges{
   // Starts as false so existing users don't need to re-enter their password.
   changePassword: boolean = false;
 
+  // To know what is today date.
+  today: string = new Date().toISOString().split('T')[0];
+
 
   // Angular function to detech changes in input properties.
   ngOnChanges(changes : SimpleChanges): void {
@@ -63,9 +67,15 @@ export class UserFormComponent implements OnChanges{
       this.form = v ? { ...v } : this._blank();
       this.errors = {}; // Reset errors when initial value changes.
     }
+
     // Add the API errors into the errors object.
     if (changes["apiError"] && this.apiError) {
       this.errors = { ...this.errors, api: this.apiError };
+    }
+
+    
+    if (changes["defaultHospitalID"] && !this.initialValue) {
+      this.form.hospitalID = this.defaultHospitalID;
     }
   }
 
@@ -108,13 +118,13 @@ export class UserFormComponent implements OnChanges{
   getValue() : IUserForm {
     return {
       ...this.form,
-      username:    this.form.username.trim(),
-      email:       this.form.email.trim(),
-      password:    this.form.password.trim(),
-      firstName:   this.form.firstName.trim(),
-      middleName:  this.form.middleName.trim(),
-      lastName:    this.form.lastName.trim(),
-      dateOfBirth: this.form.dateOfBirth.trim(),
+      username: this.form.username.trim(),
+      email: this.form.email.trim(),
+      password: this.form.password.trim(),
+      firstName: this.form.firstName.trim(),
+      middleName: this.form.middleName.trim(),
+      lastName: this.form.lastName.trim(),
+      dob: this.form.dob.trim(),
     };
   }
 
@@ -136,13 +146,13 @@ export class UserFormComponent implements OnChanges{
       username: "",
       email: "",
       password: "",
-      hospitalID: null,
+      hospitalID: this.defaultHospitalID,
       role: UserRole.Admin,
       firstName: "",
       middleName: "",
       lastName: "",
       specialty: null,
-      dateOfBirth: "",
+      dob: "",
       gender: null
     };
   }
@@ -175,7 +185,7 @@ export class UserFormComponent implements OnChanges{
       !this.errors.middleName &&
       !this.errors.lastName &&
       !this.errors.specialty &&
-      !this.errors.dateOfBirth &&
+      !this.errors.dob &&
       !this.errors.gender
     );
   }

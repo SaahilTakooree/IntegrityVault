@@ -8,14 +8,14 @@ import { TopbarComponent } from "../../../shared/components/topbar/topbar"; // I
 import { ConfirmModalComponent } from "../../../shared/components/confirm-modal/confirm-modal"; // Import the confirm modal.
 import { EntitySectionComponent } from "../../../shared/components/entity-section/entity-section"; // Section for entity data.
 import { EntityModalComponent } from "../../../shared/components/entity-modal/entity-modal"; // Modal for creating and editing entities.
-import { UserFormComponent } from "../../../shared/components/user-form/user-form"; // Enum for button styles.
+import { UserFormComponent } from "../../../shared/components/user-form/user-form"; // Import the user from..
 import { ConfirmButtonStyle } from "../../../shared/enums/button-style.enum"; // Import confirm modal button enum.
 import { UserRole } from "../../../shared/enums/user-role.enum"; // Import the user role enum.
 import { HospitalFormComponent } from "../../../shared/components/hospital-form/hospital-form"; // Import hospital form..
 import { IColumnDefinition } from "../../../shared/interfaces/column-definition.interface"; // Interface for column definition.
 import { IHospital } from "../../../shared/interfaces/hospital.interface";  // Hospital interface for type-checking.
 import { IAdmin } from "../../../shared/interfaces/admin.interface"; // Admin interface for type-checking.
-import { IUserForm } from "../../../shared/interfaces/user.interface"; // User interface for type-checking.
+import { IUserForm } from "../../../shared/interfaces/user-form.interface"; // User interface for type-checking.
 import { HospitalService } from "../../../core/services/hospital.service"; // Service to interact with hospital API.
 import { UserService } from "../../../core/services/user.service"; // Service to interact with user API.
 import { parseHospitalApiError } from "../../../shared/utils/hospital-form.validator"; // Validation and error handling utils for hospital.
@@ -186,7 +186,7 @@ export class SuperadminDashboardComponent {
           middleName: "",
           lastName: "",
           specialty: null,
-          dateOfBirth: "",
+          dob: "",
           gender: null
         }
         : null;

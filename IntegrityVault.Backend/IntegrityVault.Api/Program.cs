@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer; // JWT authentication.
 using Microsoft.IdentityModel.Tokens; // JWT token handling.
 using System.Text; //  Encoding for JWT key.
 using System.Security.Claims; // ClaimTypes for JWT claims.
+using IntegrityVault.Common.Converters; // DateOnly converters.
 using Microsoft.OpenApi.Models; //
 
 
@@ -17,7 +18,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 // Add services to the container.
-builder.Services.AddControllers(); // Allows Swagger to see the created endpoint.
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+    }); // Allows Swagger to see the created endpoint.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(); // Adds Swagger generation.
 

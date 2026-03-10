@@ -15,5 +15,5 @@ export interface IDoctor {
     firstName: string; // First name of the doctor.
     middleName?: string; // Optional middle name of the doctor.
     lastName: string; // Last name of the doctor.
-    speciality: DoctorSpecialty; // Specialty of the doctor.
+    specialty: DoctorSpecialty; // Specialty of the doctor.
 }

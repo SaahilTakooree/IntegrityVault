@@ -32,7 +32,7 @@ export class SidebarComponent {
   set sidebarItems(items: ISidebarItem[]) {
     // Check each label
     for (const item of items) {
-      if (item.label.length > 15) {
+      if (item.label.length > 24) {
         throw new Error(
           `Sidebar label "${item.label}" exceeds 15 characters. This is not allowed.`
         );

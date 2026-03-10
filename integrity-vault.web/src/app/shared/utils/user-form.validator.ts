@@ -3,7 +3,7 @@ import { UserRole }      from "../enums/user-role.enum"; // User role enum.
 import { DoctorSpecialty } from "../enums/doctor-specialty.enum"; // Doctor specialty enum.
 import { PatientGender }   from "../enums/patient-gender.enum"; // Patient gender enum.
 import { UserFormValidationErrors } from "../types/user-form-validation-errors.type"; // All possible form errors.
-import { IUserForm } from "../interfaces/user.interface"; // User form value interface.
+import { IUserForm } from "../interfaces/user-form.interface"; // User form value interface.
 
 
 // Regex to have a password with at least 1 uppercase, 1 lowercase, 1 digit, 1 special char, and min 7 chars.
@@ -82,9 +82,17 @@ export function validateSpecialty(specialty : DoctorSpecialty | null) : string |
 
 // Validates the date of birth field.
 export function validateDateOfBirth(dateOfBirth : string) : string | undefined {
-  if (!dateOfBirth.trim())
+  if (!dateOfBirth ||!dateOfBirth.trim())
     return "Date of birth is required.";
+
+  const dob = new Date(dateOfBirth);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  if (dob > today)
+    return "Date of birth cannot be in the future.";
+  
   return undefined;
+
 }
 
 
@@ -145,8 +153,8 @@ export function validateUserForm( form : IUserForm, role : UserRole, showHospita
     const lastErr = validateRequiredName(form.lastName, "Last name");
     if (lastErr) errors.lastName = lastErr;
 
-    const dobErr = validateDateOfBirth(form.dateOfBirth);
-    if (dobErr) errors.dateOfBirth = dobErr;
+    const dobErr = validateDateOfBirth(form.dob);
+    if (dobErr) errors.dob = dobErr;
 
     const genderErr = validateGender(form.gender);
     if (genderErr) errors.gender = genderErr;

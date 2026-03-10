@@ -1,0 +1,225 @@
+<div class="d-flex" style="min-height:100vh">
+  <!-- Sidebar. -->
+    <app-sidebar
+        [activeLink]="activeLink"
+        [sidebarItems]="[
+            { label: 'Patients', icon: 'bi bi-person', link: 'patients' },
+            { label: 'Doctors', icon: 'bi bi-person-badge', link: 'doctors' },
+            { label: 'External Providers', icon: 'bi bi-hdd-network', link: 'externalProviders' },
+            { label: 'IP Management', icon: 'bi bi-building-gear', link: 'ip-management' },
+        ]"
+        [isCollapsed]="isCollapsed"
+        (closeSidebar)="toggleSidebar()"
+        (linkClicked)="onNavigate($event)">
+    </app-sidebar>
+
+    <div class="iv-main">
+        <!-- Topbar. -->
+        <app-topbar
+            (toggleSidebar)="toggleSidebar()"
+            [message]="'Welcome back, Admin'">
+        </app-topbar>
+
+        <div class="p-4">
+
+            <!-- Patient. -->
+            @if (activeLink === "patients") {
+                <ng-container>
+                    <app-entity-section
+                        title="Patient"
+                        addLabel="Add Patient"
+                        emptyIcon="bi bi-person-gear"
+                        emptyMessage="No Patients Yet."
+                        warningMessage="Create a doctor first before adding patient."
+                        warningActionLabel="Create Doctor"
+                        [columns]="patientColumns"
+                        [rows]="patients"
+                        [addDisable]="noDoctors"
+                        (addClicked)="openPatientModal()"
+                        (warningAction)="onNavigate('doctors')"
+                        (editRow)="onEditPatient($event)"
+                        (deleteRow)="onDeletePatient($event)"
+                    >
+                    </app-entity-section>
+                </ng-container>
+            }
+
+            <!-- Doctors. -->
+            @if (activeLink === "doctors") {
+                <ng-container>
+                    <app-entity-section
+                        title="Doctor"
+                        addLabel="Add Doctor"
+                        emptyIcon="bi bi-person-gear"
+                        emptyMessage="No Doctors Yet."
+                        [columns]="doctorColumns"
+                        [rows]="doctors"
+                        (addClicked)="openDoctorModal()"
+                        (editRow)="onEditDoctor($event)"
+                        (deleteRow)="onDeleteDoctor($event)"
+                    >
+                    </app-entity-section>
+                </ng-container>
+            }
+
+            <!-- External Providers. -->
+            @if (activeLink === "externalProviders") {
+                <ng-container>
+                    <app-entity-section
+                        title="External Provider"
+                        addLabel="Add External Provider"
+                        emptyIcon="bi bi-person-gear"
+                        emptyMessage="No External Provider Yet."
+                        [columns]="externalProviderColumns"
+                        [rows]="externalProviders"
+                        (addClicked)="openExternalProviderModal()"
+                        (editRow)="onEditExternalProvider($event)"
+                        (deleteRow)="onDeleteExternalProvider($event)"
+                    >
+                    </app-entity-section>
+                </ng-container>
+            }
+
+            <!-- IP Management. -->
+            @if (activeLink === "ip-management") {
+                <div class="card shadow-sm">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <h5 class="mb-0">
+                            <i class="bi bi-building-gear me-2"></i>IP Address Manager
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        @if (!hospital) {
+                            <div class="text-center text-muted py-5">
+                                <i class="bi bi-hourglass-split d-block fs-1 mb-2"></i>
+                                Loading Hospital Data...
+                            </div>
+                        } @else {
+                            <!-- Hospital info. -->
+                            <div class="mb-4">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label text-muted small fw-semibold text-uppercase">Hospital Name</label>
+                                        <div class="form-control-plaintext fw-semibold">{{ hospital.name }}</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label text-muted small fw-semibold text-uppercase">Wallet Address</label>
+                                        <div class="form-control-plaintext font-mono small text-truncate">{{ hospital.walletAddress }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <!-- IP address table. -->
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <h6 class="mb-0">
+                                    Allowed IP Addresses
+                                </h6>
+                                <button class="btn btn-sm btn-outline-primary" (click)="openHospitalModal(hospital)">
+                                    <i class="bi bi-pencil me-1"></i>Edit IPs
+                                </button>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="text-muted small">#</th>
+                                            <th class="text-muted small">IP Address</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (ip of hospital.ipAddresses; track $index) {
+                                            <tr>
+                                                <td class="text-muted small" style="width:50px">{{ $index + 1 }}</td>
+                                                <td class="font-mono small">{{ ip }}</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<!-- Patient modal. -->
+<app-entity-modal
+    [show]="showPatientModal"
+    [title]="editingPatient ? 'Edit Patient' : 'Add Patient'"
+    [confirmLabel]="editingPatient ? 'Save Changes' : 'Create Patient'"
+    (closed)="closeModals()"
+    (confirmed)="onPatientConfirmed()">
+    <app-user-form
+        #patientForm
+        [role]="UserRole.Patient"
+        [showHospitalSelect]="false"
+        [defaultHospitalID]="adminHospitalID"
+        [initialValue]="patientInitialValue">
+    </app-user-form>
+</app-entity-modal>
+
+
+<!-- Doctor modal. -->
+<app-entity-modal
+    [show]="showDoctorModal"
+    [title]="editingDoctor ? 'Edit Doctor' : 'Add Doctor'"
+    [confirmLabel]="editingDoctor ? 'Save Changes' : 'Create Doctor'"
+    (closed)="closeModals()"
+    (confirmed)="onDoctorConfirmed()">
+    <app-user-form
+        #doctorForm
+        [role]="UserRole.Doctor"
+        [showHospitalSelect]="false"
+        [defaultHospitalID]="adminHospitalID"
+        [initialValue]="doctorInitialValue">
+    </app-user-form>
+</app-entity-modal>
+
+
+<!-- External Provider modal. -->
+<app-entity-modal
+    [show]="showExternalProviderModal"
+    [title]="editingExternalProvider ? 'Edit External Provider' : 'Add External Provider'"
+    [confirmLabel]="editingExternalProvider ? 'Save Changes' : 'Create External Provider'"
+    (closed)="closeModals()"
+    (confirmed)="onExternalProviderConfirmed()">
+    <app-user-form
+        #externalProviderForm
+        [role]="UserRole.ExternalProvider"
+        [showHospitalSelect]="false"
+        [initialValue]="externalProviderInitialValue">
+    </app-user-form>
+</app-entity-modal>
+
+
+<!-- Hospital Modal -->
+<app-entity-modal
+  [show]="showHospitalModal"
+  [title]="editingHospital ? 'Edit Hospital' : 'Add Hospital'"
+  [confirmLabel]="editingHospital ? 'Save Changes' : 'Create Hospital'"
+  (closed)="closeModals()"
+  (confirmed)="onHospitalConfirmed()">
+  <app-hospital-form
+    mode="ip-only"
+    [initialValue]="hospitalInitialValue">
+  </app-hospital-form>
+</app-entity-modal>
+
+
+<!-- Delete modal. -->
+<app-confirm-modal
+    [show]="showDeleteModal"
+    [title]="'Delete ' + deleteTarget + '?'"
+    message="This action cannot be undone."
+    [buttons]="[
+        { label: 'Cancel', style: ConfirmButtonStyle.Secondary, result: false },
+        { label: 'Delete', style: ConfirmButtonStyle.Danger, result: true }
+    ]"
+    (closed)="closeModals()"
+    (action)="handleDeleteResult($event)"
+    >
+    <i icon class="bi bi-exclamation-circle text-danger d-block mb-3 iv-modal-icon"></i>
+</app-confirm-modal>

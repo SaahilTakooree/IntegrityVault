@@ -446,60 +446,73 @@ namespace IntegrityVault.Service.Implementations
         // Private method to map the each user to its most appropriate DTO.
         private static UserDTO MapToDTO(User user)
         {
-            return user.Role switch
+            return user switch
             {
-                UserRole.Doctor => new DoctorDTO
+                Doctor d => new DoctorDTO
                 {
-                    ID = user.ID,
-                    Username = user.Username,
-                    Email = user.Email,
-                    Password = user.Password,
-                    Role = user.Role,
-                    JoinDate = user.JoinDate,
-                    HospitalID = user.HospitalID,
-                    FirstName = (user as Doctor)!.FirstName,
-                    MiddleName = (user as Doctor)?.MiddleName,
-                    LastName = (user as Doctor)!.LastName,
-                    Specialty = (user as Doctor)!.Specialty
+                    ID = d.ID,
+                    Username = d.Username,
+                    Email = d.Email,
+                    Password = d.Password,
+                    Role = d.Role,
+                    JoinDate = d.JoinDate,
+                    HospitalID = d.HospitalID,
+                    FirstName = d.FirstName,
+                    MiddleName = d.MiddleName,
+                    LastName = d.LastName,
+                    Specialty = d.Specialty
                 },
-                UserRole.Patient => new PatientDTO
+                Patient p => new PatientDTO
                 {
-                    ID = user.ID,
-                    Username = user.Username,
-                    Email = user.Email,
-                    Role = user.Role,
-                    JoinDate = user.JoinDate,
-                    HospitalID = user.HospitalID,
-                    FirstName = (user as Patient)!.FirstName,
-                    MiddleName = (user as Patient)?.MiddleName,
-                    LastName = (user as Patient)!.LastName,
-                    DOB = (user as Patient)!.DOB,
-                    Gender = (user as Patient)!.Gender
+                    ID = p.ID,
+                    Username = p.Username,
+                    Email = p.Email,
+                    Password = p.Password,
+                    Role = p.Role,
+                    JoinDate = p.JoinDate,
+                    HospitalID = p.HospitalID,
+                    FirstName = p.FirstName,
+                    MiddleName = p.MiddleName,
+                    LastName = p.LastName,
+                    DOB = p.DOB,
+                    Gender = p.Gender
                 },
-                UserRole.Admin => new AdminDTO
+                Admin a => new AdminDTO
                 {
-                    ID = user.ID,
-                    Username = user.Username,
-                    Email = user.Email,
-                    Role = user.Role,
-                    JoinDate = user.JoinDate,
-                    HospitalID = user.HospitalID
+                    ID = a.ID,
+                    Username = a.Username,
+                    Email = a.Email,
+                    Password = a.Password,
+                    Role = a.Role,
+                    JoinDate = a.JoinDate,
+                    HospitalID = a.HospitalID
                 },
-                UserRole.ExternalProvider => new ExternalProviderDTO
+                ExternalProvider e => new ExternalProviderDTO
                 {
-                    ID = user.ID,
-                    Username = user.Username,
-                    Email = user.Email,
-                    Role = user.Role,
-                    JoinDate = user.JoinDate,
-                    HospitalID = user.HospitalID
+                    ID = e.ID,
+                    Username = e.Username,
+                    Email = e.Email,
+                    Password = e.Password,
+                    Role = e.Role,
+                    JoinDate = e.JoinDate,
+                    HospitalID = e.HospitalID
                 },
-                // Fallback for any unhandled roles.
+                SuperAdmin s => new UserDTO
+                {
+                    ID = s.ID,
+                    Username = s.Username,
+                    Email = s.Email,
+                    Password = s.Password,
+                    Role = s.Role,
+                    JoinDate = s.JoinDate,
+                    HospitalID = s.HospitalID
+                },
                 _ => new UserDTO
                 {
                     ID = user.ID,
                     Username = user.Username,
                     Email = user.Email,
+                    Password = user.Password,
                     Role = user.Role,
                     JoinDate = user.JoinDate,
                     HospitalID = user.HospitalID

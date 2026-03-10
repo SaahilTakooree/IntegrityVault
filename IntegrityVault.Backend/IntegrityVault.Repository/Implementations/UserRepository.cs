@@ -19,7 +19,18 @@ namespace IntegrityVault.Repository.Implementations
             try
             {
                 // Fetch all users from the Users table asynchronously and converting to a list.
-                return await _context!.Users.ToListAsync();
+                var doctors = await _context.Doctors.ToListAsync<User>();
+                var patients = await _context.Patients.ToListAsync<User>();
+                var admins = await _context.Admins.ToListAsync<User>();
+                var superAdmins = await _context.SuperAdmins.ToListAsync<User>();
+                var externalProviders = await _context.ExternalProviders.ToListAsync<User>();
+
+                return doctors
+                    .Concat(patients)
+                    .Concat(admins)
+                    .Concat(superAdmins)
+                    .Concat(externalProviders);
+
             }
             catch (Exception ex) // Catch any general exceptions during data fetching.
             {
@@ -35,7 +46,12 @@ namespace IntegrityVault.Repository.Implementations
             try
             {
                 // Finding the user by ID asynchronously, returning null if not found.
-                return await _context!.Users.FirstOrDefaultAsync(u => u.ID == id);
+                User? user = await _context.Doctors.FirstOrDefaultAsync(u => u.ID == id);
+                user ??= await _context.Patients.FirstOrDefaultAsync(u => u.ID == id);
+                user ??= await _context.Admins.FirstOrDefaultAsync(u => u.ID == id);
+                user ??= await _context.SuperAdmins.FirstOrDefaultAsync(u => u.ID == id);
+                user ??= await _context.ExternalProviders.FirstOrDefaultAsync(u => u.ID == id);
+                return user;
             }
             catch (Exception ex) // Catch any general exceptions during data fetching.
             {

@@ -32,7 +32,8 @@ namespace IntegrityVault.Repository.Configurations
 
             // Configure the DOB property.
             entity.Property(p => p.DOB)
-                .IsRequired(); // Make the DOB column not null.
+                .IsRequired() // Make the DOB column not null.
+                .HasColumnType("date"); // Make sure the date of birth is stored at date time.
 
             // Configure the Gender property.
             entity.Property(p => p.Gender)

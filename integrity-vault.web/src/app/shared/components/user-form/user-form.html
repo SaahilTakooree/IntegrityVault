@@ -73,7 +73,7 @@
         </label>
         <input type="text" class="form-control" [(ngModel)]="form.firstName" (ngModelChange)="onFieldChange()"
           placeholder="First Name" [class.is-invalid]="errors.firstName">
-          <div class="invalid-feedback">{{ errors.firstName }}</div>>
+          <div class="invalid-feedback">{{ errors.firstName }}</div>
       </div>
       <!-- Doctor middle name field. -->
       <div class="col-md-4">
@@ -150,11 +150,12 @@
           Date of Birth
           <span class="text-danger">*</span>
         </label>
-        <input type="date" class="form-control" [(ngModel)]="form.dateOfBirth" (ngModelChange)="onFieldChange()"
-                [class.is-invalid]="errors.dateOfBirth"
+        <input type="date" class="form-control" [(ngModel)]="form.dob" (ngModelChange)="onFieldChange()"
+                [class.is-invalid]="errors.dob" [max]="today"
             >
-            <div class="invalid-feedback">{{ errors.dateOfBirth }}</div>
+            <div class="invalid-feedback">{{ errors.dob }}</div>
       </div>
+      
       <!-- Patient gender. -->
       <div class="col-md-6">
         <label class="form-label">
