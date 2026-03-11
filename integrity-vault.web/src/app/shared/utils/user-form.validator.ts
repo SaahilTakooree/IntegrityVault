@@ -127,6 +127,18 @@ export function validateUserForm( form : IUserForm, role : UserRole, showHospita
     if (hospitalErr) errors.hospitalId = hospitalErr;
   }
 
+  // External providers specific fields
+  if (role === UserRole.ExternalProvider) {
+    // belongsToID is required for external providers.
+    if (form.belongsToID == null) {
+      errors.belongsToID = "Belongs To is required.";
+    }
+    // belongsToID cannot match hospitalID — enforces the cross-hospital constraint.
+    else if (form.hospitalID != null && form.belongsToID === form.hospitalID) {
+      errors.belongsToID = "The owning hospital cannot be the same as the login hospital.";
+    }
+  }
+
   // Doctor specific fields.
   if (role === UserRole.Doctor) {
     const firstErr = validateRequiredName(form.firstName, "First name");

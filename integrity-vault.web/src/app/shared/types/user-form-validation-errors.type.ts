@@ -4,6 +4,7 @@ export type UserFormValidationErrors = {
     email?: string;
     password?: string;
     hospitalId?: string;
+    belongsToID?: string;
     firstName?: string;
     middleName?: string;
     lastName?: string;

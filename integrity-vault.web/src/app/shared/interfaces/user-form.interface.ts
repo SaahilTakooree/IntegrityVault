@@ -10,6 +10,7 @@ export interface IUserForm {
   email: string;
   password: string;
   hospitalID: number | null;
+  belongsToID: number | null;
   role: UserRole;
 
   // Doctor only fields.

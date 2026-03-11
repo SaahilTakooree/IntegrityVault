@@ -1,7 +1,8 @@
 // Import dependencies.
-import { Component, Input, Output, EventEmitter } from "@angular/core"; // Import Angular core module.
+import { Component, Input, Output, EventEmitter, inject } from "@angular/core"; // Import Angular core module.
 import { CommonModule } from "@angular/common"; // Import CommonModule for common directives.
 import { ISidebarItem } from "./sidebar.interface"; // Import SidebarItem Interface.
+import { AuthService } from "../../../core/services/auth.service"; // Import the authtication services.
 
 
 // Define the component decorator.
@@ -16,6 +17,9 @@ import { ISidebarItem } from "./sidebar.interface"; // Import SidebarItem Interf
 
 // Define the SidebarComponent class.
 export class SidebarComponent {
+  // Get the authentication services.
+  private readonly _authService = inject(AuthService);
+
   // Inputs: data coming into the component.
   @Input() activeLink : string = ""; // Input for currently active link.
   @Input() isCollapsed: boolean = false; // Input to check if sidebar is collapsed.
@@ -55,5 +59,10 @@ export class SidebarComponent {
     if (link) {
       this.linkClicked.emit(link);
     }
+  }
+
+  // Logout out the user.
+  onLogout() : void {
+    this._authService.logout();
   }
 }

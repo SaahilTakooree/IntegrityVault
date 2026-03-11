@@ -4,21 +4,21 @@ using IntegrityVault.Service.Interfaces; // Import the interface for the user se
 using IntegrityVault.Common.Entities; // Import the entity class for User.
 using IntegrityVault.Common.Helpers; // Import helper functions.
 using IntegrityVault.Common.DTOs; // Import the data transfer objects (DTOs) used in the service layer.
-using IntegrityVault.Common.Enums; // Import the emnus for the UserRole
+
 
 // Declaring the namespace where this service implementation resides.
 namespace IntegrityVault.Service.Implementations
 {
-    // Define the UserService class and injecting the IUserRepository dependency.
-    public class UserService(IUserRepository _userRepository) : IUserService
+    // Define the UserService class and injecting the IUserRepository and IHospitalRepository dependency.
+    public class UserService(IUserRepository _userRepository, IHospitalRepository _hospitalRepository) : IUserService
     {
         // Method to return all users mapped to their role-specific DTOs.
-        public async Task<IEnumerable<UserDTO>> GetAllUsersAsync()
+        public async Task<IEnumerable<UserDTO>> GetAllUsersAsync(int? hospitalId = null)
         {
             try
             {
                 // Get all the user from the repository.
-                var users = await _userRepository.GetAllUsersAsync();
+                var users = await _userRepository.GetAllUsersAsync(hospitalId);
 
                 // Map each User entity to the most specific DTO avaliable for that role.
                 return users.Select(MapToDTO).ToList();
@@ -173,6 +173,35 @@ namespace IntegrityVault.Service.Implementations
                 {
                     throw new InvalidOperationException($"A user with the username '{createExternalProviderDTO.Username}' already exists."); // Throwing an error if the username is already taken.
                 }
+
+                // Check that hospital ID is provided.
+                if (createExternalProviderDTO.HospitalID is null)
+                {
+                    throw new InvalidOperationException("HospitalID is required."); // Throw an error if the hospital id not provided.
+                }
+
+                // Check that belongs to is provided
+                if (createExternalProviderDTO.BelongsToID <= 0)
+                {
+                    throw new InvalidOperationException("BelongsToID is required."); // Throw an error if the BelongsTo id not provided.
+                }
+
+                // Check BelongsToID exists in Hospitals table
+                var belongsToHospitalExists = await _hospitalRepository.ExistsAsync(createExternalProviderDTO.BelongsToID);
+                if (!belongsToHospitalExists)
+                {
+                    throw new InvalidOperationException($"Hospital with ID '{createExternalProviderDTO.BelongsToID}' does not exist.");
+                }
+
+                var hospitalExists = await _hospitalRepository.ExistsAsync(createExternalProviderDTO.HospitalID.Value);
+                if (!hospitalExists)
+                {
+                    throw new InvalidOperationException($"Hospital with ID '{createExternalProviderDTO.HospitalID}' does not exist.");
+                }
+
+                // Ensure the owning hospital is not the same as the hospital id .
+                if (createExternalProviderDTO.BelongsToID == createExternalProviderDTO.HospitalID)
+                    throw new InvalidOperationException("BelongsToID cannot be the same as HospitalID"); // Throw an error if the hospital id and BelongsTo id are the same.
 
                 // Hash the password before storing it.
                 createExternalProviderDTO.Password = HashHelper.Hash(createExternalProviderDTO.Password) ?? throw new InvalidOperationException("Password hashing failed."); // Hashing the password using a helper method and ensuring it is not null.
@@ -364,6 +393,13 @@ namespace IntegrityVault.Service.Implementations
                     throw new InvalidOperationException($"A user with the username '{updateExternalProvidersDTO.Username}' already exists."); // Throwing an error if the username is already taken.
                 }
 
+                // If either HospitalID or BelongsToID is being changed, validate they won't collide.
+                if (updateExternalProvidersDTO.BelongsToID.HasValue && updateExternalProvidersDTO.HospitalID.HasValue)
+                {
+                    if (updateExternalProvidersDTO.BelongsToID == updateExternalProvidersDTO.HospitalID)
+                        throw new InvalidOperationException("BelongsToID cannot be the same as HospitalID.");
+                }
+
                 // Hash the password before storing it.
                 if (updateExternalProvidersDTO.Password is not null)
                 {
@@ -495,7 +531,8 @@ namespace IntegrityVault.Service.Implementations
                     Password = e.Password,
                     Role = e.Role,
                     JoinDate = e.JoinDate,
-                    HospitalID = e.HospitalID
+                    HospitalID = e.HospitalID,
+                    BelongsToID = e.BelongsToID 
                 },
                 SuperAdmin s => new UserDTO
                 {

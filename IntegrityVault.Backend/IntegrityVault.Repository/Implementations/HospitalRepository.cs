@@ -153,9 +153,16 @@ namespace IntegrityVault.Repository.Implementations
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error while checking IP authorisation: {ex.Message}.");
-                throw new InvalidOperationException($"Error checking IP authorisation. {ex.Message}");
+                Console.WriteLine($"Error while checking IP authorisation: {ex.Message}."); // Log the database checking error.
+                throw new InvalidOperationException($"Error checking IP authorisation. {ex.Message}"); // Throw a custom exception for database checking errors.
             }
+        }
+
+
+        // Method to check if an id actually exists in the hospital table.
+        public async Task<bool> ExistsAsync(int hospitalId)
+        {
+            return await _context.Hospitals.AnyAsync(h => h.ID == hospitalId);
         }
 
 

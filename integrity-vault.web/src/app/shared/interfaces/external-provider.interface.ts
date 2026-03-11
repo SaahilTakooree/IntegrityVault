@@ -11,4 +11,5 @@ export interface IExternalProvider {
     role : UserRole; // // Role assigned to the external providers.
     joinDate : Date; // Join date of the external provider stored as date.
     hospitalID : number; // Hospital that the external provider is assigned to.
+    belongsToID : number; // The external hospital that can use this account to log.
 }

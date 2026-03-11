@@ -8,7 +8,7 @@ namespace IntegrityVault.Service.Interfaces
     // Define the IUserService interface, which will be implemented by the user service.
     public interface IUserService
     {
-        Task<IEnumerable<UserDTO>> GetAllUsersAsync(); // Returns every user mapped to a role-specific DTO.
+        Task<IEnumerable<UserDTO>> GetAllUsersAsync(int? hospitalId = null); // Returns every user mapped to a role-specific DTO.
         Task<UserDTO?> GetUserByIdAsync(int id); // Method signature for fetching a user by ID asynchronously. Returns a nullable User object.
         Task<bool> CreateDoctorAsync(CreateDoctorDTO createDoctorDTO); // Method signature for creating a doctor asynchronously. Returns a boolean indicating success.
         Task<bool> CreatePatientAsync(CreatePatientDTO createPatientDTO); // Method signature for creating a patient asynchronously. Returns a boolean indicating success.

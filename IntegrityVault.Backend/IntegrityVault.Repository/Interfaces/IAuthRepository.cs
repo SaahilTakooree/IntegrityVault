@@ -8,6 +8,6 @@ namespace IntegrityVault.Repository.Interfaces
     // Define the IAuthRepository interface that represents the contract for auth-related database operation.
     public interface IAuthRepository
     {
-        Task<User?> GetUserByEmailAndPasswordAsync(string email, string password);
+        Task<User?> GetUserByCredentialAsync(string usernameOrEmail, string password);
     }
 }

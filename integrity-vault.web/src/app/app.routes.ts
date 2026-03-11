@@ -1,24 +1,50 @@
 import { Routes } from '@angular/router';
-import { Login } from './features/auth/login/login';
-import { SuperadminDashboardComponent } from './features/dashboards/super-admin/super-admin';
-import { AdminDashboardComponent } from './features/dashboards/admin/admin';
+import { authGuard } from './core/guards/auth.guard';
+import { roleGuard } from './core/guards/role.guard';
 
-export const routes: Routes = [
+
+export const routes : Routes = [
     {
-    path: '',
-    redirectTo: 'admin',
-    pathMatch: 'full' // important for full URL match
+    path : '',
+    redirectTo : 'admin',
+    pathMatch : 'full'
   },
   {
-    path: 'login',
-    component: Login
+    path : 'login',
+    loadComponent : () => import("./features/auth/login/login").then(m => m.Login)
   },
   {
-    path: 'superadmin',
-    component: SuperadminDashboardComponent
+    path : 'superadmin',
+    loadComponent : () => import("./features/dashboards/super-admin/super-admin").then(m => m.SuperadminDashboardComponent),
+    canActivate: [authGuard, roleGuard],
+    data : { roles : ["SuperAdmin"]}
   },
   {
-    path: 'admin',
-    component: AdminDashboardComponent
+    path : 'admin',
+    loadComponent : () => import("./features/dashboards/admin/admin").then(m => m.AdminDashboardComponent),
+    canActivate: [authGuard, roleGuard],
+    data : { roles : ["Admin"]}
+  },
+  // {
+  //   path : 'doctor',
+  //   loadComponent : () => import("./features/dashboards/doctor/doctor").then(m => m.DoctorDashboardComponent),
+  //   canActivate: [authGuard, roleGuard],
+  //   data : { roles : ["Doctor"]}
+  // },
+  // {
+  //   path : 'patient',
+  //   loadComponent : () => import("./features/dashboards/patient/patient").then(m => m.PatientDashboardComponent),
+  //   canActivate: [authGuard, roleGuard],
+  //   data : { roles : ["Patient"]}
+  // },
+  // {
+  //   path : 'external-provider',
+  //   loadComponent : () => import("./features/dashboards/external-provider/external-provider").then(m => m.ExternalProviderDashboardComponent),
+  //   canActivate: [authGuard, roleGuard],
+  //   data : { roles : ["ExternalProvider"]}
+  // },
+  {
+    path: '**',
+    redirectTo: 'login'
   }
 ]

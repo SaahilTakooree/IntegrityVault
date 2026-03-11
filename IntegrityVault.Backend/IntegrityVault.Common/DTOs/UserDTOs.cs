@@ -46,6 +46,7 @@ namespace IntegrityVault.Common.DTOs
     // DTO return when reading an external provider
     public class ExternalProviderDTO : UserDTO
     {
+        public int BelongsToID { get; set; }
     }
 
     // DTO return when reading a super
@@ -94,6 +95,7 @@ namespace IntegrityVault.Common.DTOs
     // DTO for creating an external provider.
     public class CreateExternalProviderDTO : CreateUserDTO
     {
+        public required int BelongsToID { get; set; }
     }
 
     // DTO for creating an super admin.
@@ -142,6 +144,7 @@ namespace IntegrityVault.Common.DTOs
     // DTO for updating an external provider.
     public class UpdateExternalProviderDTO : UpdateUserDTO
     {
+        public int? BelongsToID { get; set; }
     }
 
     // DTO for updating an admin.

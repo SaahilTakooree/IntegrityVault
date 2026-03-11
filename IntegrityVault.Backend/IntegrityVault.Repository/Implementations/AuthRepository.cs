@@ -13,10 +13,14 @@ namespace IntegrityVault.Repository.Implementations
     public class AuthRepository(IntegrityVaultDbContext _context) : IAuthRepository
     {
         // Get the user from the repository then compare it to the credential
-        public async Task<User?> GetUserByEmailAndPasswordAsync(string usernameOrEmail, string password)
+        public async Task<User?> GetUserByCredentialAsync(string usernameOrEmail, string password)
         {
             // Try to see if the credital match one of the user in the database.
-            var user = await _context!.Users.FirstOrDefaultAsync(u => u.Email == usernameOrEmail || u.Username == usernameOrEmail);
+            User? user = await _context.Doctors.FirstOrDefaultAsync(u => u.Email == usernameOrEmail || u.Username == usernameOrEmail);
+            user ??= await _context.Patients.FirstOrDefaultAsync(u => u.Email == usernameOrEmail || u.Username == usernameOrEmail);
+            user ??= await _context.Admins.FirstOrDefaultAsync(u => u.Email == usernameOrEmail || u.Username == usernameOrEmail);
+            user ??= await _context.SuperAdmins.FirstOrDefaultAsync(u => u.Email == usernameOrEmail || u.Username == usernameOrEmail);
+            user ??= await _context.ExternalProviders.FirstOrDefaultAsync(u => u.Email == usernameOrEmail || u.Username == usernameOrEmail);
 
             // Return null if the user does not exist.
             if (user == null) return null;

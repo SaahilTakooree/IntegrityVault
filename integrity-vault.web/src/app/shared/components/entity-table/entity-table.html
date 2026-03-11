@@ -32,7 +32,7 @@
                     </td>
                 } @else {
                     <!-- Loop through each row of data. -->
-                    @for (row of rows; track $index) {
+                    @for (row of sortedRows; track $index) {
                         <tr>
                             <!-- Loop through each column definition to render the cell values. -->
                             @for (column of columns; track column.key) {
@@ -55,10 +55,13 @@
                                     <button class="btn btn-sm btn-outline-secondary" (click)="editRow.emit(row)">
                                         <i class="bi bi-pencil"></i>
                                     </button>
-                                    <!-- Delete button that emits the selected rows. -->
-                                    <button class="btn btn-sm btn-outline-danger" (click)="deleteRow.emit(row)">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
+                                    <!-- Hide the delete button for the current user so that the current user does not delete itself. -->
+                                    @if (currentUserId === null || !isCurrentUser(row)) {
+                                        <!-- Delete button that emits the selected rows. -->
+                                        <button class="btn btn-sm btn-outline-danger" (click)="deleteRow.emit(row)">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    }
                                 </div>
                            </td> 
                         </tr>

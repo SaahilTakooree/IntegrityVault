@@ -21,6 +21,16 @@ namespace IntegrityVault.Repository.Configurations
                 .WithOne() // Specifies that the other entity has one instance of the external provider.
                 .HasForeignKey<ExternalProvider>(e => e.ID) // Set the foreign key which is the ExternalProvider's "ID" column
                 .OnDelete(DeleteBehavior.Cascade); // Define when a user get deleted, the associated ExternalProvider is also deleted.
+
+            // Configure BelongsToID.
+            entity.Property(e => e.BelongsToID)
+                .IsRequired(); // Must always be assigned to an owning hospital.
+
+            // Configure the foreign key.
+            entity.HasOne(e => e.BelongsTo)
+                .WithMany()
+                .HasForeignKey(e => e.BelongsToID)
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading delete from owning hospital.
         }
     }
 }

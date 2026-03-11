@@ -1,5 +1,5 @@
 // Import the enum defining allowed button styles for the confirm modal.
-import { ConfirmButtonStyle } from '../../enums/button-style.enum';
+import { ConfirmButtonStyle } from "../../enums/button-style.enum";
 
 // Represent the button on the confirm modal.
 export interface IConfirmButton {

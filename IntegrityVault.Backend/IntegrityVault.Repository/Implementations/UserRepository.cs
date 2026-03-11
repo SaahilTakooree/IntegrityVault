@@ -14,16 +14,44 @@ namespace IntegrityVault.Repository.Implementations
     public class UserRepository(IntegrityVaultDbContext _context) : IUserRepository
     {
         // Method to fetch all users from the database asynchronously.
-        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        public async Task<IEnumerable<User>> GetAllUsersAsync(int? hospitalID = null)
         {
             try
             {
-                // Fetch all users from the Users table asynchronously and converting to a list.
-                var doctors = await _context.Doctors.ToListAsync<User>();
-                var patients = await _context.Patients.ToListAsync<User>();
-                var admins = await _context.Admins.ToListAsync<User>();
-                var superAdmins = await _context.SuperAdmins.ToListAsync<User>();
-                var externalProviders = await _context.ExternalProviders.ToListAsync<User>();
+                // Define all variable
+                List<User> admins;
+                List<User> doctors;
+                List<User> externalProviders;
+                List<User> patients;
+                List<User> superAdmins;
+
+
+                // Check needs a user from a specific hospital.
+                if (hospitalID.HasValue)
+                {
+                    admins = await _context.Admins
+                        .Where(u => u.HospitalID == hospitalID)
+                        .ToListAsync<User>();
+                    doctors = await _context.Doctors
+                        .Where(u => u.HospitalID == hospitalID)
+                        .ToListAsync<User>();
+                    externalProviders = await _context.ExternalProviders
+                        .Where(u => u.HospitalID == hospitalID)
+                        .ToListAsync<User>();
+                    patients = await _context.Patients
+                        .Where(u => u.HospitalID == hospitalID)
+                        .ToListAsync<User>();
+                }
+                else
+                {
+                    admins = await _context.Admins.ToListAsync<User>();
+                    doctors = await _context.Doctors.ToListAsync<User>();
+                    externalProviders = await _context.ExternalProviders.ToListAsync<User>();
+                    patients = await _context.Patients.ToListAsync<User>();
+                }
+
+                // Fetch all superuser as they don't belong to only one hospital from the Users table asynchronously and converting to a list.
+                superAdmins = await _context.SuperAdmins.ToListAsync<User>();
 
                 return doctors
                     .Concat(patients)
@@ -182,7 +210,8 @@ namespace IntegrityVault.Repository.Implementations
                     Email = createExternalProviderDTO.Email,
                     Password = createExternalProviderDTO.Password,
                     Role = UserRole.ExternalProvider,
-                    HospitalID = null
+                    HospitalID = createExternalProviderDTO.HospitalID,
+                    BelongsToID = createExternalProviderDTO.BelongsToID
                 };
 
                 // Save changes and return true if successful.
@@ -355,6 +384,9 @@ namespace IntegrityVault.Repository.Implementations
                 // Apply the base user fields.
                 ApplyBaseUserUpdates(externalProviders, updateExternalProviderDTO);
 
+                // Apply ExternalProvider-specific field.
+                if (updateExternalProviderDTO.BelongsToID.HasValue)
+                    externalProviders.BelongsToID = updateExternalProviderDTO.BelongsToID.Value;
 
                 await _context.SaveChangesAsync();
                 return true;

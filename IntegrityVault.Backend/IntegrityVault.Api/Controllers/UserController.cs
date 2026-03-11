@@ -14,11 +14,11 @@ namespace IntegrityVault.Api.Controllers
     {
         // Specifies that this method will handle HTTP Get requests.
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers() // Method for get the complete list of all users.
+        public async Task<IActionResult> GetAllUsers([FromQuery] int? hospitalId = null) // Method for get the complete list of all users.
         {
             try
             {
-                var result = await _userService.GetAllUsersAsync(); // Calling the GetAllUserAsync method from the injected service to get a list of all user.
+                var result = await _userService.GetAllUsersAsync(hospitalId); // Calling the GetAllUserAsync method from the injected service to get a list of all user.
                 var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }; // Match the global camelCase policy.
                 var serialised = result.Select(u => JsonSerializer.SerializeToElement(u, u!.GetType(), options)); // Serialise each DTO using its runtime type to preserve derived properties.
                 return Ok(serialised);

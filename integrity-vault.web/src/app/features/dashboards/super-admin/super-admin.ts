@@ -24,11 +24,11 @@ import { parseUserApiError } from "../../../shared/utils/user-form.validator"; /
 
 // Define the component for the superadmin dashboard.
 @Component({
-  selector: 'app-superadmin-dashboard',
+  selector: "app-superadmin-dashboard",
   standalone: true,
   imports: [CommonModule, FormsModule, SidebarComponent, TopbarComponent, ConfirmModalComponent, EntitySectionComponent, EntityModalComponent, HospitalFormComponent, UserFormComponent ],
-  templateUrl: './super-admin.html',
-  styleUrls: ['./super-admin.scss']
+  templateUrl: "./super-admin.html",
+  styleUrls: ["./super-admin.scss"]
 })
 
 
@@ -40,7 +40,7 @@ export class SuperadminDashboardComponent {
   
 
   // Navigation state. 
-  activeLink = 'hospitals'; // To know which 
+  activeLink = "hospitals"; // To know which 
   isCollapsed: boolean = false; // When in small screen mode.. to know if the sidebar is close or not.
   ConfirmButtonStyle = ConfirmButtonStyle; // Enum for confirm button style.
   UserRole = UserRole; // Enum for user role.
@@ -97,7 +97,7 @@ export class SuperadminDashboardComponent {
   showHospitalModal = false; // State to know whether to show the hospital modal or not.
   showAdminModal = false; // State to know whether to show the admin modal or not.
   showDeleteModal = false; // State to know whether to show the delete modal or not.
-  deleteTargetType: 'hospital' | 'admin' = 'hospital'; // Tracks which entity type is pending deletion.
+  deleteTargetType: "hospital" | "admin" = "hospital"; // Tracks which entity type is pending deletion.
   deleteTarget = ""; // Keep track of which row is being deleted.
 
   //The hospital or admin id is used when the delete modal is confirmed.
@@ -136,7 +136,7 @@ export class SuperadminDashboardComponent {
         next: (hospitals: IHospital[]) => {
           this.hospitals = hospitals; // Assign the data to the hospitals array.
         },
-        error: (err) => console.error('Error fetching hospitals:', err),
+        error: (err) => console.error("Error fetching hospitals:", err),
     });
   }
 
@@ -153,7 +153,7 @@ export class SuperadminDashboardComponent {
           // Filter only Admin-role users and cast them to IAdmin.
           this.admins = users.filter(u => u.role === UserRole.Admin) as IAdmin[];
         },
-        error: (err) => console.error('Error fetching admins:', err),
+        error: (err) => console.error("Error fetching admins:", err),
     });
   }
 
@@ -164,6 +164,11 @@ export class SuperadminDashboardComponent {
   openHospitalModal(item? : IHospital) {
     this.editingHospital = item ?? null;
     this.hospitalInitialValue = item ?? null;
+
+    // Reset the hospital form when creating a new hospital
+    if (!item && this.hospitalFormRef) {
+      this.hospitalFormRef.resetForm();
+    }
     this.showHospitalModal = true;
     if (this.isCollapsed)
       this.toggleSidebar()
@@ -181,6 +186,7 @@ export class SuperadminDashboardComponent {
           email: item.email,
           password: "",
           hospitalID: item.hospitalID ?? null,
+          belongsToID: null,
           role: UserRole.Admin,
           firstName: "",
           middleName: "",
@@ -264,7 +270,7 @@ export class SuperadminDashboardComponent {
 
     // If editing an existing hospital, update the hospital details.
     if (this.editingHospital) {
-      // If the walletAddress or ip address hasn't changed, exclude it from the update payload.
+      // If the walletAddress or ip address hasn"t changed, exclude it from the update payload.
       const walletChanged = formValue.walletAddress !== this.editingHospital.walletAddress;
       const { walletAddress, ipAddresses, ...base } = formValue;
       const hospitalData = walletChanged ? formValue : { ...base, ipAddresses } as IHospital;
@@ -370,7 +376,7 @@ export class SuperadminDashboardComponent {
       return;
     }
 
-    if (this.deleteTargetType === 'hospital') {
+    if (this.deleteTargetType === "hospital") {
       // Proceed with deleting the hospital if confirmed.
       this._hospitalService.deleteHospital(this._pendingDeleteId)
           .pipe(takeUntil(this._destroy$))
@@ -380,7 +386,7 @@ export class SuperadminDashboardComponent {
               this.closeModals(); // Close the modal after success.
             },
             error: (err) => {
-              console.error('Error adding hospital:', err)
+              console.error("Error adding hospital:", err)
               alert(err.error)
             }
         });
@@ -393,7 +399,7 @@ export class SuperadminDashboardComponent {
             this.closeModals();
           },
           error: (err) => {
-            console.error('Error deleting admin:', err);
+            console.error("Error deleting admin:", err);
             alert(err.error);
           }
         });

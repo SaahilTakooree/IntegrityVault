@@ -9,7 +9,7 @@ namespace IntegrityVault.Repository.Interfaces
     // Define the IUserRepository interface that represents the contract for user-related database operations.
     public interface IUserRepository
     {
-        Task<IEnumerable<User>> GetAllUsersAsync(); // Method signature for fetching all users asynchronously. Returns a list of User entities.
+        Task<IEnumerable<User>> GetAllUsersAsync(int? hospitalID = null); // Method signature for fetching all users asynchronously. Returns a list of User entities.
         Task<User?> GetUserByIdAsync(int id); // Method signature for fetching a single user by their ID asynchronously. Returns a nullable User object.
         Task<bool> CreateDoctorAsync(CreateDoctorDTO createDoctorDTO); // Method signature for creating a new user asynchronously. Accepts a CreateDoctorDTO and returns a boolean indicating success.
         Task<bool> CreatePatientAsync(CreatePatientDTO createPatientDTO); // Method signature for creating a new user asynchronously. Accepts a CreatePatientDTO and returns a boolean indicating success.

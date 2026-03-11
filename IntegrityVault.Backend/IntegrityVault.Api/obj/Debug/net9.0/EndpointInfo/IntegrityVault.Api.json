@@ -166,6 +166,16 @@
         "tags": [
           "User"
         ],
+        "parameters": [
+          {
+            "name": "hospitalId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -587,6 +597,7 @@
     "schemas": {
       "AuthLoginDTO": {
         "required": [
+          "ipAddress",
           "password",
           "usernameOrEmail"
         ],
@@ -597,6 +608,10 @@
             "nullable": true
           },
           "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "ipAddress": {
             "type": "string",
             "nullable": true
           }
@@ -679,6 +694,7 @@
       },
       "CreateExternalProviderDTO": {
         "required": [
+          "belongsToID",
           "email",
           "password",
           "username"
@@ -701,6 +717,10 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
+          },
+          "belongsToID": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -904,6 +924,11 @@
             "nullable": true
           },
           "hospitalID": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "belongsToID": {
             "type": "integer",
             "format": "int32",
             "nullable": true

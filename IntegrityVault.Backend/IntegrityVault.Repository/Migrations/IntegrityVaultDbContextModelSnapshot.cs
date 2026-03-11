@@ -257,7 +257,7 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.ToTable("Users", null, t =>
                         {
-                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
+                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
 
                             t.HasCheckConstraint("CK_Users_Email_Format", "Email LIKE '%_@__%.__%'");
 
@@ -275,7 +275,7 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.ToTable("Admins", null, t =>
                         {
-                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
+                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
 
                             t.HasCheckConstraint("CK_Users_Email_Format", "Email LIKE '%_@__%.__%'");
 
@@ -309,7 +309,7 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.ToTable("Doctors", null, t =>
                         {
-                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
+                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
 
                             t.HasCheckConstraint("CK_Users_Email_Format", "Email LIKE '%_@__%.__%'");
 
@@ -325,9 +325,14 @@ namespace IntegrityVault.Repository.Migrations
                 {
                     b.HasBaseType("IntegrityVault.Common.Entities.User");
 
+                    b.Property<int>("BelongsToID")
+                        .HasColumnType("int");
+
+                    b.HasIndex("BelongsToID");
+
                     b.ToTable("ExternalProviders", null, t =>
                         {
-                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
+                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
 
                             t.HasCheckConstraint("CK_Users_Email_Format", "Email LIKE '%_@__%.__%'");
 
@@ -364,7 +369,7 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.ToTable("Patients", null, t =>
                         {
-                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
+                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
 
                             t.HasCheckConstraint("CK_Users_Email_Format", "Email LIKE '%_@__%.__%'");
 
@@ -382,7 +387,7 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.ToTable("SuperAdmins", null, t =>
                         {
-                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
+                            t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
 
                             t.HasCheckConstraint("CK_Users_Email_Format", "Email LIKE '%_@__%.__%'");
 
@@ -502,6 +507,12 @@ namespace IntegrityVault.Repository.Migrations
 
             modelBuilder.Entity("IntegrityVault.Common.Entities.ExternalProvider", b =>
                 {
+                    b.HasOne("IntegrityVault.Common.Entities.Hospital", "BelongsTo")
+                        .WithMany()
+                        .HasForeignKey("BelongsToID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("IntegrityVault.Common.Entities.ExternalProvider", null)
                         .WithOne()
                         .HasForeignKey("IntegrityVault.Common.Entities.ExternalProvider", "ID")
@@ -513,6 +524,8 @@ namespace IntegrityVault.Repository.Migrations
                         .HasForeignKey("IntegrityVault.Common.Entities.ExternalProvider", "ID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("BelongsTo");
                 });
 
             modelBuilder.Entity("IntegrityVault.Common.Entities.Patient", b =>

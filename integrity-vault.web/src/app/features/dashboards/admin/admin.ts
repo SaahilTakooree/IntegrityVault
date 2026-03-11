@@ -17,22 +17,24 @@ import { PatientGender } from "../../../shared/enums/patient-gender.enum"; // Im
 import { IColumnDefinition } from "../../../shared/interfaces/column-definition.interface"; // Import patient enum.
 import { IUserForm } from "../../../shared/interfaces/user-form.interface"; // User interface for type-checking.
 import { IHospital } from "../../../shared/interfaces/hospital.interface"; // Hospital interface for type-checking.
+import { IAdmin } from "../../../shared/interfaces/admin.interface"; // Admin interface for type-checking.
 import { IDoctor } from "../../../shared/interfaces/doctor.interface"; // Doctor interface for type-checking.
 import { IPatient } from "../../../shared/interfaces/patient.interface"; // Patient interface for type-checking.
 import { IExternalProvider } from "../../../shared/interfaces/external-provider.interface"; // External provider interface for type-checking.
 import { HospitalService } from "../../../core/services/hospital.service"; // Service to interact with hospital API.
 import { UserService } from "../../../core/services/user.service"; // Service to interact with user API.
+import { AuthService } from "../../../core/services/auth.service"; // Service to interact with auth API.
 import { parseHospitalApiError } from "../../../shared/utils/hospital-form.validator"; // Validation and error handling utils for hospital.
 import { parseUserApiError } from "../../../shared/utils/user-form.validator"; // Validation and error handling utils for user.
 
 
 // Define the component for the superadmin dashboard.
 @Component({
-  selector: 'app-admin-dashboard',
+  selector: "app-admin-dashboard",
   standalone: true,
   imports: [CommonModule, FormsModule, SidebarComponent, TopbarComponent, ConfirmModalComponent, EntitySectionComponent, EntityModalComponent, UserFormComponent, HospitalFormComponent ],
-  templateUrl: './admin.html',
-  styleUrls: ['./admin.scss']
+  templateUrl: "./admin.html",
+  styleUrls: ["./admin.scss"]
 })
 
 
@@ -40,18 +42,18 @@ import { parseUserApiError } from "../../../shared/utils/user-form.validator"; /
 export class AdminDashboardComponent {
     // Reference to the HospitalFormComponent to access its methods and properties.
     @ViewChild(HospitalFormComponent) hospitalFormRef! : HospitalFormComponent;
+    @ViewChild("adminForm") adminFormRef! : UserFormComponent;
     @ViewChild("patientForm") patientFormRef! : UserFormComponent;
     @ViewChild("doctorForm") doctorFormRef! : UserFormComponent;
     @ViewChild("externalProviderForm") externalProviderFormRef! : UserFormComponent;
     
 
     // Set the hopsital id that the admin belongs to.
-    adminHospitalID : number = 1; 
     adminHospital: IHospital | null = null; // Store the hospital detail of the admin.
 
 
     // Navigation state. 
-    activeLink = 'patients'; // To know which 
+    activeLink = "patients"; // To know which 
     isCollapsed: boolean = false; // When in small screen mode.. to know if the sidebar is close or not.
     UserRole = UserRole; // Enum for user role.
     ConfirmButtonStyle = ConfirmButtonStyle; // Enum for confirm button style.
@@ -69,14 +71,36 @@ export class AdminDashboardComponent {
 
     // Data.
     hospital : IHospital | null = null; // Define hospital to store the hopsital information that the admin belongs too.
+    hospitals : IHospital[] | null = null; // Define all the hospitals.
+    admins : IAdmin[] = []; // Define doctors to store all the doctors
     doctors : IDoctor[] = []; // Define doctors to store all the doctors
     patients : IPatient[] = []; // Define patients to store all the patients
     externalProviders : IExternalProvider[] = []; // Define external providers to store all the external providers
 
     // Computed property to check if there are any doctors.
     get noDoctors() {
-        return this.doctors.length === 0;
+      return this.doctors.length === 0;
     }
+
+    // Get the hospital id of the user currently.
+    get adminHospitalID(): number {
+      return this._authService.CurrentUser?.hospitalId ?? 0;
+    }
+
+    // Get the current user id of the person login.
+    get currentUserId(): number | null {
+      console.log(this._authService.CurrentUser?.id)
+      return this._authService.CurrentUser?.id ?? null;
+    }
+
+
+    // Column definitions for admin table.
+    adminColumns : IColumnDefinition<IAdmin>[] = [
+      { key : "id", label : "ID", mono : true },
+      { key : "username", label : "Username", mono : false },
+      { key : "email", label : "Eamil", mono : false },
+      { key : "joinDate", label : "Joined", mono : false }
+    ]
 
 
     // Column definitions for doctor table.
@@ -86,7 +110,7 @@ export class AdminDashboardComponent {
         { key : "email", label : "Eamil", mono : false },
         { key : "joinDate", label : "Joined", mono : false },
         { key : "firstName", label : "First Name", mono : false },
-        { key : "middleName", label : "Middle Name", mono : false, transform: (val: string) => val?.trim() ? val : '—' },
+        { key : "middleName", label : "Middle Name", mono : false, transform: (val: string) => val?.trim() ? val : "—" },
         { key : "lastName", label : "Last Name", mono : false },
         { key : "specialty", label : "Speicialty", mono : false, transform: (val: DoctorSpecialty) => DoctorSpecialty[val] ?? String(val) }
     ]
@@ -99,7 +123,7 @@ export class AdminDashboardComponent {
         { key : "email", label : "Eamil", mono : false },
         { key : "joinDate", label : "Joined", mono : false },
         { key : "firstName", label : "Fist Name", mono : false },
-        { key : "middleName", label : "Middle Name", mono : false, transform: (val: string) => val?.trim() ? val : '—' },
+        { key : "middleName", label : "Middle Name", mono : false, transform: (val: string) => val?.trim() ? val : "—" },
         { key : "lastName", label : "Last Name", mono : false },
         { key : "dob", label : "Date of Birth", mono : false },
         { key : "gender", label : "Gender", mono : false, transform: (val: PatientGender) => PatientGender[val] ?? String(val) }
@@ -111,7 +135,8 @@ export class AdminDashboardComponent {
         { key : "id", label : "ID", mono : true },
         { key : "username", label : "Username", mono : false },
         { key : "email", label : "Eamil", mono : false },
-        { key : "joinDate", label : "Joined", mono : false }
+        { key : "joinDate", label : "Joined", mono : false },
+        { key: "belongsToID",  label: "Belongs To",     mono: true },
     ]
 
 
@@ -122,6 +147,11 @@ export class AdminDashboardComponent {
         { key : "walletAddress", label : "Wallet Address", mono : true, truncate : true },
         { key : "ipAddresses", label : "IP Addresses", mono: true }
     ]
+
+
+    // Admin form state.
+    adminInitialValue : IUserForm | null | undefined = undefined  // Value to pass to the user form.
+    editingAdmin : IAdmin | null = null; // Tracks whether editing of an existing admin is taking place.
 
 
     // Doctor form state.
@@ -146,11 +176,12 @@ export class AdminDashboardComponent {
 
     // Modal state.
     showHospitalModal = false; // State to know whether to show the hospital modal or not.
+    showAdminModal = false; // State to know whether to show the admin modal or not.
     showPatientModal = false; // State to know whether to show the patient modal or not.
     showDoctorModal = false; // State to know whether to show the doctor modal or not.
     showExternalProviderModal = false; // State to know whether to show the ExternalProvider modal or not.
     showDeleteModal = false; // State to know whether to show the delete modal or not.
-    deleteTargetType: "externalProvider" | "patient" | "doctor" = "patient"; // Tracks which entity type is pending deletion.
+    deleteTargetType: "externalProvider" | "patient" | "doctor" | "admin" = "patient"; // Tracks which entity type is pending deletion.
     deleteTarget = ""; // Keep track of which row is being deleted.
 
     //The id is used when the delete modal is confirmed.
@@ -161,6 +192,7 @@ export class AdminDashboardComponent {
     private _destroy$ = new Subject<void>(); // Teardown signal for all subscriptions.
     private _hospitalService = inject(HospitalService) // Inject the user service to interact with the backend.
     private _userService = inject(UserService) // Inject the user service to interact with the backend.
+    private _authService = inject(AuthService) // Inject the auth to get the detail of the current login user.
     
 
     // LifeCycle.
@@ -168,6 +200,7 @@ export class AdminDashboardComponent {
     // Initialise data and subscribe to hospital data.
     ngOnInit() { 
         this.fetchHospital();
+        this.fetchHospitalByID();
         this.fetchUser();
     }
 
@@ -184,13 +217,26 @@ export class AdminDashboardComponent {
     // Fetch the list of hospitals from the service.
     fetchHospital() {
         // Subscribe to the hospital data and assign the result to the hospital variable.
+        this._hospitalService.getHospital()
+        .pipe(takeUntil(this._destroy$)) // Unsubscribe automatically when the component is destroyed.
+        .subscribe({
+            next: (hospitals: IHospital[]) => {
+            this.hospitals = hospitals; // Assign the data to the hospital variable.
+            },
+            error: (err) => console.error("Error fetching hospitals:", err),
+        });
+    }
+
+    // Fetch the list of hospitals from the service.
+    fetchHospitalByID() {
+        // Subscribe to the hospital data and assign the result to the hospital variable.
         this._hospitalService.getHospitalById(this.adminHospitalID)
         .pipe(takeUntil(this._destroy$)) // Unsubscribe automatically when the component is destroyed.
         .subscribe({
             next: (hospital: IHospital) => {
             this.hospital = hospital; // Assign the data to the hospital variable.
             },
-            error: (err) => console.error('Error fetching hospitals:', err),
+            error: (err) => console.error("Error fetching hospitals:", err),
         });
     }
 
@@ -200,15 +246,16 @@ export class AdminDashboardComponent {
     // Fetch the list of user from the service.
     fetchUser() {
         // Subscribe to the admin data and assign the result to the user array.
-        this._userService.getAllUsers()
+        this._userService.getAllUsers(this.adminHospitalID)
         .pipe(takeUntil(this._destroy$)) // Unsubscribe automatically when the component is destroyed.
         .subscribe({
             next: (users) => {
+            this.admins = users.filter(u => u.role === UserRole.Admin) as IAdmin[]; // Filter only Admin role users and cast them to IAdmin.
             this.doctors = users.filter(u => u.role === UserRole.Doctor) as IDoctor[]; // Filter only Doctor role users and cast them to IDoctor.
             this.patients = users.filter(u => u.role === UserRole.Patient) as IPatient[]; // Filter only Patient role users and cast them to IPatient.
             this.externalProviders = users.filter(u => u.role === UserRole.ExternalProvider) as IExternalProvider[]; // Filter only ExternalProvider role users and cast them to IExternalProvider.
             },
-            error: (err) => console.error('Error fetching user:', err),
+            error: (err) => console.error("Error fetching user:", err),
         });
     }
 
@@ -225,6 +272,35 @@ export class AdminDashboardComponent {
     }
 
 
+    // Method to open the admin modal.
+    openAdminModal(item? : IAdmin) {
+        this.editingAdmin = item ?? null;
+        this.adminInitialValue = undefined;
+        setTimeout(() => {
+        this.adminInitialValue = item
+            ? {
+            username: item.username,
+            email: item.email,
+            password: "",
+            hospitalID: item.hospitalID ?? null,
+            belongsToID: null,
+            role: UserRole.Admin,
+            firstName: "",
+            middleName: "",
+            lastName: "",
+            specialty: null,
+            dob: "",
+            gender: null
+            }
+            : null;
+
+        this.showAdminModal = true;
+        if (this.isCollapsed)
+            this.toggleSidebar();
+        });
+    }
+
+
     // Method to open the doctor modal.
     openDoctorModal(item? : IDoctor) {
         this.editingDoctor = item ?? null;
@@ -236,6 +312,7 @@ export class AdminDashboardComponent {
             email: item.email,
             password: "",
             hospitalID: item.hospitalID ?? null,
+            belongsToID: null,
             role: UserRole.Doctor,
             firstName: item.firstName,
             middleName: item.middleName ?? "",
@@ -264,6 +341,7 @@ export class AdminDashboardComponent {
             email: item.email,
             password: "",
             hospitalID: item.hospitalID ?? null,
+            belongsToID: null,
             role: UserRole.Patient,
             firstName: item.firstName,
             middleName: item.middleName ?? "",
@@ -292,6 +370,7 @@ export class AdminDashboardComponent {
             email: item.email,
             password: "",
             hospitalID: item.hospitalID ?? null,
+            belongsToID: item.belongsToID ?? null,
             role: UserRole.ExternalProvider,
             firstName: "",
             middleName: "",
@@ -310,7 +389,7 @@ export class AdminDashboardComponent {
 
 
     // Method to open the delete modal.
-    openDeleteModal(id : number, name : string, type : "externalProvider" | "patient" | "doctor") {
+    openDeleteModal(id : number, name : string, type : "externalProvider" | "patient" | "doctor" | "admin") {
         this._pendingDeleteId = id
         this.deleteTarget = name;
         this.deleteTargetType = type;
@@ -323,6 +402,7 @@ export class AdminDashboardComponent {
     // Method to close the all modal.
     closeModals() {
         this.showHospitalModal=false;
+        this.showAdminModal=false;
         this.showDoctorModal=false;
         this.showPatientModal=false;
         this.showExternalProviderModal=false;
@@ -332,47 +412,60 @@ export class AdminDashboardComponent {
 
     // Entity section row actions.
 
+    // Method to edit an admin row.
+    onEditAdmin(row : IAdmin) {
+      if (this.isCollapsed)
+        this.toggleSidebar()
+      this.openAdminModal(row);
+    }
+
+    // Method to delete an admin row.
+    onDeleteAdmin( row : IAdmin) {
+      if (this.isCollapsed)
+        this.toggleSidebar()
+      this.openDeleteModal(row.id, row.username, "admin");
+    }
+
     // Method to edit an doctor row.
     onEditDoctor(row : IDoctor) {
-        if (this.isCollapsed)
+      if (this.isCollapsed)
         this.toggleSidebar()
-        this.openDoctorModal(row);
+      this.openDoctorModal(row);
     }
 
     // Method to delete an doctor row.
     onDeleteDoctor( row : IDoctor) {
-        if (this.isCollapsed)
+      if (this.isCollapsed)
         this.toggleSidebar()
-        this.openDeleteModal(row.id, row.username, "doctor");
+      this.openDeleteModal(row.id, row.username, "doctor");
     }
 
     // Method to edit an patient row.
     onEditPatient(row : IPatient) {
-        if (this.isCollapsed)
+      if (this.isCollapsed)
         this.toggleSidebar()
-        this.openPatientModal(row);
+      this.openPatientModal(row);
     }
 
     // Method to delete an patient row.
     onDeletePatient( row : IPatient) {
-        if (this.isCollapsed)
+      if (this.isCollapsed)
         this.toggleSidebar()
-        this.openDeleteModal(row.id, row.username, "patient");
+      this.openDeleteModal(row.id, row.username, "patient");
     }
-
 
     // Method to edit an external provider row.
     onEditExternalProvider(row : IExternalProvider) {
-        if (this.isCollapsed)
+      if (this.isCollapsed)
         this.toggleSidebar()
-        this.openExternalProviderModal(row);
+      this.openExternalProviderModal(row);
     }
 
     // Method to delete an external provider row.
     onDeleteExternalProvider( row : IExternalProvider) {
-        if (this.isCollapsed)
+      if (this.isCollapsed)
         this.toggleSidebar()
-        this.openDeleteModal(row.id, row.username, "externalProvider");
+      this.openDeleteModal(row.id, row.username, "externalProvider");
     }
   
   
@@ -394,7 +487,7 @@ export class AdminDashboardComponent {
   
       // If editing an existing hospital, update the hospital details.
       if (this.editingHospital) {
-        // If the walletAddress or ip address hasn't changed, exclude it from the update payload.
+        // If the walletAddress or ip address hasn"t changed, exclude it from the update payload.
         const walletChanged = formValue.walletAddress !== this.editingHospital.walletAddress;
         const { walletAddress, ipAddresses, ...base } = formValue;
         const hospitalData = walletChanged ? formValue : { ...base, ipAddresses } as IHospital;
@@ -403,7 +496,7 @@ export class AdminDashboardComponent {
           .pipe(takeUntil(this._destroy$))
           .subscribe({
             next: () => {
-              this.fetchHospital(); // Refresh the hospital list.
+              this.fetchHospitalByID(); // Refresh the hospital list.
               this.closeModals(); // Close the modal after success.
             },
             error: (err: unknown) => {
@@ -411,6 +504,74 @@ export class AdminDashboardComponent {
             }
         });
       }
+    }
+
+
+    // Admin form confirmation.
+
+    // Admin form confirmation – handles both create and update.
+    onAdminConfirmed() : void {
+        // Stop if form is invalid.
+        if (!this.adminFormRef.validate())
+          return;
+    
+        const formValue = this.adminFormRef.getValue();
+    
+        // Build the admin payload from the form value.
+        const payload : IAdmin = {
+            id: this.editingAdmin?.id ?? 0,
+            username: formValue.username.trim(),
+            email: formValue.email.trim(),
+            password: formValue.password,
+            role: UserRole.Admin,
+            joinDate: this.editingAdmin?.joinDate ?? new Date(),
+            hospitalID: formValue.hospitalID ?? this.adminHospitalID
+        };
+    
+        if (this.editingAdmin) {
+          const updatePayload: Partial<IAdmin> & { id: number } = {
+            id: payload.id,
+            hospitalID: payload.hospitalID,
+          };
+    
+          // Only include username if it changed.
+          if (payload.username !== this.editingAdmin.username) {
+            updatePayload.username = payload.username;
+          }
+    
+          // Only include email if it changed.
+          if (payload.email !== this.editingAdmin.email) {
+            updatePayload.email = payload.email;
+          }
+    
+          // Only include password if user chose to change it
+          if (!this.adminFormRef.isPasswordSkipped()) {
+            updatePayload.password = payload.password;
+          }
+    
+          this._userService.updateAdmin(payload.id, updatePayload as IAdmin)
+            .pipe(takeUntil(this._destroy$))
+            .subscribe({
+              next: () => {
+                this.fetchUser();
+                this.closeModals();
+              },
+              error: (err: unknown) => {
+                this.adminFormRef.setApiError(parseUserApiError(err));
+              }
+            });
+        } else {
+          // Create new admin.
+          this._userService.createAdmin(payload)
+            .pipe(takeUntil(this._destroy$))
+            .subscribe({
+              next: () => {
+                this.fetchUser();
+                this.closeModals();
+            },
+              error: (err: unknown) => { this.adminFormRef.setApiError(parseUserApiError(err)); }
+            });
+        }
     }
 
 
@@ -591,13 +752,15 @@ export class AdminDashboardComponent {
             password: formValue.password,
             role: UserRole.ExternalProvider,
             joinDate: this.editingExternalProvider?.joinDate ?? new Date(),
-            hospitalID: formValue.hospitalID ?? this.adminHospitalID
+            hospitalID: formValue.hospitalID ?? this.adminHospitalID,
+            belongsToID: formValue.belongsToID!
         };
     
         if (this.editingExternalProvider) {
           const updatePayload: Partial<IExternalProvider> & { id: number } = {
             id: payload.id,
             hospitalID: payload.hospitalID,
+            belongsToID: payload.belongsToID
           };
     
           // Only include username if it changed.
@@ -658,7 +821,7 @@ export class AdminDashboardComponent {
             this.closeModals();
         },
         error: (err) => {
-            console.error('Error deleting user:', err);
+            console.error("Error deleting user:", err);
             alert(err.error);
         }
       });

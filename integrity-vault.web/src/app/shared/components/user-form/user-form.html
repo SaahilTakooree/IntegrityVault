@@ -62,6 +62,27 @@
     </div>
   }
 
+
+  <!-- External Provider fields -->
+  @if (role === userRole.ExternalProvider) {
+    <ng-container>
+      <div class="col-12">
+        <label class="form-label">
+          Belongs To (Owning Hospital)
+          <span class="text-danger">*</span>
+        </label>
+        <select class="form-select" [(ngModel)]="form.belongsToID" (ngModelChange)="onFieldChange()"
+            [class.is-invalid]="errors.belongsToID">
+            <option [ngValue]="null" disabled selected>Select owning hospital...</option>
+            @for (hospital of belongsToHospitals; track hospital.id) {
+                <option [ngValue]="hospital.id">{{ hospital.name }}</option>
+            }
+        </select>
+        <div class="invalid-feedback">{{ errors.belongsToID }}</div>
+      </div>
+    </ng-container>
+  }
+
   <!-- Doctor fields. -->
   @if (role === userRole.Doctor) {
     <ng-container>

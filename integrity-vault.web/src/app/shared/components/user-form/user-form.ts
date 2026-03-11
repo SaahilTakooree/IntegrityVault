@@ -54,7 +54,7 @@ export class UserFormComponent implements OnChanges{
   changePassword: boolean = false;
 
   // To know what is today date.
-  today: string = new Date().toISOString().split('T')[0];
+  today: string = new Date().toISOString().split("T")[0];
 
 
   // Angular function to detech changes in input properties.
@@ -77,6 +77,15 @@ export class UserFormComponent implements OnChanges{
     if (changes["defaultHospitalID"] && !this.initialValue) {
       this.form.hospitalID = this.defaultHospitalID;
     }
+  }
+
+  
+  // Filter out the hospital that is currently login.
+  get belongsToHospitals(): IHospital[] {
+    if (!this.defaultHospitalID !== null)
+      return (this.hospitals ?? []).filter(h => h.id !== this.defaultHospitalID);
+
+    return []
   }
 
 
@@ -139,6 +148,12 @@ export class UserFormComponent implements OnChanges{
     this.errors = {};
   }
 
+  // Method to clear the form field and errors.
+  resetForm() {
+    this.form = this._blank();
+    this.errors = {};
+  }
+  
 
   // Method to clear the user form field.
   private _blank() : IUserForm {
@@ -147,6 +162,7 @@ export class UserFormComponent implements OnChanges{
       email: "",
       password: "",
       hospitalID: this.defaultHospitalID,
+      belongsToID: null,
       role: UserRole.Admin,
       firstName: "",
       middleName: "",
@@ -181,6 +197,7 @@ export class UserFormComponent implements OnChanges{
       !this.errors.email &&
       !this.errors.password &&
       !this.errors.hospitalId &&
+      !this.errors.belongsToID  &&
       !this.errors.firstName &&
       !this.errors.middleName &&
       !this.errors.lastName &&

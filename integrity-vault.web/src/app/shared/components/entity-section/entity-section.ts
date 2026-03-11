@@ -27,6 +27,8 @@ export class EntitySectionComponent<T extends object> {
     @Input() emptyMessage : string = "No Records Yet." // Message displayd when there are now rows to show.
     @Input() warningMessage : string = "" // Option warning message displayed above the table.
     @Input() warningActionLabel : string = "" // Label for optional action button associated with the warning message.
+    @Input() currentUserId: number | null = null; // User id of the one who is currently viewing the table.
+
 
     // Outputs: events the component emits to parent.
     @Output() addClicked = new EventEmitter<void>() // Event triggered when the user clicks the "Add" button.

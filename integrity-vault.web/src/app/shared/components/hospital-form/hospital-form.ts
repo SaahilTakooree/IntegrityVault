@@ -117,6 +117,12 @@ export class HospitalFormComponent implements OnChanges {
         this.errors = {};
     }
 
+    // Method to clear the form field and errors.
+    resetForm() {
+        this.form = this._blank();
+        this.errors = {};
+    }
+
 
     // Method to clear the hospital form field.
     private _blank(): IHospital {

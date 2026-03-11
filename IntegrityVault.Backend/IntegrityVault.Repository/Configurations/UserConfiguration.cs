@@ -71,7 +71,7 @@ namespace IntegrityVault.Repository.Configurations
             entity.ToTable(t =>
             {
                 t.HasCheckConstraint("CK_User_HospitalID_Required",
-                    "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
+                    "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
             });
         }
     }

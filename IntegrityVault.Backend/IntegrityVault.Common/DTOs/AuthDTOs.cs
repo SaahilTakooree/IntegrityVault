@@ -6,6 +6,7 @@ namespace IntegrityVault.Common.DTOs
     {
         public required string UsernameOrEmail { get; set; }
         public required string Password { get; set; }
+        public required string IpAddress { get; set; }
 
     }
 }

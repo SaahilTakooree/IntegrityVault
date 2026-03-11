@@ -6,6 +6,7 @@
             { label: 'Patients', icon: 'bi bi-person', link: 'patients' },
             { label: 'Doctors', icon: 'bi bi-person-badge', link: 'doctors' },
             { label: 'External Providers', icon: 'bi bi-hdd-network', link: 'externalProviders' },
+            { label: 'Admin', icon: 'bi bi-person-gear', link: 'admins' },
             { label: 'IP Management', icon: 'bi bi-building-gear', link: 'ip-management' },
         ]"
         [isCollapsed]="isCollapsed"
@@ -80,6 +81,25 @@
                 </ng-container>
             }
 
+            @if (activeLink === "admins") {
+                <ng-container>
+                    <app-entity-section
+                        title="Admins"
+                        addLabel="Add Admin"
+                        emptyIcon="bi bi-person-gear"
+                        emptyMessage="No Admins Yet."
+                        [columns]="adminColumns"
+                        [rows]="admins"
+                        [currentUserId]="currentUserId"
+                        (addClicked)="openAdminModal()"
+                        (warningAction)="onNavigate('hospitals')"
+                        (editRow)="onEditAdmin($event)"
+                        (deleteRow)="onDeleteAdmin($event)"
+                    >
+                    </app-entity-section>
+                </ng-container>
+            }
+
             <!-- IP Management. -->
             @if (activeLink === "ip-management") {
                 <div class="card shadow-sm">
@@ -145,6 +165,23 @@
 </div>
 
 
+<!-- Admin modal. -->
+<app-entity-modal
+    [show]="showAdminModal"
+    [title]="editingAdmin ? 'Edit Admin' : 'Add Admin'"
+    [confirmLabel]="editingAdmin ? 'Save Changes' : 'Create Admin'"
+    (closed)="closeModals()"
+    (confirmed)="onAdminConfirmed()">
+    <app-user-form
+        #adminForm 
+        [role]="UserRole.Admin"
+        [showHospitalSelect]="false"
+        [defaultHospitalID]="adminHospitalID"
+        [initialValue]="adminInitialValue">
+    </app-user-form>
+</app-entity-modal>
+
+
 <!-- Patient modal. -->
 <app-entity-modal
     [show]="showPatientModal"
@@ -190,6 +227,8 @@
         #externalProviderForm
         [role]="UserRole.ExternalProvider"
         [showHospitalSelect]="false"
+        [hospitals]="hospitals"
+        [defaultHospitalID]="adminHospitalID"
         [initialValue]="externalProviderInitialValue">
     </app-user-form>
 </app-entity-modal>

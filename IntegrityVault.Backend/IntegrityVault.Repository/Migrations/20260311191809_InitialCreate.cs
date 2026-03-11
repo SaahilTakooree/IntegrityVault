@@ -62,7 +62,7 @@ namespace IntegrityVault.Repository.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.ID);
-                    table.CheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 3) AND HospitalID IS NOT NULL) OR (Role IN (2, 4) AND HospitalID IS NULL)");
+                    table.CheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
                     table.CheckConstraint("Ck_User_Role", "[Role] IN (0, 1, 2, 3, 4)");
                     table.CheckConstraint("CK_Users_Email_Format", "Email LIKE '%_@__%.__%'");
                     table.CheckConstraint("CK_Users_Password_Length", "LEN(Password) >= 7");
@@ -117,11 +117,18 @@ namespace IntegrityVault.Repository.Migrations
                 name: "ExternalProviders",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(type: "int", nullable: false),
+                    BelongsToID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ExternalProviders", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_ExternalProviders_Hospitals_BelongsToID",
+                        column: x => x.BelongsToID,
+                        principalTable: "Hospitals",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ExternalProviders_Users_ID",
                         column: x => x.ID,
@@ -264,6 +271,11 @@ namespace IntegrityVault.Repository.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExternalProviders_BelongsToID",
+                table: "ExternalProviders",
+                column: "BelongsToID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_HospitalIpAddresses_HospitalID_IpAddress",
