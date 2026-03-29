@@ -1,5 +1,5 @@
 // Import dependencies.
-import { HospitalFormValidationErrors } from "../types/hospital-form-validation-errors.type"; // Import all the possible error that hospital form might contain.
+import { HospitalFormValidationErrors } from "../../types/hospital-form-validation-errors.type"; // Import all the possible error that hospital form might contain.
 
 
 // Regex for validating Ethereum wallet address format.
@@ -56,7 +56,7 @@ export function validateIpAddresses(ipAddresses : string[]): string | undefined 
 
 
 // Function to validates the complete hospital form.
-export function validateHospitalForm( name : string, walletAddress : string, ipAddresses : string[] ): HospitalFormValidationErrors {
+export function validateHospitalForm( name : string, walletAddress : string, ipAddresses : string[], privateKey? : string, isEdit = false): HospitalFormValidationErrors {
   const errors: HospitalFormValidationErrors = {};
 
   const nameErr = validateHospitalName(name);
@@ -66,6 +66,13 @@ export function validateHospitalForm( name : string, walletAddress : string, ipA
   const walletErr = validateWalletAddress(walletAddress);
   if (walletErr)
     errors.walletAddress = walletErr;
+
+  // Only require private key on create. On edit, validate only if something was typed.
+  if (!isEdit) {
+    if (!privateKey || privateKey.trim().length === 0)
+      errors.privateKey = "Private key is required.";
+  }
+
 
   const ipErr = validateIpAddresses(ipAddresses);
   if (ipErr)

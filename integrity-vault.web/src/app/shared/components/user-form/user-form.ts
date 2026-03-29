@@ -9,7 +9,7 @@ import { IHospital } from "../../interfaces/hospital.interface"; // Import the H
 import { IUserForm } from "../../interfaces/user-form.interface"; // Import the user interface.
 import { UserFormOutput } from "../../interfaces/user-form-output.interface"; // Import the form output interface.
 import { UserFormValidationErrors } from "../../types/user-form-validation-errors.type"; // Import all possible error types.
-import { validateUserForm } from "../../utils/user-form.validator"; // Import the validation function.
+import { validateUserForm } from "../../utils/user/user-form.validator"; // Import the validation function.
 
 
 // Define the component decorator.

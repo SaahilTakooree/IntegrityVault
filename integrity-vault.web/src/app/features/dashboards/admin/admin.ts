@@ -21,11 +21,11 @@ import { IAdmin } from "../../../shared/interfaces/admin.interface"; // Admin in
 import { IDoctor } from "../../../shared/interfaces/doctor.interface"; // Doctor interface for type-checking.
 import { IPatient } from "../../../shared/interfaces/patient.interface"; // Patient interface for type-checking.
 import { IExternalProvider } from "../../../shared/interfaces/external-provider.interface"; // External provider interface for type-checking.
-import { HospitalService } from "../../../core/services/hospital.service"; // Service to interact with hospital API.
-import { UserService } from "../../../core/services/user.service"; // Service to interact with user API.
-import { AuthService } from "../../../core/services/auth.service"; // Service to interact with auth API.
-import { parseHospitalApiError } from "../../../shared/utils/hospital-form.validator"; // Validation and error handling utils for hospital.
-import { parseUserApiError } from "../../../shared/utils/user-form.validator"; // Validation and error handling utils for user.
+import { HospitalService } from "../../../core/services/hospital/hospital.service"; // Service to interact with hospital API.
+import { UserService } from "../../../core/services/user/user.service"; // Service to interact with user API.
+import { AuthService } from "../../../core/services/auth/auth.service"; // Service to interact with auth API.
+import { parseHospitalApiError } from "../../../shared/utils/hospital/hospital-form.validator"; // Validation and error handling utils for hospital.
+import { parseUserApiError } from "../../../shared/utils/user/user-form.validator"; // Validation and error handling utils for user.
 
 
 // Define the component for the superadmin dashboard.

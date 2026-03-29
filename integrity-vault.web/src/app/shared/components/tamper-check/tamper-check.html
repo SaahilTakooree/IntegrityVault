@@ -1,0 +1,34 @@
+<!-- Modal wrapper component used to display integrity verification details. -->
+<app-entity-modal
+  [show]="show"
+  title="Integrity Check"
+  confirmLabel="Close"
+  [hideCancel]="true"
+  (confirmed)="onClose()">
+
+    <!-- Display record name. -->
+    <p class="text-muted small mb-1">Record</p>
+    <p class="fw-semibold font-mono small mb-3" style="word-break:break-all">
+        {{ recordName }}
+    </p>
+    
+    <!-- Display CID. -->
+    <p class="text-muted small mb-1">IPFS CID</p>
+    <p class="font-mono small mb-3" style="word-break:break-all">
+        {{ cid }}
+    </p>
+    
+    <!-- Show spinner while integrity check is in progress. -->
+    @if (loading) {
+        <div class="d-flex align-items-center gap-2 text-muted small">
+            <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+            Checking integrity on-chain — this may take a few seconds…
+        </div>
+    } @else if (result !== null || errorMessage !== null) {
+        <!-- Display the verification outcome. -->
+        <app-verify-result
+          [result]="result"
+          [errorMessage]="errorMessage">
+        </app-verify-result>
+    }
+</app-entity-modal>

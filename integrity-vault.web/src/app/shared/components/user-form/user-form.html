@@ -2,14 +2,14 @@
   <!-- Username field -->
   <div class="col-12">
     <label class="form-label">Username <span class="text-danger">*</span></label>
-    <input type="text" class="form-control" [(ngModel)]="form.username" (ngModelChange)="onFieldChange()"
+    <input type="text" class="form-control" name="username" [(ngModel)]="form.username" (ngModelChange)="onFieldChange()"
         placeholder="e.g. jdoe" [class.is-invalid]="errors.username">
     <div class="invalid-feedback">{{ errors.username }}</div>
   </div>
   <!-- Email field. -->
   <div class="col-md-6">
     <label class="form-label">Email <span class="text-danger">*</span></label>
-    <input type="email" class="form-control" [(ngModel)]="form.email" (ngModelChange)="onFieldChange()"
+    <input type="email" class="form-control" name="email" [(ngModel)]="form.email" (ngModelChange)="onFieldChange()"
         placeholder="user@hospital.com" [class.is-invalid]="errors.email">
     <div class="invalid-feedback">{{ errors.email }}</div>
   </div>
@@ -35,7 +35,7 @@
     @if (!isEditMode || changePassword) {
       <div class="input-group" [class.is-invalid]="errors.password">
         <input [type]="showPassword ? 'text' : 'password'" class="form-control"
-          [(ngModel)]="form.password" (ngModelChange)="onFieldChange()"
+          name="password" [(ngModel)]="form.password" (ngModelChange)="onFieldChange()"
           placeholder="Min. 7 characters" [class.is-invalid]="errors.password">
         <button class="btn btn-outline-secondary" type="button" (click)="showPassword = !showPassword">
             <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
@@ -51,7 +51,7 @@
   @if (showHospitalSelect) {
     <div class="col-12">
       <label class="form-label">Assign to Hospital <span class="text-danger">*</span></label>
-      <select class="form-select" [(ngModel)]="form.hospitalID" (ngModelChange)="onFieldChange()"
+      <select class="form-select" name="hospitalID" [(ngModel)]="form.hospitalID" (ngModelChange)="onFieldChange()"
           [class.is-invalid]="errors.hospitalId">
           <option [ngValue]="null" disabled selected>Select a hospital...</option>
           @for (hospital of hospitals; track hospital.id) {
@@ -92,7 +92,7 @@
           First Name
           <span class="text-danger">*</span>
         </label>
-        <input type="text" class="form-control" [(ngModel)]="form.firstName" (ngModelChange)="onFieldChange()"
+        <input type="text" class="form-control" name="drFirstName" [(ngModel)]="form.firstName" (ngModelChange)="onFieldChange()"
           placeholder="First Name" [class.is-invalid]="errors.firstName">
           <div class="invalid-feedback">{{ errors.firstName }}</div>
       </div>
@@ -101,7 +101,7 @@
         <label class="form-label">
           Middle Name
         </label>
-        <input type="text" class="form-control" [(ngModel)]="form.middleName" (ngModelChange)="onFieldChange()"
+        <input type="text" class="form-control" name="drMiddleName"[(ngModel)]="form.middleName" (ngModelChange)="onFieldChange()"
           placeholder="Optional" [class.is-invalid]="errors.middleName">
         <div class="invalid-feedback">{{ errors.middleName }}</div>
       </div>
@@ -111,7 +111,7 @@
           Last Name
           <span class="text-danger">*</span>
         </label>
-        <input type="text" class="form-control" [(ngModel)]="form.lastName" (ngModelChange)="onFieldChange()"
+        <input type="text" class="form-control" name="drLastName" [(ngModel)]="form.lastName" (ngModelChange)="onFieldChange()"
           placeholder="Last Name" [class.is-invalid]="errors.lastName">
         <div class="invalid-feedback">{{ errors.lastName }}</div>
       </div>
@@ -121,7 +121,7 @@
           Specialty
           <span class="text-danger">*</span>
         </label>
-        <select class="form-select" [(ngModel)]="form.specialty" (ngModelChange)="onFieldChange()"
+        <select class="form-select" name="specialty" [(ngModel)]="form.specialty" (ngModelChange)="onFieldChange()"
           [class.is-invalid]="errors.specialty">
           <option [ngValue]="null" disabled selected>Select a specialty...</option>
           @for (specialty of getEnumKeys(doctorSpecialty); track specialty) {
@@ -142,7 +142,7 @@
           First Name
           <span class="text-danger">*</span>
         </label>
-        <input type="text" class="form-control" [(ngModel)]="form.firstName" (ngModelChange)="onFieldChange()"
+        <input type="text" class="form-control" name="ptFirstName" [(ngModel)]="form.firstName" (ngModelChange)="onFieldChange()"
           placeholder="First Name" [class.is-invalid]="errors.firstName">
         <div class="invalid-feedback">{{ errors.firstName }}</div>
       </div>
@@ -151,7 +151,7 @@
         <label class="form-label">
           Middle Name
         </label>
-        <input type="text" class="form-control" [(ngModel)]="form.middleName" (ngModelChange)="onFieldChange()"
+        <input type="text" class="form-control" name="ptMiddleName" [(ngModel)]="form.middleName" (ngModelChange)="onFieldChange()"
           placeholder="Optional" [class.is-invalid]="errors.middleName">
         <div class="invalid-feedback">{{ errors.middleName }}</div>
       </div>
@@ -161,7 +161,7 @@
           Last Name
           <span class="text-danger">*</span>
         </label>
-        <input type="text" class="form-control" [(ngModel)]="form.lastName" (ngModelChange)="onFieldChange()"
+        <input type="text" class="form-control" name="ptLastName" [(ngModel)]="form.lastName" (ngModelChange)="onFieldChange()"
           placeholder="Last Name" [class.is-invalid]="errors.lastName">
         <div class="invalid-feedback">{{ errors.lastName }}</div>
       </div>
@@ -171,7 +171,7 @@
           Date of Birth
           <span class="text-danger">*</span>
         </label>
-        <input type="date" class="form-control" [(ngModel)]="form.dob" (ngModelChange)="onFieldChange()"
+        <input type="date" class="form-control" name="dob" [(ngModel)]="form.dob" (ngModelChange)="onFieldChange()"
                 [class.is-invalid]="errors.dob" [max]="today"
             >
             <div class="invalid-feedback">{{ errors.dob }}</div>
@@ -183,7 +183,7 @@
           Gender
           <span class="text-danger">*</span>
         </label>
-        <select class="form-select" [(ngModel)]="form.gender" (ngModelChange)="onFieldChange()"
+        <select class="form-select" name="gender" [(ngModel)]="form.gender" (ngModelChange)="onFieldChange()"
           [class.is-invalid]="errors.gender">
           <option [ngValue]="null" disabled selected>Select...</option>
           @for (gender of getEnumKeys(patientGenders); track gender) {

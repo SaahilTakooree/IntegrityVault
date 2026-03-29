@@ -1,0 +1,82 @@
+<!-- Context heading. -->
+@if (contextLabel) {
+  <p class="text-muted small mb-3 fw-semibold text-uppercase" style="letter-spacing:.06em">
+    <i class="bi bi-folder2-open me-1"></i>{{ contextLabel }}
+  </p>
+}
+
+<div class="row g-3">
+
+  <!-- Patient selector. -->
+  @if (showPatientSelect) {
+    <div class="col-12">
+      <label class="form-label">Patient <span class="text-danger">*</span></label>
+      <select class="form-select" name="patientID" [(ngModel)]="form.patientID" (ngModelChange)="onFieldChange()"
+        [class.is-invalid]="errors.patientID">
+        <option [ngValue]="null" disabled selected>Select a patient…</option>
+        @for (p of patients; track p.id) {
+          <option [ngValue]="p.id">{{ p.fullName }}</option>
+        }
+      </select>
+      <div class="invalid-feedback">{{ errors.patientID }}</div>
+    </div>
+  }
+
+  <!-- Chief complaint. -->
+  @if (showChiefComplaint) {
+    <div class="col-12">
+      <label class="form-label">Chief Complaint <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" name="chiefComplaint" [(ngModel)]="form.chiefComplaint"
+        (ngModelChange)="onFieldChange()" placeholder="e.g. Persistent headache for 3 days"
+        [class.is-invalid]="errors.chiefComplaint">
+      <div class="invalid-feedback">{{ errors.chiefComplaint }}</div>
+    </div>
+  }
+
+  <!-- Visit date. -->
+  <div class="col-md-4">
+    <label class="form-label">Visit Date</label>
+    <input type="date" class="form-control bg-light" [value]="form.visitDate" readonly
+      style="cursor:default" tabindex="-1">
+  </div>
+
+  <!-- Diagnosis. -->
+  <div class="col-12">
+    <label class="form-label">Diagnosis <span class="text-danger">*</span></label>
+    <textarea class="form-control" rows="4" name="diagnosis" [(ngModel)]="form.diagnosis"
+      (ngModelChange)="onFieldChange()" placeholder="Enter diagnosis…"
+      [class.is-invalid]="errors.diagnosis"></textarea>
+    <div class="invalid-feedback">{{ errors.diagnosis }}</div>
+  </div>
+
+  <!-- Treatment plan. -->
+  <div class="col-12">
+    <label class="form-label">Treatment Plan <span class="text-danger">*</span></label>
+    <textarea class="form-control" rows="4" name="treatmentPlan" [(ngModel)]="form.treatmentPlan"
+      (ngModelChange)="onFieldChange()" placeholder="Describe the treatment plan…"
+      [class.is-invalid]="errors.treatmentPlan"></textarea>
+    <div class="invalid-feedback">{{ errors.treatmentPlan }}</div>
+  </div>
+
+  <!-- Doctor notes. -->
+  <div class="col-12">
+    <label class="form-label">Doctor Notes <span class="text-muted small">(optional)</span></label>
+    <textarea class="form-control" rows="3" name="doctorNotes" [(ngModel)]="form.doctorNotes"
+      (ngModelChange)="onFieldChange()" placeholder="Additional clinical notes…"></textarea>
+  </div>
+
+  <!-- Follow-up instructions. -->
+  <div class="col-12">
+    <label class="form-label">Follow-up Instructions <span class="text-muted small">(optional)</span></label>
+    <textarea class="form-control" rows="3" name="followUpInstructions" [(ngModel)]="form.followUpInstructions"
+      (ngModelChange)="onFieldChange()" placeholder="e.g. Return in 2 weeks, monitor blood pressure…"></textarea>
+  </div>
+
+  <!-- API error. -->
+  @if (errors.api) {
+    <div class="col-12">
+      <div class="text-danger small">{{ errors.api }}</div>
+    </div>
+  }
+
+</div>

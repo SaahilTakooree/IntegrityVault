@@ -1,9 +1,9 @@
 // Import dependencies.
-import { UserRole }      from "../enums/user-role.enum"; // User role enum.
-import { DoctorSpecialty } from "../enums/doctor-specialty.enum"; // Doctor specialty enum.
-import { PatientGender }   from "../enums/patient-gender.enum"; // Patient gender enum.
-import { UserFormValidationErrors } from "../types/user-form-validation-errors.type"; // All possible form errors.
-import { IUserForm } from "../interfaces/user-form.interface"; // User form value interface.
+import { UserRole }      from "../../enums/user-role.enum"; // User role enum.
+import { DoctorSpecialty } from "../../enums/doctor-specialty.enum"; // Doctor specialty enum.
+import { PatientGender }   from "../../enums/patient-gender.enum"; // Patient gender enum.
+import { UserFormValidationErrors } from "../../types/user-form-validation-errors.type"; // All possible form errors.
+import { IUserForm } from "../../interfaces/user-form.interface"; // User form value interface.
 
 
 // Regex to have a password with at least 1 uppercase, 1 lowercase, 1 digit, 1 special char, and min 7 chars.
@@ -53,21 +53,27 @@ export function validateHospitalId(hospitalId : number | null) : string | undefi
 
 
 // Validates a name field that must start with a capital letter.
-export function validateRequiredName(value : string, fieldLabel : string): string | undefined {
-  if (!value.trim())
+export function validateRequiredName(value : string | undefined, fieldLabel : string): string | undefined {
+  if (!value || !value.trim()) {
     return `${fieldLabel} is required.`;
-  if (!STARTS_CAPITAL_REGEX.test(value.trim()))
+  }
+  if (!STARTS_CAPITAL_REGEX.test(value.trim())) {
     return `${fieldLabel} must start with a capital letter.`;
+  }
   return undefined;
 }
 
 
 // Validates the optional middle name field.
-export function validateMiddleName(value : string) : string | undefined {
-  if (!value.trim())
-    return undefined; // Optional – empty is fine.
-  if (!STARTS_CAPITAL_REGEX.test(value.trim()))
+export function validateMiddleName(value?: string): string | undefined {
+  if (!value || !value.trim()) {
+    return undefined;
+  }
+
+  if (!STARTS_CAPITAL_REGEX.test(value.trim())) {
     return "Middle name must start with a capital letter.";
+  }
+
   return undefined;
 }
 

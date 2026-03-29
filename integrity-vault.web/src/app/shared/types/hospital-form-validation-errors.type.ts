@@ -3,5 +3,6 @@ export type HospitalFormValidationErrors = {
   name?: string;
   walletAddress?: string;
   ipAddresses?: string;
+  privateKey?: string;
   api?: string;
 }

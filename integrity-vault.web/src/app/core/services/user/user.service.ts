@@ -2,10 +2,10 @@
 import { Injectable, inject } from "@angular/core"; // Injectable decorator and dependency injection functionality.
 import { HttpClient, HttpParams } from "@angular/common/http"; // HttpClient for making HTTP requests and params parsing.
 import { Observable } from "rxjs"; // Observable for managing asynchronous streams of data.
-import { IAdmin } from "../../shared/interfaces/admin.interface"; // Admin interface for type checking admin.
-import { IDoctor } from "../../shared/interfaces/doctor.interface"; // Doctor interface for type checking doctor.
-import { IExternalProvider } from "../../shared/interfaces/external-provider.interface"; // ExternalProvider interface for type checking external provider.
-import { IPatient } from "../../shared/interfaces/patient.interface"; // Patient interface for type checking patient.
+import { IAdmin } from "../../../shared/interfaces/admin.interface"; // Admin interface for type checking admin.
+import { IDoctor } from "../../../shared/interfaces/doctor.interface"; // Doctor interface for type checking doctor.
+import { IExternalProvider } from "../../../shared/interfaces/external-provider.interface"; // ExternalProvider interface for type checking external provider.
+import { IPatient } from "../../../shared/interfaces/patient.interface"; // Patient interface for type checking patient.
 
 
 // Makes the service available at the root level of the application, so it"s accessible globally.

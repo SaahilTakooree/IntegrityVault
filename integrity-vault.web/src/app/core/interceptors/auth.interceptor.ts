@@ -2,7 +2,7 @@
 import { HttpInterceptorFn, HttpErrorResponse } from "@angular/common/http"; // Import HTTP interceptor types.
 import { inject } from "@angular/core"; // Used to inject dependencies.
 import { catchError, throwError } from "rxjs"; // RxJS operators for error handling.
-import { AuthService } from "../services/auth.service"; // Handles authentication.
+import { AuthService } from "../services/auth/auth.service"; // Handles authentication.
 
 
 // Auth HTTP interceptor.

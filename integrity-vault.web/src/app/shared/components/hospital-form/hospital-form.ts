@@ -6,7 +6,7 @@ import { IHospital } from "../../interfaces/hospital.interface"; // Import the h
 import { HospitalFormMode } from "../../types/hospital-form-type"; // Import the type avaliable for the hospital form.
 import { HospitalFormOutput } from "../../interfaces/hospital-form-output.interface"; // Import the form output interface.
 import { HospitalFormValidationErrors } from "../../types/hospital-form-validation-errors.type"; // Import all type of errors that hospital form can have.
-import { validateHospitalForm, validateIpAddresses }from "../../utils/hospital-form.validator"; // Import the validation functions.
+import { validateHospitalForm, validateIpAddresses }from "../../utils/hospital/hospital-form.validator"; // Import the validation functions.
 
 
 // Define the component for the hopsital form.
@@ -30,7 +30,7 @@ export class HospitalFormComponent implements OnChanges {
 
     form : IHospital = this._blank(); // Create the hospital form. Clear the form initially.
     errors : HospitalFormValidationErrors = {}; // Store all the possible errors that might happen in the hospital form.
-
+    showPrivateKey = false; // Controls password visibility toggle.
 
     // Function to allow the editing of IP address.
     get canEditIps(): boolean {
@@ -44,8 +44,9 @@ export class HospitalFormComponent implements OnChanges {
         if (changes["initialValue"]) {
             const v = this.initialValue;
             this.form = v
-                ? { id: v.id, name: v.name, walletAddress: v.walletAddress, ipAddresses: [...v.ipAddresses] }
+                ? { id: v.id, name: v.name, walletAddress: v.walletAddress, ipAddresses: [...v.ipAddresses], privateKey: "" }
                 : this._blank();
+            this.showPrivateKey = false;
             this.errors = {}; // Reset errors when initial value changes.
         }
 
@@ -126,7 +127,7 @@ export class HospitalFormComponent implements OnChanges {
 
     // Method to clear the hospital form field.
     private _blank(): IHospital {
-        return { id: 0, name: "", walletAddress: "", ipAddresses: [""] };
+        return { id: 0, name: "", walletAddress: "", ipAddresses: [""], privateKey: "" };
     }
 
 
@@ -137,7 +138,7 @@ export class HospitalFormComponent implements OnChanges {
 
         // Full form validation.
         if (this.mode === "full") {
-            this.errors = validateHospitalForm(this.form.name, this.form.walletAddress, this.form.ipAddresses);
+            this.errors = validateHospitalForm(this.form.name, this.form.walletAddress, this.form.ipAddresses, this.form.privateKey, this.initialValue !== null);
         } else {
             // Only validate the ip table..
             const ipErrors = validateIpAddresses(this.form.ipAddresses);
@@ -153,6 +154,6 @@ export class HospitalFormComponent implements OnChanges {
 
     // Method to check if form is valid
     private _isValid(): boolean {
-        return !this.errors.name && !this.errors.walletAddress && !this.errors.ipAddresses;
+        return !this.errors.name && !this.errors.walletAddress && !this.errors.ipAddresses && !this.errors.privateKey;
     }
 }

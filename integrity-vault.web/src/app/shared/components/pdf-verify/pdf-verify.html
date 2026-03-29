@@ -1,0 +1,74 @@
+<!-- Center the entire verification section both vertically and horizontally. -->
+<div class="d-flex flex-column align-items-center justify-content-center">
+
+    <!-- Wrapper to control max width and center text. -->
+    <div style="width: 100%; max-width: 60%;" class="text-center">
+
+        <!-- Section title. -->
+        <h5 class="fw-semibold mb-1">PDF Integrity Verification</h5>
+
+        <!-- Short description explaining the feature. -->
+        <p class="text-muted small mb-4">
+            Upload a downloaded medical record PDF to verify it has not been tampered with.
+        </p>
+
+        <!-- Card container for the verification UI. -->
+        <div class="card border-0 shadow-sm p-4 text-start">
+
+            <!-- PDF upload section. -->
+            <div class="card border-0 shadow-sm p-4 text-start">
+
+                <div class="iv-verify-dropzone p-4 text-center"
+                  [class.dragover]="isDragging"
+                  (click)="triggerFileInput()"
+                  (dragover)="onDragOver($event)"
+                  (dragleave)="onDragLeave()"
+                  (drop)="onDrop($event)">
+                  
+                    <input #fileInput type="file" accept="application/pdf" class="d-none" (change)="onFileSelected($event)">
+                    
+                    @if (!selectedFile) {
+                        <i class="bi bi-file-earmark-pdf d-block mb-2" style="font-size:2.5rem;color:#0d9488"></i>
+                        <p class="mb-0 small text-muted">Drag &amp; drop a PDF here, or <strong class="text-teal">click to browse</strong></p>
+                    } @else {
+                        <i class="bi bi-file-earmark-check d-block mb-2" style="font-size:2.5rem;color:#0d9488"></i>
+                        <p class="mb-1 small fw-semibold">{{ selectedFile.name }}</p>
+                        <p class="mb-0 small text-muted">{{ (selectedFile.size / 1024).toFixed(1) }} KB</p>
+                    }
+                </div>
+                
+                @if (selectedFile) {
+                    <div class="d-flex gap-2 mt-3">
+                        <button class="btn btn-primary btn-sm" [disabled]="loading" (click)="submit(); $event.stopPropagation()">
+                            <i class="bi bi-shield-check me-1"></i>
+                            Verify PDF
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm" (click)="clearAll(); $event.stopPropagation()">
+                            <i class="bi bi-x me-1"></i>
+                            Clear
+                        </button>
+                    </div>
+                }
+
+            <!-- Show loading indicator while verification is in progress. -->
+            @if (loading) {
+                <div class="d-flex align-items-center gap-2 mt-3 text-muted small">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                    Verifying PDF integrity — this may take a moment.
+                </div>
+            }
+
+            <!-- Show result or error once verification is complete. -->
+            @if (!loading && (result !== null || errorMessage !== null)) {
+                <div class="mt-3">
+
+                    <!-- Component to display verification result or error message. -->
+                    <app-verify-result
+                      [result]="result"
+                      [errorMessage]="errorMessage">
+                    </app-verify-result>
+                </div>
+            }
+        </div>
+    </div>
+</div>

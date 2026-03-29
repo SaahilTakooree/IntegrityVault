@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './core/guards/auth.guard';
-import { roleGuard } from './core/guards/role.guard';
+import { authGuard } from './core/guards/auth/auth.guard';
+import { roleGuard } from './core/guards/role/role.guard';
 
 
 export const routes : Routes = [
@@ -25,12 +25,12 @@ export const routes : Routes = [
     canActivate: [authGuard, roleGuard],
     data : { roles : ["Admin"]}
   },
-  // {
-  //   path : 'doctor',
-  //   loadComponent : () => import("./features/dashboards/doctor/doctor").then(m => m.DoctorDashboardComponent),
-  //   canActivate: [authGuard, roleGuard],
-  //   data : { roles : ["Doctor"]}
-  // },
+  {
+    path : 'doctor',
+    loadComponent : () => import("./features/dashboards/doctor/doctor").then(m => m.DoctorDashboardComponent),
+    canActivate: [authGuard, roleGuard],
+    data : { roles : ["Doctor"]}
+  },
   // {
   //   path : 'patient',
   //   loadComponent : () => import("./features/dashboards/patient/patient").then(m => m.PatientDashboardComponent),

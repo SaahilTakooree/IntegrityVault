@@ -1,0 +1,58 @@
+<!-- Intact. -->
+@if (state === 'intact') {
+    <div class="iv-verify-result iv-verify-result-success p-3 mb-3">
+        <i class="bi bi-shield-fill-check me-2"></i>
+        <strong>Intact.</strong> {{ result!.message }}
+    </div>
+}
+
+
+<!-- Tampered. -->
+@if (state === 'tampered') {
+    <div class="iv-verify-result iv-verify-result-fail p-3 mb-3">
+        <i class="bi bi-shield-fill-x me-2"></i>
+        <strong>Tampered.</strong> {{ result!.message }}
+    </div>
+}
+
+
+<!-- Unauthorised. -->
+@if (state === 'unauthorised') {
+    <div class="p-3 mb-3 rounded small" style="background:rgba(245,158,11,.1);
+      border:1px solid rgba(245,158,11,.3);color:#fbbf24">
+        <i class="bi bi-shield-exclamation me-2"></i>
+        <strong>Unauthorised.</strong> {{ result!.message }}
+    </div>
+}
+
+
+<!-- Plain string returned by the API. -->
+@if (state === 'error') {
+    <div class="p-3 mb-3 rounded small" style="background:rgba(100,116,139,.1);
+      border:1px solid rgba(100,116,139,.3);color:#94a3b8">
+        <i class="bi bi-exclamation-circle me-2"></i>
+        {{ errorMessage }}
+    </div>
+}
+
+
+<!-- Only shown for structured results when there is no errors or not unauthorised -->
+@if (showDetails && result && state !== 'unauthorised' && state !== 'error') {
+    <p class="text-muted small fw-semibold text-uppercase mb-2" style="letter-spacing:.06em;
+      font-size:.68rem">
+        Check Details
+    </p>
+    <div class="d-flex flex-column gap-1">
+        @for (check of checks; track check.key) {
+            <div class="d-flex align-items-center gap-2 small">
+                <i class="bi"
+                  [class.bi-check-circle-fill]="result[check.key]"
+                  [class.bi-x-circle-fill]="!result[check.key]"
+                  [class.text-success]="result[check.key]"
+                  [class.text-danger]="!result[check.key]">
+                </i>
+                {{ check.label }}
+            </div>
+        }
+    </div>
+}

@@ -7,7 +7,7 @@
                 Hospital Name
                 <span class="text-danger">*</span>
             </label>
-            <input type="text" class="form-control" [(ngModel)]="form.name" (ngModelChange)="onFieldChange()"
+            <input type="text" class="form-control" name="name" [(ngModel)]="form.name" (ngModelChange)="onFieldChange()"
                 placeholder="e.g. City General Hospital" [class.is-invalid]="errors.name"
             >
             <div class="invalid-feedback">{{ errors.name }}</div>
@@ -16,10 +16,35 @@
         <!-- Hospital wallet address. -->
         <div class="col-12">
             <label class="form-label">Wallet Address <span class="text-danger">*</span></label>
-            <input type="text" class="form-control font-mono" [(ngModel)]="form.walletAddress"
+            <input type="text" class="form-control font-mono" name="walletAddress" [(ngModel)]="form.walletAddress"
                 (ngModelChange)="onFieldChange()" placeholder="0x..." [class.is-invalid]="errors.walletAddress"
             >
             <div class="invalid-feedback">{{ errors.walletAddress }}</div>
+        </div>
+
+        <!-- Hospital private key. -->
+        <div class="col-12">
+            <label class="form-label">
+                Private Key
+                <span class="text-danger">*</span>
+                @if (initialValue) {
+                    <span class="text-secondary small ms-1">(leave blank to keep unchanged)</span>
+                }
+            </label>
+            <div class="input-group" [class.is-invalid]="errors.privateKey">
+                <input [type]="showPrivateKey ? 'text' : 'password'" class="form-control font-mono"
+                name="privateKey" [(ngModel)]="form.privateKey" (ngModelChange)="onFieldChange()"
+                placeholder="Enter private key..." [class.is-invalid]="errors.privateKey">
+                <button
+                    class="btn btn-outline-secondary" type="button"
+                    (click)="showPrivateKey = !showPrivateKey" [title]="showPrivateKey ? 'Hide' : 'Show'"
+                >
+                    <i class="bi" [class.bi-eye]="!showPrivateKey" [class.bi-eye-slash]="showPrivateKey"></i>
+                </button>
+            </div>
+            @if (errors.privateKey) {
+                <div class="invalid-feedback d-block">{{ errors.privateKey }}</div>
+            }
         </div>
     }
 

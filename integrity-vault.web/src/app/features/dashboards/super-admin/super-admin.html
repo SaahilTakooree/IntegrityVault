@@ -1,48 +1,22 @@
-<div class="d-flex" style="min-height:100vh">
+<div class="d-flex vh-100 overflow-hidden">
   <!-- Sidebar. -->
   <app-sidebar
     [activeLink]="activeLink"
     [sidebarItems]="[
       { label: 'Hospitals', icon: 'bi bi-building', link: 'hospitals' },
-      { label: 'Admins', icon: 'bi bi-person-gear', link: 'admins' },
-      { label: 'Active Wallet', icon: 'bi-link-45deg', link: 'wallet' }
+      { label: 'Admins', icon: 'bi bi-person-gear', link: 'admins' }
     ]"
     [isCollapsed]="isCollapsed"
     (closeSidebar)="toggleSidebar()"
     (linkClicked)="onNavigate($event)">
   </app-sidebar>
 
-  <div class="iv-main">
+  <div class="d-flex flex-column flex-grow-1 min-width-0">
     <!-- Topbar. -->
     <app-topbar (toggleSidebar)="toggleSidebar()" [message]="'Welcome back, Super Admin'">
     </app-topbar>
 
-    <div class="p-4">
-
-      <!-- ACTIVE WALLET -->
-      @if (activeLink === "wallet") {
-        <ng-container>
-          <h5 class="mb-4 fw-semibold">Active Wallet</h5>
-          <div class="card border-0 p-4" style="max-width:540px">
-            <p class="text-secondary small mb-3">Sets the hospital blockchain context for the entire system.</p>
-            <label class="form-label">Current Wallet Address</label>
-            <div class="input-group mb-4">
-              <input type="text" class="form-control font-mono" value="0x0000000000000000000000000000000000000000" readonly>
-              <button class="btn btn-outline-secondary" type="button"><i class="bi bi-clipboard"></i></button>
-            </div>
-            <label class="form-label">Switch Hospital Wallet</label>
-            <div class="input-group">
-              <select class="form-select">
-                <option value="" disabled selected>Select hospital...</option>
-                @for (hospital of hospitals; track $index) {
-                  <option [value]="hospital.walletAddress">{{ hospital.name }}</option>
-                }
-              </select>
-              <button class="btn btn-primary">Switch</button>
-            </div>
-          </div>
-        </ng-container>
-      }
+    <div class="iv-main flex-grow-1 overflow-y-auto p-4">
 
       @if(activeLink === "hospitals") {
         <ng-container>

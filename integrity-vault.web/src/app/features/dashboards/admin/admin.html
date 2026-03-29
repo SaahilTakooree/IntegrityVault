@@ -1,4 +1,4 @@
-<div class="d-flex" style="min-height:100vh">
+<div class="d-flex vh-100 overflow-hidden">
   <!-- Sidebar. -->
     <app-sidebar
         [activeLink]="activeLink"
@@ -14,14 +14,14 @@
         (linkClicked)="onNavigate($event)">
     </app-sidebar>
 
-    <div class="iv-main">
+    <div class="d-flex flex-column flex-grow-1 min-width-0">
         <!-- Topbar. -->
         <app-topbar
             (toggleSidebar)="toggleSidebar()"
             [message]="'Welcome back, Admin'">
         </app-topbar>
 
-        <div class="p-4">
+        <div class="iv-main flex-grow-1 overflow-y-auto p-4">
 
             <!-- Patient. -->
             @if (activeLink === "patients") {

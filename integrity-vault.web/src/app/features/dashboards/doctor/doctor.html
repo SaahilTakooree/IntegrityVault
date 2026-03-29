@@ -1,0 +1,282 @@
+<div class="d-flex vh-100 overflow-hidden">
+  <!-- Sidebar. -->
+  <app-sidebar
+    class="flex-shrink-0 h-100"
+    [activeLink]="activeLink"
+    [sidebarItems]="[
+      { label: 'Patient History', icon: 'bi bi-clock-history', link: 'history' },
+      { label: 'PDF Verify', icon: 'bi bi-file-earmark-pdf', link: 'pdf' }
+    ]"
+    [isCollapsed]="isCollapsed"
+    (closeSidebar)="toggleSidebar()"
+    (linkClicked)="onNavigate($event)">
+  </app-sidebar>
+
+  <!-- Main. -->
+  <div class="d-flex flex-column flex-grow-1 min-width-0">
+
+    <!-- Topbar. -->
+    <app-topbar (toggleSidebar)="toggleSidebar()"
+      class="flex-shrink-0"
+      [message]="'Welcome back, Dr. ' + (history?.doctorFullName ?? doctorFullName)">
+    </app-topbar>
+
+    <div class="iv-main flex-grow-1 overflow-y-auto p-4">
+
+      <!-- History tab. -->
+      @if (activeLink === 'history') {
+
+        <!-- Loading state -->
+        @if (historyLoading) {
+          <div class="d-flex align-items-center gap-3 py-5 text-muted">
+            <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+            <span>Loading patient history. This may take a few seconds.</span>
+          </div>
+        }
+
+        <button class="btn btn-primary btn-sm" (click)="openNewEpisodeModal()">
+          <i class="bi bi-plus-lg me-1"></i>New Episode
+        </button>
+        <br/>
+        <br/>
+
+        <!-- If there is no patient history yet for this doctor. -->
+        @if (!historyLoading && (!history?.patients || history!.patients.length === 0)) {
+          <div class="text-center py-5 text-muted">
+            <i class="bi bi-folder2-open d-block mb-2" style="font-size:2.5rem"></i>
+            <p class="mb-0">No patient history yet. Create a new episode to get started.</p>
+          </div>
+        }
+        <!-- Patient cards -->
+        @if (!historyLoading && history) {
+          @for (patient of history.patients; track patient.patientID) {
+            <div class="card border-0 shadow-sm mb-4">
+              <div class="card-header d-flex align-items-center gap-2 py-3"
+                style="background:rgba(13,148,136,.06)">
+                <span class="fw-semibold">{{ patient.patientFullName }}
+                  <span class="text-muted fw-normal small">
+                    ID: {{ patient.patientID }}
+                  </span>
+                </span>
+                <span class="badge bg-secondary ms-auto">{{ patient.episodes.length }} episode(s)</span>
+              </div>
+              <div class="card-body p-0">
+                @for (episode of patient.episodes; track episode.episodeID) {
+                  <!-- Episode row -->
+                  <div class="border-bottom px-4 py-3">
+                    <!-- Episode header -->
+                    <div class="d-flex align-items-center flex-wrap gap-2 mb-2">
+                      <span class="fw-semibold">
+                        <i class="bi bi-folder2 me-1 text-teal"></i>
+                        {{ episode.chiefComplaint }}
+                      </span>
+                      <span class="badge"
+                        [class.bg-success]="episode.isActive"
+                        [class.bg-secondary]="!episode.isActive"
+                        style="font-size:.7rem">
+                        {{ episode.isActive ? 'Active' : 'Inactive' }}
+                      </span>
+                      <span class="text-muted small ms-1">Episode #{{ episode.episodeID }}</span>
+                      <div class="ms-auto d-flex gap-2 flex-wrap">
+                        <!-- Toggle episode status -->
+                        <button class="btn btn-sm"
+                          [class.btn-outline-warning]="episode.isActive"
+                          [class.btn-outline-success]="!episode.isActive"
+                          (click)="openStatusConfirm(episode)">
+                          <i class="bi me-1"
+                            [class.bi-pause-circle]="episode.isActive"
+                            [class.bi-play-circle]="!episode.isActive"></i>
+                          {{ episode.isActive ? 'Close Episode' : 'Reopen Episode' }}
+                        </button>
+                        <!-- Add record button. -->
+                        @if (episode.isActive) {
+                          <button class="btn btn-sm btn-outline-primary"
+                            (click)="openAddRecordModal(episode, patient.patientID)">
+                            <i class="bi bi-plus me-1"></i>Add Record
+                          </button>
+                        }
+                      </div>
+                    </div>
+                    <!-- Records accordion -->
+                    @if (episode.records.length === 0) {
+                      <p class="text-muted small mb-0 ps-2">No records yet.</p>
+                    }
+                    <div class="accordion iv-record-accordion" [id]="'episode-' + episode.episodeID">
+                      @for (record of episode.records; track record.medicalRecordID) {
+                        <div class="accordion-item border-0 mb-1">
+                          <h2 class="accordion-header">
+                            <button class="accordion-button collapsed rounded py-2 small fw-medium"
+                              type="button"
+                              [attr.data-bs-toggle]="'collapse'"
+                              [attr.data-bs-target]="'#rec-' + record.medicalRecordID"
+                              [attr.aria-controls]="'rec-' + record.medicalRecordID">
+                              <i class="bi bi-file-medical me-2 text-teal"></i>
+                              Visit · {{ record.visitDate }}
+                              <span class="badge bg-primary ms-2" style="font-size:.65rem">
+                                v{{ record.currentVersion }}
+                              </span>
+                            </button>
+                          </h2>
+                          <div [id]="'rec-' + record.medicalRecordID"
+                            class="accordion-collapse collapse"
+                            [attr.data-bs-parent]="'#episode-' + episode.episodeID">
+                            <div class="accordion-body pt-2">
+                              <!-- Record action bar -->
+                              <div class="d-flex flex-wrap gap-2 mb-3">
+                                @if (episode.isActive) {
+                                  <button class="btn btn-sm btn-outline-secondary"
+                                    (click)="openUpdateRecordModal(episode, record, patient.patientID)">
+                                    <i class="bi bi-pencil me-1"></i>Update Record
+                                  </button>
+                                }
+                                <button class="btn btn-sm btn-outline-secondary"
+                                  (click)="viewAccessLog(record)">
+                                  <i class="bi bi-list-ul me-1"></i>Access Log
+                                </button>
+                              </div>
+                              <!-- Versions table -->
+                              <p class="text-muted small fw-semibold text-uppercase mb-1"
+                                style="letter-spacing:.06em;font-size:.68rem">
+                                Versions
+                              </p>
+                              <div class="table-responsive mb-0">
+                                <table class="table table-sm mb-0">
+                                  <thead>
+                                    <tr>
+                                      <th>Name</th>
+                                      <th>Version</th>
+                                      <th>Timestamp</th>
+                                      <th>Actions</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    @for (ver of record.versions; track ver.version) {
+                                      <tr>
+                                        <td class="font-mono small" style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
+                                          [title]="ver.displayName">
+                                          {{ ver.displayName }}
+                                        </td>
+                                        <td>
+                                          <span class="badge bg-primary" style="font-size:.65rem">v{{ ver.version }}</span>
+                                        </td>
+                                        <td class="small text-muted">{{ formatTimestamp(ver.timestamp) }}</td>
+                                        <td>
+                                          <div class="d-flex gap-1">
+                                            <button class="btn btn-sm btn-outline-primary"
+                                              (click)="viewVersion(ver)" title="View record">
+                                              <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-success"
+                                              (click)="checkTamper(ver)" title="Verify integrity">
+                                              <i class="bi bi-shield-check"></i>
+                                            </button>
+                                          </div>
+                                        </td>
+                                      </tr>
+                                    }
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        }
+      }
+      <!-- PDF VERIFY TAB. -->
+      @if (activeLink === 'pdf') {
+        <app-pdf-verify
+         [loading]="pdfVerifyLoading"
+         [result]="pdfVerifyResult"
+         [errorMessage]="pdfVerifyErrorMessage"
+         (verifyRequested)="onPdfVerifyRequested($event)"
+         (clearRequested)="onPdfClear()">
+        </app-pdf-verify>
+      }
+    </div>
+  </div>
+</div>
+
+
+<!-- Medical record modal. -->
+<app-entity-modal
+  [show]="showRecordModal"
+  [title]="modalTitle"
+  [confirmLabel]="modalLoading ? 'Please wait…' : modalConfirmLabel"
+  (closed)="closeRecordModal()"
+  (confirmed)="onRecordConfirmed()">
+  @if (modalLoading) {
+    <div class="d-flex align-items-center gap-3 py-4 text-muted">
+      <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+      <span>{{ modalMode === 'updateRecord' ? 'Loading record from IPFS…' : 'Saving record to IPFS — this may take a few seconds…' }}</span>
+    </div>
+  } @else {
+    <app-medical-record-form
+      [showPatientSelect]="modalMode === 'newEpisode'"
+      [showChiefComplaint]="modalMode === 'newEpisode'"
+      [patients]="patients"
+      [initialVisitDate]="activeVisitDate"
+      [initialValue]="initialFormValue"
+      [contextLabel]="modalContextLabel">
+    </app-medical-record-form>
+  }
+</app-entity-modal>
+
+
+<!-- View record modal. -->
+<app-view-medical-record
+  [show]="showViewModal"
+  [loading]="viewLoading"
+  [record]="viewedRecord"
+  [version]="viewedVersion"
+  (closed)="closeViewModal()">
+</app-view-medical-record>
+
+
+<!-- Acess modal log. -->
+<app-view-access-log
+  [show]="showAccessLogModal"
+  [record]="accessLogRecord"
+  (closed)="closeAccessLog()">
+</app-view-access-log>
+
+
+<!-- Tamper modal check. -->
+<app-tamper-check
+  [show]="showTamperModal"
+  [loading]="tamperLoading"
+  [recordName]="tamperRecordName"
+  [cid]="tamperCID"
+  [result]="tamperResult"
+  [errorMessage]="tamperErrorMessage"
+  (closed)="closeTamperModal()">
+</app-tamper-check>
+
+
+<!-- Episode status confirmation. -->
+<app-confirm-modal
+  [show]="showStatusModal"
+  [title]="pendingStatusIsActive ? 'Close Episode?' : 'Reopen Episode?'"
+  [message]="pendingStatusIsActive
+    ? 'Closing this episode will prevent new records from being added. You can reopen it later.'
+    : 'Reopening this episode will allow new records to be added.'"
+  [buttons]="[
+    { label: 'Cancel', style: ConfirmButtonStyle.Secondary, result: false },
+    { label: pendingStatusIsActive ? 'Close Episode' : 'Reopen Episode',
+      style: pendingStatusIsActive ? ConfirmButtonStyle.Danger : ConfirmButtonStyle.Primary,
+      result: true }
+  ]"
+  (closed)="showStatusModal = false"
+  (action)="handleStatusResult($event)">
+  <i icon class="bi d-block mb-3 iv-modal-icon"
+    [class.bi-pause-circle]="pendingStatusIsActive"
+    [class.bi-play-circle]="!pendingStatusIsActive"
+    [class.text-warning]="pendingStatusIsActive"
+    [class.text-success]="!pendingStatusIsActive"></i>
+</app-confirm-modal>

@@ -2,7 +2,7 @@
 import { Component, Input, Output, EventEmitter, inject } from "@angular/core"; // Import Angular core module.
 import { CommonModule } from "@angular/common"; // Import CommonModule for common directives.
 import { ISidebarItem } from "./sidebar.interface"; // Import SidebarItem Interface.
-import { AuthService } from "../../../core/services/auth.service"; // Import the authtication services.
+import { AuthService } from "../../../core/services/auth/auth.service"; // Import the authtication services.
 
 
 // Define the component decorator.

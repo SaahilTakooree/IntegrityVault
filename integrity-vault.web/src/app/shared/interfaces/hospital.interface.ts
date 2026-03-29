@@ -4,4 +4,5 @@ export interface IHospital extends Record<string, unknown> {
     name : string; // Name of the hospital stored as a string.
     walletAddress : string; // Blockchain wallet address associated with the hospital.
     ipAddresses: string[]; // List of public IP addresses associated with the hospital.
+    privateKey?: string; // The private key of the hospital's wallet address.
 }

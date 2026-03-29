@@ -12,9 +12,11 @@
                     <ng-content></ng-content>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-outline-secondary" (click)="closed.emit()">
-                        Cancel
-                    </button>
+                    @if (!hideCancel) {
+                        <button class="btn btn-outline-secondary" (click)="closed.emit()">
+                            Cancel
+                        </button>
+                    }
                     <button class="btn btn-primary" (click)="confirmed.emit()">
                         {{ confirmLabel}}
                     </button>

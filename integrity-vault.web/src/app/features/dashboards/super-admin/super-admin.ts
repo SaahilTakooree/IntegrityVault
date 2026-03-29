@@ -16,10 +16,10 @@ import { IColumnDefinition } from "../../../shared/interfaces/column-definition.
 import { IHospital } from "../../../shared/interfaces/hospital.interface";  // Hospital interface for type-checking.
 import { IAdmin } from "../../../shared/interfaces/admin.interface"; // Admin interface for type-checking.
 import { IUserForm } from "../../../shared/interfaces/user-form.interface"; // User interface for type-checking.
-import { HospitalService } from "../../../core/services/hospital.service"; // Service to interact with hospital API.
-import { UserService } from "../../../core/services/user.service"; // Service to interact with user API.
-import { parseHospitalApiError } from "../../../shared/utils/hospital-form.validator"; // Validation and error handling utils for hospital.
-import { parseUserApiError } from "../../../shared/utils/user-form.validator"; // Validation and error handling utils for user.
+import { HospitalService } from "../../../core/services/hospital/hospital.service"; // Service to interact with hospital API.
+import { UserService } from "../../../core/services/user/user.service"; // Service to interact with user API.
+import { parseHospitalApiError } from "../../../shared/utils/hospital/hospital-form.validator"; // Validation and error handling utils for hospital.
+import { parseUserApiError } from "../../../shared/utils/user/user-form.validator"; // Validation and error handling utils for user.
 
 
 // Define the component for the superadmin dashboard.
@@ -272,8 +272,13 @@ export class SuperadminDashboardComponent {
     if (this.editingHospital) {
       // If the walletAddress or ip address hasn"t changed, exclude it from the update payload.
       const walletChanged = formValue.walletAddress !== this.editingHospital.walletAddress;
-      const { walletAddress, ipAddresses, ...base } = formValue;
+      const { walletAddress, ipAddresses, privateKey, ...base } = formValue;
       const hospitalData = walletChanged ? formValue : { ...base, ipAddresses } as IHospital;
+
+      // Only include privateKey in the payload if the user typed something.
+      if (privateKey && privateKey.trim().length > 0) {
+        hospitalData.privateKey = privateKey.trim();
+      }
 
       this._hospitalService.updateHospital(hospitalData)
         .pipe(takeUntil(this._destroy$))
@@ -287,6 +292,9 @@ export class SuperadminDashboardComponent {
           }
       });
     } else {
+      // privateKey is always included on create
+      formValue.privateKey = formValue.privateKey?.trim();
+
       // If adding a new hopsital, create the hospital.
       this._hospitalService.addHospital(formValue)
         .pipe(takeUntil(this._destroy$))

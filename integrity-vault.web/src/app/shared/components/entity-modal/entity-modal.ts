@@ -19,7 +19,9 @@ export class EntityModalComponent {
     @Input() show : boolean = false; // Determines whether the modal is visible or hidden.
     @Input() title : string = ""; // Title text displayed at the top of the modal dialog.
     @Input() confirmLabel = "Save"; // Label text for the confirmation button.
+    @Input() hideCancel = false; // Determines whether to show the cancel button or not.
 
+    
     // Outputs: events the component emits to parent.
     @Output() closed = new EventEmitter<void>(); // Event triggered when the modal is closed or cancelled.
     @Output() confirmed = new EventEmitter<void>(); // Event triggered when the user clicks the confirm button.

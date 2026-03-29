@@ -1,0 +1,65 @@
+<!-- Modal component used to display access logs for a medical record. -->
+<app-entity-modal
+  [show]="show"
+  title="Access Log"
+  confirmLabel="Close"
+  [hideCancel]="true"
+  (closed)="closed.emit()"
+  (confirmed)="closed.emit()">
+    
+    <!-- Render table only if record exists. -->
+    @if (record) {
+
+        <!-- Responsive wrapper to handle overflow on smaller screens. -->
+        <div class="table-responsive">
+
+            <!-- Access log table. -->
+            <table class="table table-sm table-hover mb-0">
+
+                <!-- Table header. -->
+                 <thead>
+                    <tr class="text-muted small text-uppercase" style="letter-spacing: .05em;">
+                        <th>Action</th>
+                        <th>By</th>
+                        <th>Role</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+
+                <!-- Table body. -->
+                <tbody>
+
+                    <!-- Loop through access logs. -->
+                    @for (log of record.accessLogs; track $index) {
+                        <tr>
+                            <td class="fw-medium">
+                                {{ log.accessType }}
+                            </td>
+                            <td class="small">
+                                {{ log.accessedByName }}
+                            </td>
+                            <td>
+                                <span class="badge"
+                                  [class.bg-primary]="log.accessedByRole === 'Doctor'"
+                                  [class.bg-info]="log.accessedByRole === 'Patient'"
+                                  [class.bg-secondary]="log.accessedByRole !== 'Doctor' && log.accessedByRole !== 'Patient'"
+                                  style="font-size:.65rem">
+                                    {{ log.accessedByRole }}
+                                </span>
+                            </td>
+                            <td class="small text-muted">
+                                {{ formatTimestamp(log.timestamp) }}
+                            </td>
+                        </tr>
+                    } @empty { <!-- Empty state when no logs exist. -->
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-muted small">
+                                No access logs recorded for this document.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</app-entity-modal>

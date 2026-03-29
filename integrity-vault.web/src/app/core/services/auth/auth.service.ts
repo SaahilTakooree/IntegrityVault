@@ -3,10 +3,10 @@ import { Injectable, inject } from "@angular/core"; // Injectable decorator and 
 import { HttpClient } from "@angular/common/http"; // HttpClient for making HTTP requests
 import { Router } from "@angular/router"; // Provides Router for navigating between routes.
 import { BehaviorSubject, map, Observable, switchMap, tap } from "rxjs"; // Use for reactive programming.
-import { LoginResponce } from "../../shared/interfaces/login-responce.interface"; // Defines the shape of data for for login requests.
-import { LoginRequest } from "../../shared/interfaces/login-request.interface"; // Defines the shape of data for for login responce.
-import { UserSession } from "../../shared/interfaces/user-session.interface"; // Defines the shape of data for for user session
-import { DecodedToken } from "../../shared/interfaces/decoded-token.interface"; // Defines the shape of data for the decoded token
+import { LoginResponce } from "../../../shared/interfaces/login-responce.interface"; // Defines the shape of data for for login requests.
+import { LoginRequest } from "../../../shared/interfaces/login-request.interface"; // Defines the shape of data for for login responce.
+import { UserSession } from "../../../shared/interfaces/user-session.interface"; // Defines the shape of data for for user session
+import { DecodedToken } from "../../../shared/interfaces/decoded-token.interface"; // Defines the shape of data for the decoded token
 import { jwtDecode } from "jwt-decode"; // Use to decode JWT tokens into a readable object.
 
 

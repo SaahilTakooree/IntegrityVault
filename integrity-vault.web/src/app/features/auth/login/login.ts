@@ -2,7 +2,7 @@ import { Component, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { LoginFormValidationErrors } from "../../../shared/types/login-form-validation-errors.type";
-import { AuthService } from "../../../core/services/auth.service";
+import { AuthService } from "../../../core/services/auth/auth.service";
 
 
 @Component({

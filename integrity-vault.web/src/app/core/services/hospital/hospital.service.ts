@@ -2,7 +2,7 @@
 import { Injectable, inject } from "@angular/core"; // Injectable decorator and dependency injection functionality.
 import { HttpClient } from "@angular/common/http"; // HttpClient for making HTTP requests.
 import { Observable } from "rxjs"; // Observable for managing asynchronous streams of data.
-import { IHospital } from "../../shared/interfaces/hospital.interface"; // Hospital interface for type-checking hospital.
+import { IHospital } from "../../../shared/interfaces/hospital.interface"; // Hospital interface for type-checking hospital.
 
 
 // Makes the service available at the root level of the application, so it"s accessible globally.

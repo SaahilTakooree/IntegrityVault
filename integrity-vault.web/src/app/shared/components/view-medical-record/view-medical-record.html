@@ -1,0 +1,61 @@
+<!-- Modal component used to display a medical record fetched from IPFS. -->
+<app-entity-modal
+  [show]="show"
+  [title]="'Record: ' + (version?.displayName ?? '')"
+  confirmLabel="Close"
+  (closed)="closed.emit()"
+  (confirmed)="closed.emit()"
+  [hideCancel]="true">
+  
+    <!-- Show loading spinner while fetching record from IPFS. -->
+    @if (loading) {
+        <div class="d-flex align-items-center gap-3 py-4 text-muted">
+            <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+            <span>Loading record from IPFS…</span>
+        </div>
+    } @else if (record) { <!-- Display record details once data is available. -->
+        <div class="row g-3">
+
+            <!-- Diagnosis field. -->
+            <div class="col-12">
+                <label class="form-label fw-semibold small text-uppercase text-muted">Diagnosis</label>
+                <textarea name="record.diagnosis" class="form-control bg-light" rows="4" readonly>{{ record.diagnosis }}</textarea>
+            </div>
+            
+            <!-- Treatment plan field. -->
+            <div class="col-12">
+                <label class="form-label fw-semibold small text-uppercase text-muted">Treatment Plan</label>
+                <textarea name="record.treatmentPlan" class="form-control bg-light" rows="4" readonly>{{ record.treatmentPlan }}</textarea>
+            </div>
+            
+            <!-- Doctor note field. -->
+            @if (record.doctorNotes) {
+                <div class="col-12">
+                    <label class="form-label fw-semibold small text-uppercase text-muted">Doctor Notes</label>
+                    <textarea name="record.doctorNotes" class="form-control bg-light" rows="3" readonly>{{ record.doctorNotes }}</textarea>
+                </div>
+            }
+            
+            <!-- Follow up instructions field. -->
+            @if (record.followUpInstructions) {
+                <div class="col-12">
+                    <label class="form-label fw-semibold small text-uppercase text-muted">Follow-up Instructions</label>
+                    <textarea name="record.followUpInstructions" class="form-control bg-light" rows="3" readonly>{{ record.followUpInstructions }}</textarea>
+                </div>
+            }
+            
+            <!-- IPFS CID display. -->
+            <div class="col-12">
+                <label class="form-label fw-semibold small text-uppercase text-muted">IPFS CID</label>
+                <div class="input-group">
+
+                    <!-- Icon for visual context. -->
+                    <span class="input-group-text bg-light"><i class="bi bi-link-45deg"></i></span>
+
+                    <!-- Read-only input showing CID. -->
+                    <input name="version.ipfS_CID" class="form-control bg-light font-mono small" readonly [value]="version?.ipfS_CID">
+                </div>
+            </div>
+        </div>
+    }
+</app-entity-modal>
