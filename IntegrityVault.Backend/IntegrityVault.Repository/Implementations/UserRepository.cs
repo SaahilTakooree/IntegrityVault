@@ -91,6 +91,146 @@ namespace IntegrityVault.Repository.Implementations
         }
 
 
+        // Method to fetch all patients from a specific hospital asynchronously.
+        public async Task<IEnumerable<Patient>> GetAllPatientsFromHospitalAsync(int hospitalID)
+        {
+            try
+            {
+                // Check if the patient list exists in the database for the given hospital ID.
+                var patients = await _context.Patients
+                    .Where(u => u.HospitalID == hospitalID)
+                    .ToListAsync<Patient>();
+
+                return patients;
+            }
+            catch (Exception ex) // Catch any general exceptions during data fetching.
+            {
+                Console.WriteLine($"Error while retrieving patients for hospital {hospitalID}: {ex.Message}"); // Log the error message to the console.
+                throw new InvalidOperationException($"Error retrieving patients for hospital {hospitalID} from the database: {ex.Message}"); // Throw a custom exception with the error message.
+            }
+        }
+
+
+        // Method to fetch a single admin by ID asynchronously.
+        public async Task<Admin?> GetAdminByIdAsync(int id)
+        {
+            try
+            {
+                // Finding the admin by ID asynchronously, returning null if not found.
+                var admin = await _context.Admins.FirstOrDefaultAsync(a => a.ID == id);
+
+                return admin;
+            }
+            catch (Exception ex) // Catch any general exceptions during data fetching.
+            {
+                {
+                    Console.WriteLine($"Error while retrieving admin by ID {id} {ex.Message}."); // Log the error message to the console.
+                    throw new InvalidOperationException($"Error retrieving admin with ID {id} from the database {ex.Message}"); // Throw a custom exception with the error message.
+                }
+            }
+        }
+
+
+        // Method to fetch a single doctor by ID asynchronously.
+        public async Task<Doctor?> GetDoctorByIdAsync(int id)
+        {
+            try
+            {
+                // Finding the doctor by ID asynchronously, returning null if not found.
+                var doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.ID == id);
+
+                return doctor;
+            }
+            catch (Exception ex) // Catch any general exceptions during data fetching.
+            {
+                {
+                    Console.WriteLine($"Error while retrieving doctor by ID {id} {ex.Message}."); // Log the error message to the console.
+                    throw new InvalidOperationException($"Error retrieving doctor with ID {id} from the database {ex.Message}"); // Throw a custom exception with the error message.
+                }
+            }
+        }
+
+
+        // Method to fetch a single external provider by ID asynchronously.
+        public async Task<ExternalProvider?> GetExternalProviderByIdAsync(int id)
+        {
+            try
+            {
+                // Finding the external provider by ID asynchronously, returning null if not found.
+                var externalProvider = await _context.ExternalProviders.FirstOrDefaultAsync(e => e.ID == id);
+
+                return externalProvider;
+            }
+            catch (Exception ex) // Catch any general exceptions during data fetching.
+            {
+                {
+                    Console.WriteLine($"Error while retrieving external provider by ID {id} {ex.Message}."); // Log the error message to the console.
+                    throw new InvalidOperationException($"Error retrieving external provider with ID {id} from the database {ex.Message}"); // Throw a custom exception with the error message.
+                }
+            }
+        }
+
+
+        // Method to fetch a single patient by ID asynchronously.
+        public async Task<Patient?> GetPatientByIdAsync(int id)
+        {
+            try
+            {
+                // Finding the patient by ID asynchronously, returning null if not found.
+                var patient = await _context.Patients.FirstOrDefaultAsync(e => e.ID == id);
+
+                return patient;
+            }
+            catch (Exception ex) // Catch any general exceptions during data fetching.
+            {
+                {
+                    Console.WriteLine($"Error while retrieving patient by ID {id} {ex.Message}."); // Log the error message to the console.
+                    throw new InvalidOperationException($"Error retrieving patient with ID {id} from the database {ex.Message}"); // Throw a custom exception with the error message.
+                }
+            }
+        }
+
+
+        // Method to fetch a single suepr amdin by ID asynchronously.
+        public async Task<SuperAdmin?> GetSuperAdminByIdAsync(int id)
+        {
+            try
+            {
+                // Finding the super admin by ID asynchronously, returning null if not found.
+                var superAdmin = await _context.SuperAdmins.FirstOrDefaultAsync(e => e.ID == id);
+
+                return superAdmin;
+            }
+            catch (Exception ex) // Catch any general exceptions during data fetching.
+            {
+                {
+                    Console.WriteLine($"Error while retrieving super admin by ID {id} {ex.Message}."); // Log the error message to the console.
+                    throw new InvalidOperationException($"Error retrieving super admin with ID {id} from the database {ex.Message}"); // Throw a custom exception with the error message.
+                }
+            }
+        }
+
+
+        // Method to fetch a single suepr amdin by wallet address asynchronously.
+        public async Task<SuperAdmin?> GetSuperAdminByWalletAsync(string walletAddress)
+        {
+            try
+            {
+                // Finding the super admin by wallet address asynchronously, returning null if not found.
+                var superAdmin = await _context.SuperAdmins.FirstOrDefaultAsync(s => s.WalletAddress.ToLower() == walletAddress.ToLower());
+
+                return superAdmin;
+            }
+            catch (Exception ex) // Catch any general exceptions during data fetching.
+            {
+                {
+                    Console.WriteLine($"Error while retrieving super admin by wallet address {walletAddress} {ex.Message}."); // Log the error message to the console.
+                    throw new InvalidOperationException($"Error retrieving super admin with wallet address {walletAddress} from the database {ex.Message}"); // Throw a custom exception with the error message.
+                }
+            }
+        }
+
+
         //  Method to create a new doctor in the database asynchronously.
         public async Task<bool> CreateDoctorAsync(CreateDoctorDTO createDoctorDTO)
         {
@@ -234,7 +374,7 @@ namespace IntegrityVault.Repository.Implementations
 
 
         //  Method to create a new super admin in the database asynchronously.
-        public async Task<bool> CreateSuperAdminAsync(CreateSuperAdminDTO createSuperAdminDTO)
+        public async Task<bool> CreateSuperAdminAsync(CreateSuperAdminDTO createSuperAdminDTO, byte[] encryptedKey)
         {
             try
             {
@@ -244,7 +384,9 @@ namespace IntegrityVault.Repository.Implementations
                     Email = createSuperAdminDTO.Email,
                     Password = createSuperAdminDTO.Password,
                     Role = UserRole.SuperAdmin,
-                    HospitalID = null
+                    HospitalID = null,
+                    WalletAddress = createSuperAdminDTO.WalletAddress,
+                    EncryptedPrivateKey = encryptedKey,
                 };
 
                 // Save changes and return true if successful.
@@ -409,7 +551,7 @@ namespace IntegrityVault.Repository.Implementations
 
 
         // Method to update an super admins record asynchronously.
-        public async Task<bool> UpdateSuperAdminAsync(int id, UpdateSuperAdminDTO updateSuperAdminDTO)
+        public async Task<bool> UpdateSuperAdminAsync(int id, UpdateSuperAdminDTO updateSuperAdminDTO, byte[]? encryptedKey)
         {
             try
             {
@@ -419,6 +561,9 @@ namespace IntegrityVault.Repository.Implementations
                 // Apply the base user fields.
                 ApplyBaseUserUpdates(superadmins, updateSuperAdminDTO);
 
+                // Apply super admin specific fields.
+                if (updateSuperAdminDTO.WalletAddress is not null) superadmins.WalletAddress = updateSuperAdminDTO.WalletAddress;
+                if (encryptedKey is not null) superadmins.EncryptedPrivateKey = encryptedKey;
 
                 await _context.SaveChangesAsync();
                 return true;
@@ -464,10 +609,46 @@ namespace IntegrityVault.Repository.Implementations
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"General error while deleting user {id}: {ex.Message}.");  // Log a general error message.
+                Console.WriteLine($"General error while deleting user {id}: {ex.Message}."); // Log a general error message.
                 throw new InvalidOperationException($"Unexpected error deleting user with ID {id}. {ex.Message}"); // Throw a custom exception for general errors during user deletion.
             }
         }
+
+
+        // Method to get all the doctor IDs.
+        public async Task<List<Doctor>> GetDoctorsByIDsAsync(List<int> doctorIDs)
+        {
+            try
+            {
+                // Return a list of all doctors.
+                return await _context.Doctors
+                    .Where(d => doctorIDs.Contains(d.ID))
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving doctors by IDs: {ex.Message}"); // Log a general error message.
+                throw new InvalidOperationException($"Error retrieving doctors by IDs: {ex.Message}"); // Throw a custom exception for general errors during user retrival.
+            }
+        }
+
+
+        // Method to get all the patient IDs.
+        public async Task<List<Patient>> GetPatientsByIDsAsync(List<int> patientIDs)
+        {
+            try
+            {
+                return await _context.Patients
+                    .Where(p => patientIDs.Contains(p.ID))
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving patients by IDs: {ex.Message}"); // Log a general error message.
+                throw new InvalidOperationException($"Error retrieving patients by IDs: {ex.Message}"); // Throw a custom exception for general errors during user retrival.
+            }
+        }
+
 
 
         // Private helper to applie the shared based-user field form any UpdateUserDTO

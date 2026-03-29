@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("IntegrityVault.Service")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+895b8b12b516730c2170a46ad0684de3ccb742d5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+515b67d8b74ea6969358b1c95b9dd8b0a62e77c3")]
 [assembly: System.Reflection.AssemblyProductAttribute("IntegrityVault.Service")]
 [assembly: System.Reflection.AssemblyTitleAttribute("IntegrityVault.Service")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

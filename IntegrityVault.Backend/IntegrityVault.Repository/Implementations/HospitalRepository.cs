@@ -51,7 +51,7 @@ namespace IntegrityVault.Repository.Implementations
 
 
         //  Method to create a new hospital in the database asynchronously.
-        public async Task<bool> CreateHospitalAsync(CreateHospitalDTO createHospitalDTO)
+        public async Task<int> CreateHospitalAsync(CreateHospitalDTO createHospitalDTO, byte[] encryptedKey)
         {
             try
             {
@@ -59,6 +59,7 @@ namespace IntegrityVault.Repository.Implementations
                 {
                     Name = createHospitalDTO.Name,
                     WalletAddress = createHospitalDTO.WalletAddress,
+                    EncryptedPrivateKey = encryptedKey,
                     IpAddresses = createHospitalDTO.IpAddresses // Map each IP string from the DTO into a HospitalIpAddress entity.
                         .Select(ip => new HospitalIpAddress { IpAddress = ip })
                         .ToList()
@@ -68,7 +69,7 @@ namespace IntegrityVault.Repository.Implementations
                 await _context.Hospitals.AddAsync(hospital);
                 await _context.SaveChangesAsync();
 
-                return true; // Return true to show success.
+                return hospital.ID; // Return ID to show success.
             }
             catch (DbUpdateException dbEx) // Catch database update exceptions specifically.
             {
@@ -84,7 +85,7 @@ namespace IntegrityVault.Repository.Implementations
 
 
         // Method to update an hospital record asynchronously.
-        public async Task<bool> UpdateHospitalAsync(int id, UpdateHospitalDTO updateHospitalDTO)
+        public async Task<bool> UpdateHospitalAsync(int id, UpdateHospitalDTO updateHospitalDTO, byte[]? encryptedKey)
         {
             try
             {
@@ -121,6 +122,11 @@ namespace IntegrityVault.Repository.Implementations
 
                     foreach (var ip in toAdd)
                         hospitals.IpAddresses.Add(new HospitalIpAddress { HospitalID = id, IpAddress = ip });
+                }
+
+                if (encryptedKey is not null)
+                {
+                    hospitals.EncryptedPrivateKey = encryptedKey;
                 }
 
                 await _context.SaveChangesAsync();

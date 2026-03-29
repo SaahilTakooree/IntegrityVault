@@ -155,6 +155,10 @@
             "BCrypt.Net-Next": {
               "target": "Package",
               "version": "[4.1.0, )"
+            },
+            "Nethereum.Web3": {
+              "target": "Package",
+              "version": "[6.0.4, )"
             }
           },
           "imports": [
@@ -332,6 +336,24 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.Extensions.Http": {
+              "target": "Package",
+              "version": "[9.0.14, )"
+            },
+            "Nethereum.Web3": {
+              "target": "Package",
+              "version": "[6.0.4, )"
+            },
+            "QuestPDF": {
+              "target": "Package",
+              "version": "[2026.2.3, )"
+            },
+            "UglyToad.PdfPig": {
+              "target": "Package",
+              "version": "[1.7.0-custom-5, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

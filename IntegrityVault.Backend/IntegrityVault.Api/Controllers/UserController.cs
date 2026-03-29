@@ -66,6 +66,28 @@ namespace IntegrityVault.Api.Controllers
         }
 
 
+        // Specifies that this method will handle HTTP Get requests.
+        [HttpGet("patient/{hospitalId:int}")]
+        public async Task<IActionResult> GetAllPatientFromHosptal(int hospitalId) // Method for get the complete list of all patient from a specific hospital.
+        {
+            try
+            {
+                var result = await _userService.GetAllPatientFromHospital(hospitalId); // Calling the GetAllUserAsync method from the injected service to get a list of all user.
+                return Ok(result);
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine($"Invalid get all user: {ex.Message}."); // Logging the exception message to the console for debugging.
+                return BadRequest(ex.Message); // Returning a 400 BadRequest with the exception message.
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Internal server error: {ex.Message}."); // Logging the exception message to the console for debugging.
+                return StatusCode(500, $"Internal server error: {ex.Message}."); // Returning a 500 Internal Server Error with the exception message.
+            }
+        }
+
+
         // Specifies that this method will handle HTTP POST requests.
         [HttpPost("doctor")]
         public async Task<IActionResult> CreateDoctor([FromBody] CreateDoctorDTO createDoctorDTO) // Method for creating a doctor, accepting a CreateDoctorDTO object from the request body.

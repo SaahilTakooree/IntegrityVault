@@ -54,6 +54,10 @@
             "BCrypt.Net-Next": {
               "target": "Package",
               "version": "[4.1.0, )"
+            },
+            "Nethereum.Web3": {
+              "target": "Package",
+              "version": "[6.0.4, )"
             }
           },
           "imports": [

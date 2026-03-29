@@ -52,6 +52,8 @@ namespace IntegrityVault.Common.DTOs
     // DTO return when reading a super
     public class SuperAdminDTO : UserDTO
     {
+        public required string WalletAddress { get; set; }
+        public required byte[] EncryptedPrivateKey { get; set; }
     }
 
 
@@ -101,6 +103,8 @@ namespace IntegrityVault.Common.DTOs
     // DTO for creating an super admin.
     public class CreateSuperAdminDTO : CreateUserDTO
     {
+        public required string WalletAddress { get; set; }
+        public required string PrivateKey { get; set; }
     }
 
 
@@ -150,5 +154,7 @@ namespace IntegrityVault.Common.DTOs
     // DTO for updating an admin.
     public class UpdateSuperAdminDTO : UpdateUserDTO
     {
+        public string? WalletAddress { get; set; }
+        public string? PrivateKey { get; set; }
     }
 }

@@ -10,7 +10,7 @@ using IntegrityVault.Common.DTOs; // Import the data transfer objects (DTOs) use
 namespace IntegrityVault.Service.Implementations
 {
     // Define the UserService class and injecting the IUserRepository and IHospitalRepository dependency.
-    public class UserService(IUserRepository _userRepository, IHospitalRepository _hospitalRepository) : IUserService
+    public class UserService(IUserRepository _userRepository, IHospitalRepository _hospitalRepository, ICryptoService _cryptoService) : IUserService
     {
         // Method to return all users mapped to their role-specific DTOs.
         public async Task<IEnumerable<UserDTO>> GetAllUsersAsync(int? hospitalId = null)
@@ -48,6 +48,29 @@ namespace IntegrityVault.Service.Implementations
             catch (Exception ex) // Catching any general exceptions.
             {
                 throw new InvalidOperationException($"Error fetching user by ID: {ex.Message}."); // Wrapping the exception and throwing it with a custom message.
+            }
+        }
+
+
+        // Method to get all patient from one hospital.
+        public async Task<IEnumerable<Patient?>> GetAllPatientFromHospital(int hospitalId)
+        {
+            try
+            {
+                // Check if the hospital exists.
+                bool hospitalExists = await _hospitalRepository.ExistsAsync(hospitalId);
+
+                if (!hospitalExists)
+                {
+                    throw new InvalidOperationException("Hospital cannot be found.");
+                }
+
+                // Return patients from the hospital if it exists,
+                return await _userRepository.GetAllPatientsFromHospitalAsync(hospitalId);
+            }
+            catch (Exception ex) // Catching any general exceptions.
+            {
+                throw new InvalidOperationException($"Error fetching all patient from specific hospital: {ex.Message}."); // Wrapping the exception and throwing it with a custom message.
             }
         }
 
@@ -241,9 +264,11 @@ namespace IntegrityVault.Service.Implementations
                 // Hash the password before storing it.
                 createSuperAdminDTO.Password = HashHelper.Hash(createSuperAdminDTO.Password) ?? throw new InvalidOperationException("Password hashing failed."); // Hashing the password using a helper method and ensuring it is not null.
 
+                // Encrypt the private key before passing it to the repository.
+                var encryptedKey = _cryptoService.Encrypt(createSuperAdminDTO.PrivateKey);
 
                 // Create the super admin.
-                return await _userRepository.CreateSuperAdminAsync(createSuperAdminDTO); // Create the super admin in the repository and returning the result.
+                return await _userRepository.CreateSuperAdminAsync(createSuperAdminDTO, encryptedKey); // Create the super admin in the repository and returning the result.
             }
             catch (InvalidOperationException ex) // Catch InvalidOperationException separately to provide specific error messages.
             {
@@ -445,7 +470,11 @@ namespace IntegrityVault.Service.Implementations
                     updateSuperAdminDTO.Password = HashHelper.Hash(updateSuperAdminDTO.Password) ?? throw new InvalidOperationException("Password hashing failed."); // Hashing the password using a helper method and ensuring it is not null.
                 }
 
-                return await _userRepository.UpdateSuperAdminAsync(id, updateSuperAdminDTO);
+                // Encrypt the new private key only if one was provided.
+                byte[]? encryptedKey = updateSuperAdminDTO.PrivateKey is not null ? _cryptoService.Encrypt(updateSuperAdminDTO.PrivateKey) : null;
+
+
+                return await _userRepository.UpdateSuperAdminAsync(id, updateSuperAdminDTO, encryptedKey);
             }
             catch (InvalidOperationException ex)
             {

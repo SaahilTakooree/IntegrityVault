@@ -16,6 +16,21 @@ namespace IntegrityVault.Repository.Configurations
             // Maps the external super admin to the database table name "Admins".
             entity.ToTable("SuperAdmins");
 
+            // Configure the WalletAddress property. 
+            entity.Property(h => h.WalletAddress)
+                .IsRequired() // Make the WalletAddress column not null.
+                .HasMaxLength(42);// Set the macimum length to the 43 characters.
+            entity.ToTable(t => {
+                t.HasCheckConstraint("CK_SuperAdmin_WalletAddress_Length",
+                    "LEN(WalletAddress) = 42"); // Ensures tha each length of each address is exactly 42 characters long.
+            });
+            entity.HasIndex(h => h.WalletAddress)
+                .IsUnique(); // Ensure that each wallet address is unique.
+
+            // Configure the EncryptedPrivateKey property.
+            entity.Property(h => h.EncryptedPrivateKey)
+                .IsRequired();
+
             // Configure one-to-one relationship with User table.
             entity.HasOne<SuperAdmin>() // Reference the SuperAdmin Entity to another entity.
                 .WithOne() // Specifies that the other entity has one instance of the external provider.

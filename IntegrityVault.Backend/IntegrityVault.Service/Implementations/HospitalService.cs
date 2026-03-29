@@ -1,4 +1,5 @@
 ﻿// Import dependencies needed.
+using IntegrityVault.Repository.Contexts; // Import the context class for interacting with the database.
 using IntegrityVault.Repository.Interfaces; // Import the interface for the hospital repository.
 using IntegrityVault.Service.Interfaces; // Import the interface for the hospital service.
 using IntegrityVault.Common.Entities; // Import the entity class for Hospital.
@@ -10,7 +11,7 @@ using IntegrityVault.Common.DTOs; // Import the data transfer objects (DTOs) use
 namespace IntegrityVault.Service.Implementations
 {
     // Define the HospitalService class and injecting the IHospitalRepository dependency.
-    public class HospitalService(IHospitalRepository _hospitalRepository) : IHospitalService
+    public class HospitalService(IHospitalRepository _hospitalRepository, ICryptoService _cryptoService, IBlockchainService _blockchainService, IntegrityVaultDbContext _context) : IHospitalService
     {
         // Method to return all hospitals mapped to their role-specific DTOs.
         public async Task<IEnumerable<HospitalDTO>> GetAllHospitalsAsync()
@@ -55,6 +56,7 @@ namespace IntegrityVault.Service.Implementations
         // Method to create a hospital asynchronously.
         public async Task<bool> CreateHospitalAsync(CreateHospitalDTO createHospitalDTO)
         {
+            using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 // Check if the wallet already exists.
@@ -69,15 +71,27 @@ namespace IntegrityVault.Service.Implementations
                     throw new InvalidOperationException("At least one IP address is required when creating a hospital.");
                 }
 
+                // Encrypt the private key before passing it to the repository.
+                var encryptedKey = _cryptoService.Encrypt(createHospitalDTO.PrivateKey);
+
                 // Create the hospital.
-                return await _hospitalRepository.CreateHospitalAsync(createHospitalDTO); // Create the hospital in the repository and returning the result.
+                var hospitalID =  await _hospitalRepository.CreateHospitalAsync(createHospitalDTO, encryptedKey); // Create the hospital in the repository and returning the result.
+
+                // Update the data on the chain.
+                await _blockchainService.AddHospitalToChainAsync(hospitalID, createHospitalDTO.WalletAddress);
+
+                await transaction.CommitAsync();
+
+                return true;
             }
             catch (InvalidOperationException ex) // Catch InvalidOperationException separately to provide specific error messages.
             {
+                await transaction.RollbackAsync();
                 throw new InvalidOperationException($"Hospital creation failed: {ex.Message}."); // Wrap the exception and throwing it with a custom message for hospital creation failure.
             }
             catch (Exception ex) // Catch any other general exceptions.
             {
+                await transaction.RollbackAsync();
                 throw new InvalidOperationException($"Error during hospital creation: {ex.Message},"); // Wrap  the exception and throwing it with a custom message for general errors.
             }
         }
@@ -86,6 +100,8 @@ namespace IntegrityVault.Service.Implementations
         // Method to update the hospital repository.
         public async Task<bool> UpdateHospitalAsync(int id, UpdateHospitalDTO updateHospitalDTO)
         {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
             try
             {
                 // Custom validation to ensure the provided ID is valid.
@@ -103,14 +119,28 @@ namespace IntegrityVault.Service.Implementations
                     throw new InvalidOperationException("A hospital must have at least one IP address.");
                 }
 
-                return await _hospitalRepository.UpdateHospitalAsync(id, updateHospitalDTO);
+                // Encrypt the new private key only if one was provided.
+                byte[]? encryptedKey = updateHospitalDTO.PrivateKey is not null ? _cryptoService.Encrypt(updateHospitalDTO.PrivateKey): null;
+
+                await _hospitalRepository.UpdateHospitalAsync(id, updateHospitalDTO, encryptedKey);
+
+                if (updateHospitalDTO.WalletAddress is not null)
+                {
+                    await _blockchainService.UpdateHospitalWalletOnChainAsync(id, updateHospitalDTO.WalletAddress);
+                }
+
+                await transaction.CommitAsync();
+
+                return true;
             }
             catch (InvalidOperationException ex)
             {
+                await transaction.RollbackAsync();
                 throw new InvalidOperationException($"Hospital update failed: {ex.Message}.");
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 throw new InvalidOperationException($"Error during Hospital update: {ex.Message}.");
             }
         }
@@ -119,19 +149,29 @@ namespace IntegrityVault.Service.Implementations
         // Method to delete a hospital from repository.
         public async Task<bool> DeleteHospitalAsync(int id)
         {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
             try
             {
                 // Custom validation to ensure the provided ID is valid.
                 id.ThrowIfInvalidId("Hospital Id");
 
-                return await _hospitalRepository.DeleteHospitalAsync(id);
+                await _hospitalRepository.DeleteHospitalAsync(id);
+
+                await _blockchainService.DeleteHospitalWalletFromChainAsync(id);
+
+                await transaction.CommitAsync();
+
+                return true;
             }
             catch (InvalidOperationException ex)
             {
+                await transaction.RollbackAsync();
                 throw new InvalidOperationException($"Hosptal delete failed: {ex.Message}.");
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 throw new InvalidOperationException($"Error during hospital deletion: {ex.Message}.");
             }
         }

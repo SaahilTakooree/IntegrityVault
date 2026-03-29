@@ -95,6 +95,206 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "IntegrityVault.Api.Controllers.MedicalRecordController",
+    "Method": "CreateNewMedicalRecordAndEpisode",
+    "RelativePath": "api/MedicalRecord",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "createMedicalRecordDTO",
+        "Type": "IntegrityVault.Common.DTOs.CreateMedicalRecordDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.MedicalRecordController",
+    "Method": "GetDoctorMedicalHistory",
+    "RelativePath": "api/MedicalRecord/doctor/{doctorID}/history",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "doctorID",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.MedicalRecordController",
+    "Method": "AddMedicalRecordToEpisode",
+    "RelativePath": "api/MedicalRecord/episode/{episodeID}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "episodeID",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "createMedicalRecordDTO",
+        "Type": "IntegrityVault.Common.DTOs.CreateMedicalRecordDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.MedicalRecordController",
+    "Method": "UpdateMedicalrecord",
+    "RelativePath": "api/MedicalRecord/episode/{episodeID}/{medicalRecordID}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "medicalRecordID",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "episodeID",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "createMedicalRecordDTO",
+        "Type": "IntegrityVault.Common.DTOs.CreateMedicalRecordDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.MedicalRecordController",
+    "Method": "SetEpisodeStatus",
+    "RelativePath": "api/MedicalRecord/episode/{episodeID}/status",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "episodeID",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "doctorID",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.MedicalRecordController",
+    "Method": "GetMedicalRecordInformFromCID",
+    "RelativePath": "api/MedicalRecord/ipfs/{cid}/user/{userID}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cid",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "userID",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.MedicalRecordController",
+    "Method": "DownloadMedicalRecord",
+    "RelativePath": "api/MedicalRecord/ipfs/{cid}/user/{userID}/download",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cid",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "userID",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.MedicalRecordController",
+    "Method": "CheckIfMedicalRecordTampered",
+    "RelativePath": "api/MedicalRecord/ipfs/{cid}/user/{userID}/tamper-check",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cid",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "userID",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.MedicalRecordController",
+    "Method": "GetPatientMedicalHistory",
+    "RelativePath": "api/MedicalRecord/patient/{patientID}/history",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "patientID",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.MedicalRecordController",
+    "Method": "VerifyPdfTampering",
+    "RelativePath": "api/MedicalRecord/pdf/tamper-check/user/{userID}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userID",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "file",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "IntegrityVault.Api.Controllers.UserController",
     "Method": "GetAllUsers",
     "RelativePath": "api/User",
@@ -264,6 +464,22 @@
       {
         "Name": "createPatientDTO",
         "Type": "IntegrityVault.Common.DTOs.CreatePatientDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IntegrityVault.Api.Controllers.UserController",
+    "Method": "GetAllPatientFromHosptal",
+    "RelativePath": "api/User/patient/{hospitalId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "hospitalId",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],

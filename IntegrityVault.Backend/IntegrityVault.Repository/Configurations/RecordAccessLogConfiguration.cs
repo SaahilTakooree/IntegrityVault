@@ -37,13 +37,13 @@ namespace IntegrityVault.Repository.Configurations
                 .HasMaxLength(3); // Set the maximum length to 3 charactes.
             entity.ToTable(t => {
                 t.HasCheckConstraint("Ck_RecordAccessLog_AccessType",
-                    "[AccessType] IN (0, 1)"); // Make sure that AccessType column can only take values 0, or 1.
+                    "[AccessType] IN (0, 1, 2, 3, 4)"); // Make sure that AccessType column can only take values 0, 1, 2, 3 or 4.
             });
 
             // Configure the CreatedAt property.
             entity.Property(m => m.Timestamp)
                 .IsRequired() // Make the Timestamp column not null.
-                .HasColumnType("date") // Set the column type to data.
+                .HasColumnType("datetime2") // Set the column type to data.
                 .HasDefaultValueSql("GETUTCDATE()"); // Sets the default value of Timestamp to the current UTC date and time.
         }
     }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IntegrityVault.Repository.Migrations
 {
     [DbContext(typeof(IntegrityVaultDbContext))]
-    [Migration("20260311191809_InitialCreate")]
+    [Migration("20260324135442_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -25,6 +25,53 @@ namespace IntegrityVault.Repository.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("IntegrityVault.Common.Entities.Episode", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<int>("DoctorID")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<int>("PatientID")
+                        .HasColumnType("int");
+
+                    b.Property<byte>("Specialty")
+                        .HasMaxLength(3)
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DoctorID");
+
+                    b.HasIndex("PatientID");
+
+                    b.ToTable("Episodes", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Episode_Specialty", "[Specialty] IN (0, 1, 2, 3, 4)");
+
+                            t.HasCheckConstraint("CK_Episode_Title_MinLength", "LEN(Title) >= 3");
+                        });
+                });
+
             modelBuilder.Entity("IntegrityVault.Common.Entities.Hospital", b =>
                 {
                     b.Property<int>("ID")
@@ -32,6 +79,10 @@ namespace IntegrityVault.Repository.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<byte[]>("EncryptedPrivateKey")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -86,6 +137,17 @@ namespace IntegrityVault.Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
+                    b.Property<string>("BlockchainTxHash")
+                        .HasMaxLength(66)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(66)");
+
+                    b.Property<string>("ContentHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(64)");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -96,7 +158,7 @@ namespace IntegrityVault.Repository.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<int>("DoctorID")
+                    b.Property<int>("EpisodeID")
                         .HasColumnType("int");
 
                     b.Property<string>("IPFS_CID")
@@ -104,23 +166,40 @@ namespace IntegrityVault.Repository.Migrations
                         .HasMaxLength(90)
                         .HasColumnType("nvarchar(90)");
 
-                    b.Property<int>("PatientID")
-                        .HasColumnType("int");
+                    b.Property<string>("PreviousVersionHash")
+                        .HasMaxLength(64)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(64)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
+                    b.Property<string>("VersionHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<DateOnly>("VisitDate")
+                        .HasColumnType("date");
+
                     b.HasKey("ID");
 
-                    b.HasIndex("DoctorID");
-
-                    b.HasIndex("PatientID");
+                    b.HasIndex("EpisodeID");
 
                     b.ToTable("MedicalRecords", null, t =>
                         {
+                            t.HasCheckConstraint("CK_MedicalRecord_BlockchainTxHash_Length", "BlockchainTxHash IS NULL OR LEN(BlockchainTxHash) = 66");
+
+                            t.HasCheckConstraint("CK_MedicalRecord_ContentHash_Length", "LEN(ContentHash) = 64");
+
                             t.HasCheckConstraint("CK_MedicalRecord_CurrentVersion_NonNegative", "CurrentVersion >= 0");
+
+                            t.HasCheckConstraint("CK_MedicalRecord_PreviousVersionHash_Length", "PreviousVersionHash IS NULL OR LEN(PreviousVersionHash) = 64");
+
+                            t.HasCheckConstraint("CK_MedicalRecord_VersionHash_Length", "LEN(VersionHash) = 64");
 
                             t.HasCheckConstraint("CK_Medical_Record_IPFS_CID_Length", "LEN(IPFS_CID) >= 40");
                         });
@@ -134,15 +213,44 @@ namespace IntegrityVault.Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
+                    b.Property<string>("BlockchainTxHash")
+                        .HasMaxLength(66)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(66)");
+
+                    b.Property<string>("NewContentHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(64)");
+
                     b.Property<string>("NewIPFS_CID")
                         .IsRequired()
                         .HasMaxLength(90)
                         .HasColumnType("nvarchar(90)");
 
+                    b.Property<string>("NewVersionHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<string>("PreviousContentHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(64)");
+
                     b.Property<string>("PreviousIPFS_CID")
                         .IsRequired()
                         .HasMaxLength(90)
                         .HasColumnType("nvarchar(90)");
+
+                    b.Property<string>("PreviousVersionHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(64)");
 
                     b.Property<int>("RecordID")
                         .HasColumnType("int");
@@ -167,11 +275,25 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.ToTable("MedicalRecordAuditLogs", null, t =>
                         {
+                            t.HasCheckConstraint("CK_AuditLog_BlockchainTxHash_Length", "BlockchainTxHash IS NULL OR LEN(BlockchainTxHash) = 66");
+
                             t.HasCheckConstraint("CK_AuditLog_CIDs_Must_Differ", "PreviousIPFS_CID <> NewIPFS_CID");
+
+                            t.HasCheckConstraint("CK_AuditLog_ContentHashes_Must_Differ", "PreviousContentHash <> NewContentHash");
+
+                            t.HasCheckConstraint("CK_AuditLog_NewContentHash_Length", "LEN(NewContentHash) = 64");
 
                             t.HasCheckConstraint("CK_AuditLog_NewIPFS_CID_Length", "LEN(NewIPFS_CID) >= 40");
 
+                            t.HasCheckConstraint("CK_AuditLog_NewVersionHash_Length", "LEN(NewVersionHash) = 64");
+
+                            t.HasCheckConstraint("CK_AuditLog_PreviousContentHash_Length", "LEN(PreviousContentHash) = 64");
+
                             t.HasCheckConstraint("CK_AuditLog_PreviousIPFS_CID_Length", "LEN(PreviousIPFS_CID) >= 40");
+
+                            t.HasCheckConstraint("CK_AuditLog_PreviousVersionHash_Length", "LEN(PreviousVersionHash) = 64");
+
+                            t.HasCheckConstraint("CK_AuditLog_VersionHashes_Must_Differ", "PreviousVersionHash <> NewVersionHash");
 
                             t.HasCheckConstraint("CK_AuditLog_Version_Positive", "Version >= 1");
                         });
@@ -197,7 +319,7 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("date")
+                        .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.HasKey("ID");
@@ -208,7 +330,7 @@ namespace IntegrityVault.Repository.Migrations
 
                     b.ToTable("RecordAccessLogs", null, t =>
                         {
-                            t.HasCheckConstraint("Ck_RecordAccessLog_AccessType", "[AccessType] IN (0, 1)");
+                            t.HasCheckConstraint("Ck_RecordAccessLog_AccessType", "[AccessType] IN (0, 1, 2, 3, 4)");
                         });
                 });
 
@@ -388,6 +510,19 @@ namespace IntegrityVault.Repository.Migrations
                 {
                     b.HasBaseType("IntegrityVault.Common.Entities.User");
 
+                    b.Property<byte[]>("EncryptedPrivateKey")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("WalletAddress")
+                        .IsRequired()
+                        .HasMaxLength(42)
+                        .HasColumnType("nvarchar(42)");
+
+                    b.HasIndex("WalletAddress")
+                        .IsUnique()
+                        .HasFilter("[WalletAddress] IS NOT NULL");
+
                     b.ToTable("SuperAdmins", null, t =>
                         {
                             t.HasCheckConstraint("CK_User_HospitalID_Required", "(Role IN (0, 1, 2, 3) AND HospitalID IS NOT NULL) OR (Role IN (4) AND HospitalID IS NULL)");
@@ -397,7 +532,28 @@ namespace IntegrityVault.Repository.Migrations
                             t.HasCheckConstraint("CK_Users_Password_Length", "LEN(Password) >= 7");
 
                             t.HasCheckConstraint("Ck_User_Role", "[Role] IN (0, 1, 2, 3, 4)");
+
+                            t.HasCheckConstraint("CK_SuperAdmin_WalletAddress_Length", "LEN(WalletAddress) = 42");
                         });
+                });
+
+            modelBuilder.Entity("IntegrityVault.Common.Entities.Episode", b =>
+                {
+                    b.HasOne("IntegrityVault.Common.Entities.Doctor", "Doctor")
+                        .WithMany("Episodes")
+                        .HasForeignKey("DoctorID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("IntegrityVault.Common.Entities.Patient", "Patient")
+                        .WithMany("Episodes")
+                        .HasForeignKey("PatientID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("IntegrityVault.Common.Entities.HospitalIpAddress", b =>
@@ -413,21 +569,13 @@ namespace IntegrityVault.Repository.Migrations
 
             modelBuilder.Entity("IntegrityVault.Common.Entities.MedicalRecord", b =>
                 {
-                    b.HasOne("IntegrityVault.Common.Entities.Doctor", "Doctor")
-                        .WithMany("CreatedRecords")
-                        .HasForeignKey("DoctorID")
+                    b.HasOne("IntegrityVault.Common.Entities.Episode", "Episode")
+                        .WithMany("Records")
+                        .HasForeignKey("EpisodeID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("IntegrityVault.Common.Entities.Patient", "Patient")
-                        .WithMany("MedicalRecords")
-                        .HasForeignKey("PatientID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Doctor");
-
-                    b.Navigation("Patient");
+                    b.Navigation("Episode");
                 });
 
             modelBuilder.Entity("IntegrityVault.Common.Entities.MedicalRecordAuditLog", b =>
@@ -561,6 +709,11 @@ namespace IntegrityVault.Repository.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("IntegrityVault.Common.Entities.Episode", b =>
+                {
+                    b.Navigation("Records");
+                });
+
             modelBuilder.Entity("IntegrityVault.Common.Entities.Hospital", b =>
                 {
                     b.Navigation("IpAddresses");
@@ -577,12 +730,12 @@ namespace IntegrityVault.Repository.Migrations
 
             modelBuilder.Entity("IntegrityVault.Common.Entities.Doctor", b =>
                 {
-                    b.Navigation("CreatedRecords");
+                    b.Navigation("Episodes");
                 });
 
             modelBuilder.Entity("IntegrityVault.Common.Entities.Patient", b =>
                 {
-                    b.Navigation("MedicalRecords");
+                    b.Navigation("Episodes");
                 });
 #pragma warning restore 612, 618
         }

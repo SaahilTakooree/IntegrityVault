@@ -16,6 +16,7 @@ namespace IntegrityVault.Common.DTOs
     {
         public required string Name { get; set; }
         public required string WalletAddress { get; set; }
+        public required string PrivateKey { get; set; }
         public required List<string> IpAddresses { get; set; }
     }
 
@@ -25,6 +26,7 @@ namespace IntegrityVault.Common.DTOs
     {
         public string? Name { get; set; }
         public string? WalletAddress { get; set; }
+        public string? PrivateKey { get; set; }
         public List<string>? IpAddresses { get; set; }
     }
 }

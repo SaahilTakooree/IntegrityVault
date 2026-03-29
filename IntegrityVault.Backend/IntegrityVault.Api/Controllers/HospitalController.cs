@@ -86,7 +86,7 @@ namespace IntegrityVault.Api.Controllers
         }
 
 
-        // Specifies that this method will handle HTTP Put requests.
+        // Specifies that this method will handle HTTP Patch requests.
         [HttpPatch("{id:int}")]
         public async Task<IActionResult> UpdateHospital(int id, [FromBody] UpdateHospitalDTO updateHospitalDTO) // Method for update a hospital, accepting a UpdateHospitalDTO object from the request body.
         {

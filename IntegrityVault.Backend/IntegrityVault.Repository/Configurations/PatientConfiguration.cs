@@ -15,25 +15,30 @@ namespace IntegrityVault.Repository.Configurations
         {
             // Maps the patient entity to the database table name "Patients".
             entity.ToTable("Patients");
+            
 
             // Configure the FirstName property.
             entity.Property(p => p.FirstName)
                 .IsRequired() // Make the FirstName column not null.
                 .HasMaxLength(100); // Set maximum length to the 100 characters.
 
+
             // Configure the MiddleName property.
             entity.Property(p => p.MiddleName)
                 .HasMaxLength(100); // Set maximum length to the 100 characters.
+
 
             // Configure the LastName property.
             entity.Property(p => p.LastName)
                 .IsRequired() // Make the LastName column not null.
                 .HasMaxLength(100); // Set maximum length to the 100 characters.
+            
 
             // Configure the DOB property.
             entity.Property(p => p.DOB)
                 .IsRequired() // Make the DOB column not null.
                 .HasColumnType("date"); // Make sure the date of birth is stored at date time.
+
 
             // Configure the Gender property.
             entity.Property(p => p.Gender)
@@ -43,6 +48,7 @@ namespace IntegrityVault.Repository.Configurations
                 t.HasCheckConstraint("Ck_Patient_Gender",
                     "[Gender] IN (0, 1)"); // Make sure that Gender column can only take values 0, or 1.
             });
+
 
             // Configure one-to-one relationship with User table.
             entity.HasOne<Patient>() // Reference the Patient Entity to another entity.

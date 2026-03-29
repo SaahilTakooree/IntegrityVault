@@ -18,17 +18,20 @@ namespace IntegrityVault.Repository.Configurations
             // Set the primary key.
             entity.HasKey(m => m.ID);
 
+
             // Configure the relationship between MedicalRecordAuditLog and MedicalRecord.
             entity.HasOne(r => r.Record)
                 .WithMany(m => m.AuditLogs)
                 .HasForeignKey(r => r.RecordID)
                 .OnDelete(DeleteBehavior.Cascade);
 
+
             // Configure the relationship between MedicalRecordAuditLog and Doctor.
             entity.HasOne(a => a.UpdatedByDoctor)
                 .WithMany()
                 .HasForeignKey(a => a.UpdatedByDoctorID)
                 .OnDelete(DeleteBehavior.Restrict);
+
 
             // Configure the PreviousIPFS_CID property.
             entity.Property(a => a.PreviousIPFS_CID)
@@ -40,6 +43,7 @@ namespace IntegrityVault.Repository.Configurations
                     "LEN(PreviousIPFS_CID) >= 40"); // Ensures the old CID is at least 40 characters long.
             });
 
+
             // Configure the NewIPFS_CID property.
             entity.Property(a => a.NewIPFS_CID)
                 .IsRequired() // Make the NewIPFS_CID column not null.
@@ -50,12 +54,88 @@ namespace IntegrityVault.Repository.Configurations
                     "LEN(NewIPFS_CID) >= 40"); // Ensures the new CID is at least 40 characters long.
             });
 
+
             // Ensure the old and new CIDs are never the same.
             entity.ToTable(t =>
             {
                 t.HasCheckConstraint("CK_AuditLog_CIDs_Must_Differ",
                     "PreviousIPFS_CID <> NewIPFS_CID");
             });
+
+
+            // Configure the PreviousContentHash property.
+            entity.Property(a => a.PreviousContentHash)
+                .IsRequired()
+                .HasMaxLength(64)
+                .IsUnicode(false);
+            entity.ToTable(t =>
+            {
+                t.HasCheckConstraint("CK_AuditLog_PreviousContentHash_Length",
+                    "LEN(PreviousContentHash) = 64");
+            });
+
+
+            // Configure the NewContentHash property.
+            entity.Property(a => a.NewContentHash)
+                .IsRequired()
+                .HasMaxLength(64)
+                .IsUnicode(false);
+            entity.ToTable(t =>
+            {
+                t.HasCheckConstraint("CK_AuditLog_NewContentHash_Length",
+                    "LEN(NewContentHash) = 64");
+            });
+
+            // Ensure the old and new content hashes are never the same.
+            entity.ToTable(t =>
+            {
+                t.HasCheckConstraint("CK_AuditLog_ContentHashes_Must_Differ",
+                    "PreviousContentHash <> NewContentHash");
+            });
+
+
+            // Configure the PreviousVersionHash property.
+            entity.Property(a => a.PreviousVersionHash)
+                .IsRequired()
+                .HasMaxLength(64)
+                .IsUnicode(false);
+            entity.ToTable(t =>
+            {
+                t.HasCheckConstraint("CK_AuditLog_PreviousVersionHash_Length",
+                    "LEN(PreviousVersionHash) = 64");
+            });
+
+
+            // Configure the NewVersionHash property.
+            entity.Property(a => a.NewVersionHash)
+                .IsRequired()
+                .HasMaxLength(64)
+                .IsUnicode(false);
+            entity.ToTable(t =>
+            {
+                t.HasCheckConstraint("CK_AuditLog_NewVersionHash_Length",
+                    "LEN(NewVersionHash) = 64");
+            });
+
+            // Ensure the version hashes are never the same.
+            entity.ToTable(t =>
+            {
+                t.HasCheckConstraint("CK_AuditLog_VersionHashes_Must_Differ",
+                    "PreviousVersionHash <> NewVersionHash");
+            });
+
+
+            // Configure the BlockchainTxHash property.
+            entity.Property(a => a.BlockchainTxHash)
+                .IsRequired(false)
+                .HasMaxLength(66)
+                .IsUnicode(false);
+            entity.ToTable(t =>
+            {
+                t.HasCheckConstraint("CK_AuditLog_BlockchainTxHash_Length",
+                    "BlockchainTxHash IS NULL OR LEN(BlockchainTxHash) = 66");
+            });
+
 
             // Configure the Version property.
             entity.Property(a => a.Version)
@@ -69,6 +149,7 @@ namespace IntegrityVault.Repository.Configurations
             // Add a unique constraint on (RecordID, Version) so each version number is only used once per record.
             entity.HasIndex(a => new { a.RecordID, a.Version })
                 .IsUnique();
+
 
             // Configure the UpdatedAt property.
             entity.Property(a => a.UpdatedAt)

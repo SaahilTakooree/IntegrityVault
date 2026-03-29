@@ -15,20 +15,24 @@ namespace IntegrityVault.Repository.Configurations
         {
             // Maps the doctor entity to the database table name "Doctors".
             entity.ToTable("Doctors");
+            
 
             // Configure the FirstName property.
             entity.Property(d => d.FirstName)
                 .IsRequired() // Make the FirstName column not null.
                 .HasMaxLength(100); // Set maximum length to the 100 characters.
 
+
             // Configure the MiddleName property.
             entity.Property(d => d.MiddleName)
                 .HasMaxLength(100); // Set maximum length to the 100 characters.
+            
 
             // Configure the LastName property.
             entity.Property(d => d.LastName)
                 .IsRequired() // Make the LastName column not null.
                 .HasMaxLength(100); // Set maximum length to the 100 characters.
+
 
             // Configure the Specialty property.
             entity.Property(d => d.Specialty)
@@ -38,6 +42,7 @@ namespace IntegrityVault.Repository.Configurations
                 d.HasCheckConstraint("Ck_Doctor_Specialty",
                     "[Specialty] IN (0, 1, 2, 3, 4)"); // Make sure that Specialty column can only take values 0, 1, 2, 3, or 4.
             });
+
 
             // Configure one-to-one relationship with User table.
             entity.HasOne<Doctor>() // Reference the Doctor Entity to another entity.

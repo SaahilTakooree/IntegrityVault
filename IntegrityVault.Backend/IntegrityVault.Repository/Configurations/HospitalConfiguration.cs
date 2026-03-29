@@ -35,6 +35,10 @@ namespace IntegrityVault.Repository.Configurations
             entity.HasIndex(h => h.WalletAddress)
                 .IsUnique(); // Ensure that each wallet address is unique.
 
+            // Configure the EncryptedPrivateKey property.
+            entity.Property(h => h.EncryptedPrivateKey)
+                .IsRequired();
+
             // Configure one-to-many relationship with User.
             entity.HasMany(h => h.Users) // One Hospital has many Users
                 .WithOne(u => u.Hospital) // Each User has one Hospital.

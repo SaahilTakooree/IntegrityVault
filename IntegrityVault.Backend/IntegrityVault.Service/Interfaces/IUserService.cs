@@ -1,5 +1,6 @@
 ﻿// Import dependencies.
 using IntegrityVault.Common.DTOs; // Importing the data transfer objects (DTOs) used for user creation and interaction.
+using IntegrityVault.Common.Entities; // Import to get assec to patient entity
 
 
 // Declare the namespace for the service interfaces.
@@ -10,6 +11,7 @@ namespace IntegrityVault.Service.Interfaces
     {
         Task<IEnumerable<UserDTO>> GetAllUsersAsync(int? hospitalId = null); // Returns every user mapped to a role-specific DTO.
         Task<UserDTO?> GetUserByIdAsync(int id); // Method signature for fetching a user by ID asynchronously. Returns a nullable User object.
+        Task<IEnumerable<Patient?>> GetAllPatientFromHospital(int hospitalId); // Method to get all patient from one hospital.
         Task<bool> CreateDoctorAsync(CreateDoctorDTO createDoctorDTO); // Method signature for creating a doctor asynchronously. Returns a boolean indicating success.
         Task<bool> CreatePatientAsync(CreatePatientDTO createPatientDTO); // Method signature for creating a patient asynchronously. Returns a boolean indicating success.
         Task<bool> CreateAdminAsync(CreateAdminDTO createAdminDTO); // Method signature for creating an admin asynchronously. Returns a boolean indicating success.

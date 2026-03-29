@@ -14,6 +14,7 @@ namespace IntegrityVault.Repository.Contexts
         public DbSet<ExternalProvider> ExternalProviders { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<SuperAdmin> SuperAdmins { get; set; }
+        public DbSet<Episode> Episodes { get; set; }
         public DbSet<MedicalRecord> MedicalRecords { get; set; }
         public DbSet<MedicalRecordAuditLog> MedicalRecordsAuditLogs { get; set; }
         public DbSet<RecordAccessLog> RecordAccessLogs { get; set; }
@@ -28,6 +29,7 @@ namespace IntegrityVault.Repository.Contexts
             modelBuilder.ApplyConfiguration(new ExternalProviderConfiguration());
             modelBuilder.ApplyConfiguration(new AdminConfiguration());
             modelBuilder.ApplyConfiguration(new SuperAdminConfiguration());
+            modelBuilder.ApplyConfiguration(new EpisodeConfiguration());
             modelBuilder.ApplyConfiguration(new MedicalRecordConfiguration());
             modelBuilder.ApplyConfiguration(new MedicalRecordAuditLogConfiguration());
             modelBuilder.ApplyConfiguration(new RecordAccessLogConfiguration());

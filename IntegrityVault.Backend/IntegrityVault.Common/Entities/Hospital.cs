@@ -24,6 +24,10 @@ namespace IntegrityVault.Common.Entities
         [StringLength(42, MinimumLength = 42, ErrorMessage = "Wallet address must exactly 42 characters long.")]
         public required string WalletAddress { get; set; }
 
+        // Hospital private key encrypted.
+        [Required]
+        public required byte[] EncryptedPrivateKey { get; set; }
+
         // Navigation property representing all ipaddress associated with this hospital.
         public virtual ICollection<HospitalIpAddress> IpAddresses { get; set; } = new HashSet<HospitalIpAddress>();
 

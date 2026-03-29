@@ -14,41 +14,66 @@ namespace IntegrityVault.Common.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
-        // Foreign key refrencing the patient and is required.
+
+        // Foreign key refrencing the episode and is required.
         [Required]
-        public required int PatientID { get; set; }
+        public required int EpisodeID { get; set; }
 
-        // Navigation property to the related patient entity.
-        [ForeignKey("PatientID")]
-        public Patient? Patient { get; set; }
+        // Navigation property to the related episode entity.
+        [ForeignKey("EpisodeID")]
+        public Episode? Episode { get; set; }
 
-        // Foreign key refrencing the doctor and is required.
+
+        // The date on which this visit took place. It is required
         [Required]
-        public required int DoctorID { get; set; }
-
-        // Navigation property to the related doctor entity.
-        [ForeignKey("DoctorID")]
-        public Doctor? Doctor { get; set; }
+        public required DateOnly VisitDate { get; set; }
+        
 
         // Medical record's IPFS CID. It is required, limited to 90 characters, and must be at least 40 characters.
         [Required]
         [StringLength(90, MinimumLength = 40, ErrorMessage = "IPFS CID must be at least 40 characters.")]
         public required string IPFS_CID{ get; set; }
 
+
+        // Medical record's content hast. It is required, and must be exactly 64 characters.
+        [Required]
+        [StringLength(64, MinimumLength = 64, ErrorMessage = "ContentHash must be exactly 64 hex characters.")]
+        public required string ContentHash { get; set; }
+
+        // Medical record's VersionHash. It is required, and must be exactly 64 characters.
+        [Required]
+        [StringLength(64, MinimumLength = 64, ErrorMessage = "VersionHash must be exactly 64 hex characters.")]
+        public required string VersionHash { get; set; }
+
+
+        // Medical record's content hast. It must be exactly 64 characters.
+        [StringLength(64, MinimumLength = 64, ErrorMessage = "PreviousVersionHash must be exactly 64 hex characters.")]
+        public string? PreviousVersionHash { get; set; }
+
+
+        // Medical record'blockchain transaction hash. It must be exactly 66 characters.
+        [StringLength(66, MinimumLength = 66, ErrorMessage = "BlockchainTxHash must be exactly 66 characters.")]
+        public string? BlockchainTxHash { get; set; }
+
+
         // Track how many times this record has been updated.
         [Required]
         public int CurrentVersion { get; set; } = 0;
+
 
         // Date on which the medical record was created.
         [Required]
         public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+
         // Date on which the medical record was updated.
         [Required]
         public required DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
+
         // Navigation property representing all accessed logs associated with this medical record.
         public virtual ICollection<RecordAccessLog> AccessLogs { get; set; } = new HashSet<RecordAccessLog>();
+
 
         // Navigation propety representing the full update history of this medical record.
         public virtual ICollection<MedicalRecordAuditLog> AuditLogs { get; set; } = new HashSet<MedicalRecordAuditLog>();

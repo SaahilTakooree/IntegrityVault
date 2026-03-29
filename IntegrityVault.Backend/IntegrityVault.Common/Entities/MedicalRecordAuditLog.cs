@@ -14,6 +14,7 @@ namespace IntegrityVault.Common.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
+
         // Foeign key referencing the medical record that was changed. It is required.
         [Required]
         public required int RecordID { get; set; }
@@ -21,6 +22,7 @@ namespace IntegrityVault.Common.Entities
         //Navigation property to the related medical record entity.
         [ForeignKey("RecordID")]
         public MedicalRecord? Record { get; set; }
+
 
         //Foreign key referencing the doctor who made the update. It is requied.
         [Required]
@@ -30,19 +32,52 @@ namespace IntegrityVault.Common.Entities
         [ForeignKey("UpdatedByDoctorID")]
         public Doctor? UpdatedByDoctor { get; set; }
 
+
         // The IPFS CID that was stored on the record before an update. It is required and must be between 40 and 90 characters.
         [Required]
         [StringLength(90, MinimumLength = 40, ErrorMessage = "Previous IPFS CID must be at least 40 characters.")]
         public required string PreviousIPFS_CID { get; set; }
+
 
         // The new IPFS CID that replaced the old one in this update. It is required and must be between 40 and 90 characters.
         [Required]
         [StringLength(90, MinimumLength = 40, ErrorMessage = "New IPFS CID must be at least 40 characters.")]
         public required string NewIPFS_CID { get; set; }
 
+
+        // The previous content hash. It is required and must be exactly 64 characters long.
+        [Required]
+        [StringLength(64, MinimumLength = 64, ErrorMessage = "PreviousContentHash must be exactly 64 hex characters.")]
+        public required string PreviousContentHash { get; set; }
+        
+
+        // The new content hash. It is required and must be exactly 64 characters.
+        [Required]
+        [StringLength(64, MinimumLength = 64, ErrorMessage = "NewContentHash must be exactly 64 hex characters.")]
+        public required string NewContentHash { get; set; }
+
+
+        // The previous hash of the version. it is required and must be exactly 64 characters.
+        [Required]
+        [StringLength(64, MinimumLength = 64, ErrorMessage = "PreviousVersionHash must be exactly 64 hex characters.")]
+        public required string PreviousVersionHash { get; set; }
+
+
+        // The new hash of the version. it is required and must be exactly 64 characters.
+        [Required]
+        [StringLength(64, MinimumLength = 64, ErrorMessage = "NewVersionHash must be exactly 64 hex characters.")]
+        public required string NewVersionHash { get; set; }
+
+
+        // The blockchain transaction.
+        [StringLength(66, MinimumLength = 66, ErrorMessage = "BlockchainTxHash must be exactly 66 characters.")]
+        public string? BlockchainTxHash { get; set; }
+
+
         // The version number of this entry for this record.
         [Required]
         public required int Version { get; set; }
+
 
         // Date and time when this update was made.
         [Required]

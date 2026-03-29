@@ -11,6 +11,8 @@ using System.Text; //  Encoding for JWT key.
 using System.Security.Claims; // ClaimTypes for JWT claims.
 using IntegrityVault.Common.Converters; // DateOnly converters.
 using Microsoft.OpenApi.Models; //
+using QuestPDF.Infrastructure;
+using IntegrityVault.Common.Configurations;
 
 
 // Create web application builder.
@@ -31,6 +33,10 @@ builder.Services.AddSwaggerGen(); // Adds Swagger generation.
 builder.Services.AddDbContext<IntegrityVaultDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Add the blockchain configuration.
+builder.Services.Configure<BlockchainSettings>(
+    builder.Configuration.GetSection("Blockchain"));
+
 
 // Register the services and repository.
 builder.Services.AddScoped<IHospitalService, HospitalService>();
@@ -39,11 +45,26 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
-
+builder.Services.AddScoped<IEpisodeService, EpisodeService>();
+builder.Services.AddScoped<IEpisodeRepository, EpisodeRepository>();
+builder.Services.AddScoped<IMedicalRecordService, MedicalRecordService>();
+builder.Services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
+builder.Services.AddScoped<IRecordAccessLogRepository, RecordAccessLogRepository>();
+builder.Services.AddScoped<IMedicalRecordAuditLogRepository, MedicalRecordAuditLogRepository>();
+builder.Services.AddScoped<IPDFService, PDFService>();
+builder.Services.AddScoped<IBlockchainService, BlockchainService>();
 
 // Create jwt configuration.
-var jwtKey = builder.Configuration["Jwt:Key"];
-var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT key is missing.");
+var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? throw new InvalidOperationException("JWT issuer is missing.");
+
+// Store the master key for encryption and decryption.
+var cryptoKeyString = builder.Configuration["Crypto:MasterKey"] ?? throw new InvalidOperationException("Crypto master key is missing.");
+var cryptoKeyBytes = Encoding.UTF8.GetBytes(cryptoKeyString);
+builder.Services.AddSingleton<ICryptoService>(new CryptoService(cryptoKeyBytes)); // Register the ICryptoService implementation.
+builder.Services.AddScoped<IIPFSService, IPFSService>();
+
+builder.Services.AddHttpClient();
 
 // Add jtw to the builder.
 builder.Services.AddAuthentication(options =>
@@ -123,6 +144,9 @@ app.UseHttpsRedirection(); // Redirect HTTP to HTTPS.
 app.UseAuthentication(); // Enable authentication.
 app.UseAuthorization(); // Enable authorisation.
 app.MapControllers(); // Map controller routes.
+
+// Set QuestPDF license here at startup.
+QuestPDF.Settings.License = LicenseType.Community;
 
 // Run the application.
 app.Run();

@@ -18,7 +18,8 @@ namespace IntegrityVault.Repository.Migrations
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    WalletAddress = table.Column<string>(type: "nvarchar(42)", maxLength: 42, nullable: false)
+                    WalletAddress = table.Column<string>(type: "nvarchar(42)", maxLength: 42, nullable: false),
+                    EncryptedPrivateKey = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -164,11 +165,14 @@ namespace IntegrityVault.Repository.Migrations
                 name: "SuperAdmins",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(type: "int", nullable: false),
+                    WalletAddress = table.Column<string>(type: "nvarchar(42)", maxLength: 42, nullable: false),
+                    EncryptedPrivateKey = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SuperAdmins", x => x.ID);
+                    table.CheckConstraint("CK_SuperAdmin_WalletAddress_Length", "LEN(WalletAddress) = 42");
                     table.ForeignKey(
                         name: "FK_SuperAdmins_Users_ID",
                         column: x => x.ID,
@@ -178,14 +182,50 @@ namespace IntegrityVault.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MedicalRecords",
+                name: "Episodes",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PatientID = table.Column<int>(type: "int", nullable: false),
                     DoctorID = table.Column<int>(type: "int", nullable: false),
+                    Specialty = table.Column<byte>(type: "tinyint", maxLength: 3, nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Episodes", x => x.ID);
+                    table.CheckConstraint("CK_Episode_Specialty", "[Specialty] IN (0, 1, 2, 3, 4)");
+                    table.CheckConstraint("CK_Episode_Title_MinLength", "LEN(Title) >= 3");
+                    table.ForeignKey(
+                        name: "FK_Episodes_Doctors_DoctorID",
+                        column: x => x.DoctorID,
+                        principalTable: "Doctors",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Episodes_Patients_PatientID",
+                        column: x => x.PatientID,
+                        principalTable: "Patients",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MedicalRecords",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EpisodeID = table.Column<int>(type: "int", nullable: false),
+                    VisitDate = table.Column<DateOnly>(type: "date", nullable: false),
                     IPFS_CID = table.Column<string>(type: "nvarchar(90)", maxLength: 90, nullable: false),
+                    ContentHash = table.Column<string>(type: "varchar(64)", unicode: false, maxLength: 64, nullable: false),
+                    VersionHash = table.Column<string>(type: "varchar(64)", unicode: false, maxLength: 64, nullable: false),
+                    PreviousVersionHash = table.Column<string>(type: "varchar(64)", unicode: false, maxLength: 64, nullable: true),
+                    BlockchainTxHash = table.Column<string>(type: "varchar(66)", unicode: false, maxLength: 66, nullable: true),
                     CurrentVersion = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
@@ -194,17 +234,15 @@ namespace IntegrityVault.Repository.Migrations
                 {
                     table.PrimaryKey("PK_MedicalRecords", x => x.ID);
                     table.CheckConstraint("CK_Medical_Record_IPFS_CID_Length", "LEN(IPFS_CID) >= 40");
+                    table.CheckConstraint("CK_MedicalRecord_BlockchainTxHash_Length", "BlockchainTxHash IS NULL OR LEN(BlockchainTxHash) = 66");
+                    table.CheckConstraint("CK_MedicalRecord_ContentHash_Length", "LEN(ContentHash) = 64");
                     table.CheckConstraint("CK_MedicalRecord_CurrentVersion_NonNegative", "CurrentVersion >= 0");
+                    table.CheckConstraint("CK_MedicalRecord_PreviousVersionHash_Length", "PreviousVersionHash IS NULL OR LEN(PreviousVersionHash) = 64");
+                    table.CheckConstraint("CK_MedicalRecord_VersionHash_Length", "LEN(VersionHash) = 64");
                     table.ForeignKey(
-                        name: "FK_MedicalRecords_Doctors_DoctorID",
-                        column: x => x.DoctorID,
-                        principalTable: "Doctors",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_MedicalRecords_Patients_PatientID",
-                        column: x => x.PatientID,
-                        principalTable: "Patients",
+                        name: "FK_MedicalRecords_Episodes_EpisodeID",
+                        column: x => x.EpisodeID,
+                        principalTable: "Episodes",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -219,16 +257,28 @@ namespace IntegrityVault.Repository.Migrations
                     UpdatedByDoctorID = table.Column<int>(type: "int", nullable: false),
                     PreviousIPFS_CID = table.Column<string>(type: "nvarchar(90)", maxLength: 90, nullable: false),
                     NewIPFS_CID = table.Column<string>(type: "nvarchar(90)", maxLength: 90, nullable: false),
+                    PreviousContentHash = table.Column<string>(type: "varchar(64)", unicode: false, maxLength: 64, nullable: false),
+                    NewContentHash = table.Column<string>(type: "varchar(64)", unicode: false, maxLength: 64, nullable: false),
+                    PreviousVersionHash = table.Column<string>(type: "varchar(64)", unicode: false, maxLength: 64, nullable: false),
+                    NewVersionHash = table.Column<string>(type: "varchar(64)", unicode: false, maxLength: 64, nullable: false),
+                    BlockchainTxHash = table.Column<string>(type: "varchar(66)", unicode: false, maxLength: 66, nullable: true),
                     Version = table.Column<int>(type: "int", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MedicalRecordAuditLogs", x => x.ID);
+                    table.CheckConstraint("CK_AuditLog_BlockchainTxHash_Length", "BlockchainTxHash IS NULL OR LEN(BlockchainTxHash) = 66");
                     table.CheckConstraint("CK_AuditLog_CIDs_Must_Differ", "PreviousIPFS_CID <> NewIPFS_CID");
+                    table.CheckConstraint("CK_AuditLog_ContentHashes_Must_Differ", "PreviousContentHash <> NewContentHash");
+                    table.CheckConstraint("CK_AuditLog_NewContentHash_Length", "LEN(NewContentHash) = 64");
                     table.CheckConstraint("CK_AuditLog_NewIPFS_CID_Length", "LEN(NewIPFS_CID) >= 40");
+                    table.CheckConstraint("CK_AuditLog_NewVersionHash_Length", "LEN(NewVersionHash) = 64");
+                    table.CheckConstraint("CK_AuditLog_PreviousContentHash_Length", "LEN(PreviousContentHash) = 64");
                     table.CheckConstraint("CK_AuditLog_PreviousIPFS_CID_Length", "LEN(PreviousIPFS_CID) >= 40");
+                    table.CheckConstraint("CK_AuditLog_PreviousVersionHash_Length", "LEN(PreviousVersionHash) = 64");
                     table.CheckConstraint("CK_AuditLog_Version_Positive", "Version >= 1");
+                    table.CheckConstraint("CK_AuditLog_VersionHashes_Must_Differ", "PreviousVersionHash <> NewVersionHash");
                     table.ForeignKey(
                         name: "FK_MedicalRecordAuditLogs_Doctors_UpdatedByDoctorID",
                         column: x => x.UpdatedByDoctorID,
@@ -252,12 +302,12 @@ namespace IntegrityVault.Repository.Migrations
                     RecordID = table.Column<int>(type: "int", nullable: false),
                     AccessedByUserID = table.Column<int>(type: "int", nullable: false),
                     AccessType = table.Column<byte>(type: "tinyint", maxLength: 3, nullable: false),
-                    Timestamp = table.Column<DateTime>(type: "date", nullable: false, defaultValueSql: "GETUTCDATE()")
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RecordAccessLogs", x => x.ID);
-                    table.CheckConstraint("Ck_RecordAccessLog_AccessType", "[AccessType] IN (0, 1)");
+                    table.CheckConstraint("Ck_RecordAccessLog_AccessType", "[AccessType] IN (0, 1, 2, 3, 4)");
                     table.ForeignKey(
                         name: "FK_RecordAccessLogs_MedicalRecords_RecordID",
                         column: x => x.RecordID,
@@ -271,6 +321,16 @@ namespace IntegrityVault.Repository.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Episodes_DoctorID",
+                table: "Episodes",
+                column: "DoctorID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Episodes_PatientID",
+                table: "Episodes",
+                column: "PatientID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExternalProviders_BelongsToID",
@@ -301,14 +361,9 @@ namespace IntegrityVault.Repository.Migrations
                 column: "UpdatedByDoctorID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MedicalRecords_DoctorID",
+                name: "IX_MedicalRecords_EpisodeID",
                 table: "MedicalRecords",
-                column: "DoctorID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MedicalRecords_PatientID",
-                table: "MedicalRecords",
-                column: "PatientID");
+                column: "EpisodeID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RecordAccessLogs_AccessedByUserID",
@@ -319,6 +374,13 @@ namespace IntegrityVault.Repository.Migrations
                 name: "IX_RecordAccessLogs_RecordID",
                 table: "RecordAccessLogs",
                 column: "RecordID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SuperAdmins_WalletAddress",
+                table: "SuperAdmins",
+                column: "WalletAddress",
+                unique: true,
+                filter: "[WalletAddress] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
@@ -361,6 +423,9 @@ namespace IntegrityVault.Repository.Migrations
 
             migrationBuilder.DropTable(
                 name: "MedicalRecords");
+
+            migrationBuilder.DropTable(
+                name: "Episodes");
 
             migrationBuilder.DropTable(
                 name: "Doctors");

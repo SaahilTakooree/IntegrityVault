@@ -161,6 +161,357 @@
         }
       }
     },
+    "/api/MedicalRecord": {
+      "post": {
+        "tags": [
+          "MedicalRecord"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMedicalRecordDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMedicalRecordDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMedicalRecordDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/MedicalRecord/episode/{episodeID}": {
+      "post": {
+        "tags": [
+          "MedicalRecord"
+        ],
+        "parameters": [
+          {
+            "name": "episodeID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMedicalRecordDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMedicalRecordDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMedicalRecordDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/MedicalRecord/episode/{episodeID}/{medicalRecordID}": {
+      "patch": {
+        "tags": [
+          "MedicalRecord"
+        ],
+        "parameters": [
+          {
+            "name": "medicalRecordID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "episodeID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMedicalRecordDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMedicalRecordDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMedicalRecordDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/MedicalRecord/patient/{patientID}/history": {
+      "get": {
+        "tags": [
+          "MedicalRecord"
+        ],
+        "parameters": [
+          {
+            "name": "patientID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/MedicalRecord/doctor/{doctorID}/history": {
+      "get": {
+        "tags": [
+          "MedicalRecord"
+        ],
+        "parameters": [
+          {
+            "name": "doctorID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/MedicalRecord/episode/{episodeID}/status": {
+      "patch": {
+        "tags": [
+          "MedicalRecord"
+        ],
+        "parameters": [
+          {
+            "name": "episodeID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/MedicalRecord/ipfs/{cid}/user/{userID}": {
+      "get": {
+        "tags": [
+          "MedicalRecord"
+        ],
+        "parameters": [
+          {
+            "name": "cid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/MedicalRecord/ipfs/{cid}/user/{userID}/tamper-check": {
+      "get": {
+        "tags": [
+          "MedicalRecord"
+        ],
+        "parameters": [
+          {
+            "name": "cid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/MedicalRecord/pdf/tamper-check/user/{userID}": {
+      "post": {
+        "tags": [
+          "MedicalRecord"
+        ],
+        "parameters": [
+          {
+            "name": "userID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/MedicalRecord/ipfs/{cid}/user/{userID}/download": {
+      "get": {
+        "tags": [
+          "MedicalRecord"
+        ],
+        "parameters": [
+          {
+            "name": "cid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/User": {
       "get": {
         "tags": [
@@ -212,6 +563,29 @@
         "parameters": [
           {
             "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/User/patient/{hospitalId}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "hospitalId",
             "in": "path",
             "required": true,
             "schema": {
@@ -729,6 +1103,7 @@
         "required": [
           "ipAddresses",
           "name",
+          "privateKey",
           "walletAddress"
         ],
         "type": "object",
@@ -741,11 +1116,61 @@
             "type": "string",
             "nullable": true
           },
+          "privateKey": {
+            "type": "string",
+            "nullable": true
+          },
           "ipAddresses": {
             "type": "array",
             "items": {
               "type": "string"
             },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateMedicalRecordDTO": {
+        "required": [
+          "chiefComplaint",
+          "diagnosis",
+          "treatmentPlan"
+        ],
+        "type": "object",
+        "properties": {
+          "doctorID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "patientID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "specialty": {
+            "$ref": "#/components/schemas/DoctorSpecialty"
+          },
+          "visitDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "chiefComplaint": {
+            "type": "string",
+            "nullable": true
+          },
+          "diagnosis": {
+            "type": "string",
+            "nullable": true
+          },
+          "treatmentPlan": {
+            "type": "string",
+            "nullable": true
+          },
+          "doctorNotes": {
+            "type": "string",
+            "nullable": true
+          },
+          "followUpInstructions": {
+            "type": "string",
             "nullable": true
           }
         },
@@ -804,7 +1229,9 @@
         "required": [
           "email",
           "password",
-          "username"
+          "privateKey",
+          "username",
+          "walletAddress"
         ],
         "type": "object",
         "properties": {
@@ -823,6 +1250,14 @@
           "hospitalID": {
             "type": "integer",
             "format": "int32",
+            "nullable": true
+          },
+          "walletAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "privateKey": {
+            "type": "string",
             "nullable": true
           }
         },
@@ -947,6 +1382,10 @@
             "type": "string",
             "nullable": true
           },
+          "privateKey": {
+            "type": "string",
+            "nullable": true
+          },
           "ipAddresses": {
             "type": "array",
             "items": {
@@ -1018,6 +1457,14 @@
           "hospitalID": {
             "type": "integer",
             "format": "int32",
+            "nullable": true
+          },
+          "walletAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "privateKey": {
+            "type": "string",
             "nullable": true
           }
         },
