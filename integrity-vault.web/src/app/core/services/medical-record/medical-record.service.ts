@@ -3,6 +3,7 @@ import { Injectable, inject } from "@angular/core"; // Import the Angular inject
 import { HttpClient } from "@angular/common/http"; // Import HTTP client for API calls/
 import { Observable } from "rxjs"; // Import Observable for async handling.
 import { IDoctorHistory, IRecordViewData } from "../../../shared/interfaces/doctor-history.interface"; // Import interfaces for doctor history and record view.
+import { IPatientHistory } from "../../../shared/interfaces/patient-history.interface"; // Import interfaces for patient history and record view.
 import { CreateMedicalRecord } from "../../../shared/interfaces/create-medical-record.interface" // Import interface for creating medical record.
 import { ITamperResult } from "../../../shared/interfaces/tamper-result.interface" // Import interface for tamper result..
 import { IPatient } from "../../../shared/interfaces/patient.interface"; // Import interface for patient.
@@ -48,6 +49,11 @@ export class MedicalRecordService {
         return this._http.get<IDoctorHistory>(`${this._apiUrl}/doctor/${doctorID}/history`);
     }
 
+    // Get patient's full medical history, grouped by specialty.
+    getPatientHistory(patientID: number): Observable<IPatientHistory> {
+        return this._http.get<IPatientHistory>(`${this._apiUrl}/patient/${patientID}/history`);
+    }
+
     // Get medical record content from IPFS CID.
     getMedicalRecordFromCID(cid: string, userID: number): Observable<IRecordViewData> {
         return this._http.get<IRecordViewData>(`${this._apiUrl}/ipfs/${cid}/user/${userID}`);
@@ -63,6 +69,13 @@ export class MedicalRecordService {
         const formData = new FormData();
         formData.append("file", file);
         return this._http.post<ITamperResult>(`${this._apiUrl}/pdf/tamper-check/user/${userID}`, formData);
+    }
+
+    // Download a medical record PDF from IPFS.
+    downloadMedicalRecord(cid: string, userID: number): Observable<Blob> {
+        return this._http.get(`${this._apiUrl}/ipfs/${cid}/user/${userID}/download`, {
+            responseType: "blob"
+        });
     }
 
     // Set episode active/inactive.

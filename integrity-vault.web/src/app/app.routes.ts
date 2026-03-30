@@ -31,12 +31,12 @@ export const routes : Routes = [
     canActivate: [authGuard, roleGuard],
     data : { roles : ["Doctor"]}
   },
-  // {
-  //   path : 'patient',
-  //   loadComponent : () => import("./features/dashboards/patient/patient").then(m => m.PatientDashboardComponent),
-  //   canActivate: [authGuard, roleGuard],
-  //   data : { roles : ["Patient"]}
-  // },
+  {
+    path : 'patient',
+    loadComponent : () => import("./features/dashboards/patient/patient").then(m => m.PatientDashboardComponent),
+    canActivate: [authGuard, roleGuard],
+    data : { roles : ["Patient"]}
+  },
   // {
   //   path : 'external-provider',
   //   loadComponent : () => import("./features/dashboards/external-provider/external-provider").then(m => m.ExternalProviderDashboardComponent),

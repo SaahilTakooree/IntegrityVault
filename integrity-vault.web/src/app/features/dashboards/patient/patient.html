@@ -1,0 +1,234 @@
+<div class="d-flex vh-100 overflow-hidden">
+    <!-- Sidebar. -->
+    <app-sidebar
+      class="flex-shrink-0 h-100"
+      [activeLink]="activeLink"
+      [sidebarItems]="[
+          { label: 'My Records', icon: 'bi bi-journal-medical', link: 'history' },
+          { label: 'PDF Verify',  icon: 'bi bi-file-earmark-pdf', link: 'pdf' }
+      ]"
+      [isCollapsed]="isCollapsed"
+      (closeSidebar)="toggleSidebar()"
+      (linkClicked)="onNavigate($event)">
+    </app-sidebar>
+    
+    
+    <!-- Main. -->
+     
+    <div class="d-flex flex-column flex-grow-1 min-width-0">
+        <!-- Topbar. -->
+        <app-topbar
+          class="flex-shrink-0"
+          (toggleSidebar)="toggleSidebar()"
+          [message]="'Welcome back, ' + (history?.patientFullName ?? patientFullName)">
+        </app-topbar>
+        
+        <div class="iv-main flex-grow-1 overflow-y-auto p-4">
+            
+            <!-- History tab. -->
+            @if (activeLink === 'history') {
+                
+                <!-- Loading state. -->
+                 @if (historyLoading) {
+                    <div class="d-flex align-items-center gap-3 py-5 text-muted">
+                        <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                        <span>Loading your medical records. This may take a few seconds.</span>
+                    </div>
+                }
+                
+                <!-- Empty state. -->
+                @if (!historyLoading && (!history?.specialities || history!.specialities.length === 0)) {
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-journal-medical d-block mb-2" style="font-size:2.5rem"></i>
+                        <p class="mb-0">No medical records found.</p>
+                    </div>
+                }
+                
+                
+                <!-- Specialty groups. -->
+                @if (!historyLoading && history) {
+                    @for (group of history.specialities; track group.speciality) {
+                        <!-- Specialty heading. -->
+                        <div class="d-flex align-items-center gap-2 mb-3 mt-2">
+                            <h6 class="mb-0 fw-semibold">{{ group.speciality }}</h6>
+                            <span class="badge bg-secondary" style="font-size:.65rem">
+                                {{ group.episodes.length }} episode(s)
+                            </span>
+                        </div>
+                        
+                        <!-- Episodes within the specialty. -->
+                         @for (episode of group.episodes; track episode.episodeID) {
+                            <div class="card border-0 shadow-sm mb-4">
+                                <!-- Episode header. -->
+                                <div class="card-header d-flex align-items-center gap-2 py-3"
+                                  style="background:rgba(13,148,136,.06)">
+                                    <i class="bi bi-folder2 text-teal"></i>
+                                    <span class="fw-semibold">{{ episode.chiefComplaint }}</span>
+                                    <span class="badge ms-1"
+                                      [class.bg-success]="episode.isActive"
+                                      [class.bg-secondary]="!episode.isActive"
+                                      style="font-size:.65rem">
+                                      {{ episode.isActive ? 'Active' : 'Closed' }}
+                                    </span>
+                                    <span class="text-muted small ms-1">Episode #{{ episode.episodeID }}</span>
+                                    <span class="badge bg-secondary ms-auto">
+                                        {{ episode.records.length }} record(s)
+                                    </span>
+                                </div>
+                                
+                                <!-- Records accordion. -->
+                                <div class="card-body p-0">
+                                    @if (episode.records.length === 0) {
+                                        <p class="text-muted small mb-0 px-4 py-3">No records in this episode.</p>
+                                    }
+                                    
+                                    <div class="accordion iv-record-accordion" [id]="'ep-' + episode.episodeID">
+                                        @for (record of episode.records; track record.medicalRecordID) {
+                                            <div class="accordion-item border-0 mb-1">
+                                                <h2 class="accordion-header">
+                                                    <button class="accordion-button collapsed rounded py-2 small fw-medium"
+                                                      type="button"
+                                                      [attr.data-bs-toggle]="'collapse'"
+                                                      [attr.data-bs-target]="'#prec-' + record.medicalRecordID"
+                                                      [attr.aria-controls]="'prec-' + record.medicalRecordID">
+                                                        <i class="bi bi-file-medical me-2 text-teal"></i>
+                                                        Visit · {{ record.visitDate }}
+                                                        <span class="badge bg-primary ms-2" style="font-size:.65rem">
+                                                            v{{ record.currentVersion }}
+                                                        </span>
+                                                    </button>
+                                                </h2>
+
+                                                <div [id]="'prec-' + record.medicalRecordID"
+                                                  class="accordion-collapse collapse"
+                                                  [attr.data-bs-parent]="'#ep-' + episode.episodeID">
+                                                  
+                                                    <div class="accordion-body pt-2">
+                                                        
+                                                        <!-- Record action bar. -->
+                                                        <div class="d-flex flex-wrap gap-2 mb-3">
+                                                            <button class="btn btn-sm btn-outline-secondary"
+                                                              (click)="viewAccessLog(record)">
+                                                                <i class="bi bi-list-ul me-1"></i>Access Log
+                                                          </button>
+                                                        </div>
+                                                        
+                                                        <!-- Versions table. -->
+                                                        <p class="text-muted small fw-semibold text-uppercase mb-1"
+                                                          style="letter-spacing:.06em;font-size:.68rem">
+                                                            Versions
+                                                        </p>
+                                                        <div class="table-responsive mb-0">
+                                                            <table class="table table-sm mb-0">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Name</th>
+                                                                        <th>Version</th>
+                                                                        <th>Timestamp</th>
+                                                                        <th>Actions</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @for (ver of record.versions; track ver.version) {
+                                                                        <tr>
+                                                                            <td class="font-mono small"
+                                                                              style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
+                                                                              [title]="ver.displayName">
+                                                                                {{ ver.displayName }}
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="badge bg-primary" style="font-size:.65rem">
+                                                                                    v{{ ver.version }}
+                                                                                </span>
+                                                                            </td>
+                                                                            <td class="small text-muted">
+                                                                                {{ formatTimestamp(ver.timestamp) }}
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="d-flex gap-1">
+                                                                                    <!-- View. -->
+                                                                                    <button class="btn btn-sm btn-outline-primary"
+                                                                                      (click)="viewVersion(ver)" title="View record">
+                                                                                        <i class="bi bi-eye"></i>
+                                                                                    </button>
+                                                                                    
+                                                                                    <!-- Download. -->
+                                                                                    <button class="btn btn-sm btn-outline-secondary"
+                                                                                      (click)="downloadRecord(ver)"
+                                                                                      [disabled]="downloadingCID === ver.ipfS_CID"
+                                                                                      title="Download PDF">
+                                                                                        @if (downloadingCID === ver.ipfS_CID) {
+                                                                                            <span class="spinner-border spinner-border-sm" role="status"></span>
+                                                                                        } @else {
+                                                                                            <i class="bi bi-download"></i>
+                                                                                        }
+                                                                                    </button>
+                                                                                    
+                                                                                    <!-- Verify integrity. -->
+                                                                                     
+                                                                                    <button class="btn btn-sm btn-outline-success"
+                                                                                      (click)="checkTamper(ver)" title="Verify integrity">
+                                                                                        <i class="bi bi-shield-check"></i>
+                                                                                    </button>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            }
+            
+            <!-- PDF verify tab. -->
+             @if (activeLink === 'pdf') {
+                <app-pdf-verify
+                  [loading]="pdfVerifyLoading"
+                  [result]="pdfVerifyResult"
+                  [errorMessage]="pdfVerifyErrorMessage"
+                  (verifyRequested)="onPdfVerifyRequested($event)"
+                  (clearRequested)="onPdfClear()">
+                </app-pdf-verify>
+            }
+        </div>
+    </div>
+</div>
+
+
+<!-- View record modal. -->
+<app-view-medical-record
+  [show]="showViewModal"
+  [loading]="viewLoading"
+  [record]="viewedRecord"
+  [version]="viewedVersion"
+  (closed)="closeViewModal()">
+</app-view-medical-record>
+
+
+<!-- Access log modal. -->
+<app-view-access-log
+  [show]="showAccessLogModal"
+  [record]="accessLogRecord"
+  (closed)="closeAccessLog()">
+</app-view-access-log>
+
+
+<!-- Tamper check modal. -->
+<app-tamper-check
+  [show]="showTamperModal"
+  [loading]="tamperLoading"
+  [recordName]="tamperRecordName"
+  [cid]="tamperCID"
+  [result]="tamperResult"
+  [errorMessage]="tamperErrorMessage"
+  (closed)="closeTamperModal()">
+</app-tamper-check>

@@ -663,11 +663,13 @@ namespace IntegrityVault.Service.Implementations
                 var user = await _userRepository.GetUserByIdAsync(userID)
                     ?? throw new InvalidOperationException($"User {userID} not found.");
 
-                if (user.Role != UserRole.Doctor)
-                    throw new InvalidOperationException("Only doctors may retrieve medical record content by CID.");
+                bool isAuthor = user.Role == UserRole.Doctor && embeddedDto.DoctorID == userID;
+                bool isSubject = user.Role == UserRole.Patient && embeddedDto.PatientID == userID;
 
-                if (embeddedDto.DoctorID != userID)
-                    throw new InvalidOperationException("You may only retrieve records you authored.");
+                if (!isAuthor && !isSubject)
+                {
+                    throw new InvalidOperationException("Unauthorised: You do not have permission to view this record.");
+                }
 
                 // Log access as View
                 try
