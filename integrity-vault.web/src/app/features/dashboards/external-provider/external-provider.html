@@ -1,0 +1,21 @@
+<div class="d-flex vh-100 overflow-hidden">    
+    <!-- Main. -->
+    <div class="d-flex flex-column flex-grow-1 min-width-0">
+        <!-- Topbar. -->
+        <app-topbar
+          class="flex-shrink-0"
+          [showLogout]="true"
+          message="Welcome back">
+        </app-topbar>
+        
+        <div class="iv-main flex-grow-1 overflow-y-auto p-4">
+            <app-pdf-verify
+              [loading]="pdfVerifyLoading"
+              [result]="pdfVerifyResult"
+              [errorMessage]="pdfVerifyErrorMessage"
+              (verifyRequested)="onPdfVerifyRequested($event)"
+              (clearRequested)="onPdfClear()">
+            </app-pdf-verify>
+        </div>
+    </div>
+</div>

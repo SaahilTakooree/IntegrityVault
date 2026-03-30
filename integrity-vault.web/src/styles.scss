@@ -180,6 +180,32 @@
       background: rgba($primary, 0.3);
     }
   }
+
+  .topbar-logout-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    color: $body-color;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+
+    i {
+      font-size: 1.1rem;
+    }
+
+    &:hover {
+      background: rgba($primary, 0.1); // Same soft teal as sidebar
+      color: $primary;
+    }
+    
+    &:active {
+      background: rgba($primary, 0.2);
+    }
+  }
 }
 
 

@@ -29,6 +29,7 @@ namespace IntegrityVault.Service.Mappers
                 DoctorMiddleName = doctor.MiddleName,
                 DoctorLastName = doctor.LastName,
                 DoctorSpecialy = doctor.Specialty,
+                HospitalID = hospital!.ID,
                 HospitalName = hospital!.Name,
                 VisitDate = medicalRecordDTO.VisitDate,
                 ChiefComplaint = medicalRecordDTO.ChiefComplaint,

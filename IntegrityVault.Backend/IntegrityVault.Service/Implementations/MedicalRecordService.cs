@@ -1070,9 +1070,9 @@ namespace IntegrityVault.Service.Implementations
                     return (true, string.Empty);
 
                 case UserRole.ExternalProvider:
-                    // Fetch the ExternalProvider sub-record to get BelongsToID.
                     var provider = await _userRepository.GetExternalProviderByIdAsync(userID) ?? throw new InvalidOperationException($"External provider {userID} not found.");
-                    if (provider.HospitalID != embeddedDto.HospitalID)
+                   
+                    if (provider.BelongsToID != embeddedDto.HospitalID)
                         return (false, "External providers may only verify records belonging to their associated hospital.");
                     return (true, string.Empty);
 

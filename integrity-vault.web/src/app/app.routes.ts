@@ -37,12 +37,12 @@ export const routes : Routes = [
     canActivate: [authGuard, roleGuard],
     data : { roles : ["Patient"]}
   },
-  // {
-  //   path : 'external-provider',
-  //   loadComponent : () => import("./features/dashboards/external-provider/external-provider").then(m => m.ExternalProviderDashboardComponent),
-  //   canActivate: [authGuard, roleGuard],
-  //   data : { roles : ["ExternalProvider"]}
-  // },
+  {
+    path : 'external-provider',
+    loadComponent : () => import("./features/dashboards/external-provider/external-provider").then(m => m.ExternalProviderDashboardComponent),
+    canActivate: [authGuard, roleGuard],
+    data : { roles : ["ExternalProvider"]}
+  },
   {
     path: '**',
     redirectTo: 'login'
