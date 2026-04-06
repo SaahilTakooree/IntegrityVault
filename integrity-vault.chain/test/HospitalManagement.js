@@ -250,7 +250,7 @@ describe("HospitalManagement", function () {
                 const newIpfsCID = "Qm2222222222222222222222222222222222222222";
 
                 await expect(
-                    registry.connect(hospitalA).updateRecord(recordID, newContentHash, newVersionHash, newIpfsCID)
+                    registry.connect(hospitalA).updateRecord(recordID, 1, newContentHash, newVersionHash, newIpfsCID)
                 ).to.emit(registry, "RecordUpdated");
 
                 // Fetch latest version and validate.
@@ -263,7 +263,7 @@ describe("HospitalManagement", function () {
             // Prevent updates with unchanged hashes.
             it("Cannot update a record with same contentHash or versionHash", async function () {
                 await expect(
-                    registry.connect(hospitalA).updateRecord(recordID, contentHash1, versionHash1, ipfsCID1)
+                    registry.connect(hospitalA).updateRecord(recordID, 1, contentHash1, versionHash1, ipfsCID1)
                 ).to.be.revertedWith("contentHash unchanged.");
             });
 
@@ -275,7 +275,7 @@ describe("HospitalManagement", function () {
                 const newIpfsCID = "Qm3333333333333333333333333333333333333333";
 
                 await expect(
-                    registry.connect(attacker).updateRecord(recordID, newContentHash, newVersionHash, newIpfsCID)
+                    registry.connect(attacker).updateRecord(recordID, 1, newContentHash, newVersionHash, newIpfsCID)
                 ).to.be.revertedWith("Wallet not registered.");
             });
         });
@@ -298,7 +298,7 @@ describe("HospitalManagement", function () {
                 const contentHash2 = ethers.encodeBytes32String("second");
                 const versionHash2 = ethers.encodeBytes32String("v2");
                 const ipfsCID2 = "Qmbbbbbbbbccccccccddddddddeeeeeeeeffffffff";
-                await registry.connect(hospitalA).updateRecord(recordID, contentHash2, versionHash2, ipfsCID2);
+                await registry.connect(hospitalA).updateRecord(recordID, 1, contentHash2, versionHash2, ipfsCID2);
             });
 
 

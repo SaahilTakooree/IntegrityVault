@@ -64,7 +64,7 @@
 <app-entity-modal
   [show]="showHospitalModal"
   [title]="editingHospital ? 'Edit Hospital' : 'Add Hospital'"
-  [confirmLabel]="editingHospital ? 'Save Changes' : 'Create Hospital'"
+  [confirmLabel]="isSubmitting ? 'Processing...' : (editingHospital ? 'Save Changes' : 'Create Hospital')"
   (closed)="closeModals()"
   (confirmed)="onHospitalConfirmed()">
   <app-hospital-form
@@ -77,7 +77,7 @@
 <app-entity-modal
   [show]="showAdminModal"
   [title]="editingAdmin ? 'Edit Admin' : 'Add Admin'"
-  [confirmLabel]="editingAdmin ? 'Save Changes' : 'Create Admin'"
+  [confirmLabel]="isSubmitting ? 'Processing...' : (editingAdmin ? 'Save Changes' : 'Create Admin')"
   (closed)="closeModals()"
   (confirmed)="onAdminConfirmed()">
   <app-user-form [role]="UserRole.Admin" [hospitals]="hospitals" [showHospitalSelect]="true" [initialValue]="adminInitialValue"></app-user-form>

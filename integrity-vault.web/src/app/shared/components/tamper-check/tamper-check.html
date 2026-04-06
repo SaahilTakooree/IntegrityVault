@@ -4,7 +4,8 @@
   title="Integrity Check"
   confirmLabel="Close"
   [hideCancel]="true"
-  (confirmed)="onClose()">
+  (confirmed)="onClose()"
+  (closed)="onClose()">
 
     <!-- Display record name. -->
     <p class="text-muted small mb-1">Record</p>

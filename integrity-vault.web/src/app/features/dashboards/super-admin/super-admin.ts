@@ -59,6 +59,7 @@ export class SuperadminDashboardComponent {
   // Data.
   hospitals : IHospital[] = []; // Define hospitals to store all the hospitals.
   admins : IAdmin[] = []; // Define admins to store all the admins
+  isSubmitting = false; // To know if a form is being submitted.
 
   // Computed property to check if there are any hospitals.
   get noHospitals() {
@@ -260,6 +261,9 @@ export class SuperadminDashboardComponent {
     if (!this.hospitalFormRef.validate())
       return
 
+    // Set to true to show that the form has been submitting.
+    this.isSubmitting = true;
+
     // Get the value from the hospital form.
     const formValue = this.hospitalFormRef.getValue();
 
@@ -286,9 +290,11 @@ export class SuperadminDashboardComponent {
           next: () => {
             this.fetchHospitals(); // Refresh the hospital list.
             this.closeModals(); // Close the modal after success.
+            this.isSubmitting = false;
           },
           error: (err: unknown) => {
             this.hospitalFormRef.setApiError(parseHospitalApiError(err));
+            this.isSubmitting = false;
           }
       });
     } else {
@@ -302,9 +308,11 @@ export class SuperadminDashboardComponent {
           next: () => {
             this.fetchHospitals(); // Refresh the hospital list.
             this.closeModals(); // Close the modal after success.
+            this.isSubmitting = false;
           },
           error: (err: unknown) => {
             this.hospitalFormRef.setApiError(parseHospitalApiError(err));
+            this.isSubmitting = false;
           }
       });
     }
@@ -318,6 +326,9 @@ export class SuperadminDashboardComponent {
     // Stop if form is invalid.
     if (!this.userFormRef.validate())
       return;
+
+    // Set to true to show that the form has been submitting.
+    this.isSubmitting = true;
 
     const formValue = this.userFormRef.getValue();
 
@@ -359,9 +370,11 @@ export class SuperadminDashboardComponent {
           next: () => {
             this.fetchAdmins();
             this.closeModals();
+            this.isSubmitting = false;
           },
           error: (err: unknown) => {
             this.userFormRef.setApiError(parseUserApiError(err));
+            this.isSubmitting = false;
           }
         });
     } else {
@@ -369,8 +382,15 @@ export class SuperadminDashboardComponent {
       this._userService.createAdmin(payload)
         .pipe(takeUntil(this._destroy$))
         .subscribe({
-          next: () => { this.fetchAdmins(); this.closeModals(); },
-          error: (err: unknown) => { this.userFormRef.setApiError(parseUserApiError(err)); }
+          next: () => {
+            this.fetchAdmins();
+            this.closeModals();
+            this.isSubmitting = false;
+          },
+          error: (err: unknown) => {
+            this.userFormRef.setApiError(parseUserApiError(err));
+            this.isSubmitting = false;
+          }
         });
     }
   }

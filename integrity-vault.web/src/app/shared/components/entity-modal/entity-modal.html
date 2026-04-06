@@ -3,7 +3,7 @@
         <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">
+                    <h5 class="modal-title text-truncate me-3" [title]="title">
                         {{ title }}
                     </h5>
                     <button class="btn-close" (click)="closed.emit()"></button>
