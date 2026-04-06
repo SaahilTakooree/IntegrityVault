@@ -217,7 +217,7 @@ namespace IntegrityVault.Repository.Implementations
             try
             {
                 // Finding the super admin by wallet address asynchronously, returning null if not found.
-                var superAdmin = await _context.SuperAdmins.FirstOrDefaultAsync(s => s.WalletAddress.ToLower() == walletAddress.ToLower());
+                var superAdmin = await _context.SuperAdmins.FirstOrDefaultAsync(s => s.WalletAddress == walletAddress);
 
                 return superAdmin;
             }

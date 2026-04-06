@@ -14,6 +14,7 @@ namespace IntegrityVault.Api.Controllers
     {
         // Specifies that this method will handle HTTP Get requests.
         [HttpGet]
+        [Authorize(Roles = "SuperAdmin, Admin")]
         public async Task<IActionResult> GetAllHospital() // Method for get the complete list of all hospital.
         {
             try
@@ -36,6 +37,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP Get requests but with the primary key.
         [HttpGet("{id:int}")]
+        [Authorize(Roles = "SuperAdmin, Admin")]
         public async Task<IActionResult> GetHospitalById(int id) // Method for get a specific hospital.
         {
             try
@@ -66,6 +68,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP POST requests.
         [HttpPost]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> CreateHospital([FromBody] CreateHospitalDTO createHospitalDTO) // Method for creating a hopsital, accepting a CreateHospitalDTO object from the request body.
         {
             try
@@ -88,6 +91,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP Patch requests.
         [HttpPatch("{id:int}")]
+        [Authorize(Roles = "SuperAdmin, Admin")]
         public async Task<IActionResult> UpdateHospital(int id, [FromBody] UpdateHospitalDTO updateHospitalDTO) // Method for update a hospital, accepting a UpdateHospitalDTO object from the request body.
         {
             try
@@ -110,6 +114,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP Delete requests.
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> DeleteHospital(int id) // Method for deleting a specific hospital.
         {
             try

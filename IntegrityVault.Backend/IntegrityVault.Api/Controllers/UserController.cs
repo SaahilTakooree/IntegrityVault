@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc; // Import ASP.Net Core MVC library for building 
 using IntegrityVault.Service.Interfaces; // Import the interface for the user service layer.
 using IntegrityVault.Common.DTOs; // Import the DTOs for User.
 using System.Text.Json; // Import System.Text.Json for explicit runtime - type serialization of derived DTOs.
+using Microsoft.AspNetCore.Authorization; // Import ASP.NET Core for enabling authorisation.
 
 
 // Declaring the namespace where this controller belongs.
@@ -14,6 +15,7 @@ namespace IntegrityVault.Api.Controllers
     {
         // Specifies that this method will handle HTTP Get requests.
         [HttpGet]
+        [Authorize(Roles = "Admin, SuperAdmin")]
         public async Task<IActionResult> GetAllUsers([FromQuery] int? hospitalId = null) // Method for get the complete list of all users.
         {
             try
@@ -38,6 +40,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP Get requests but with the primary key.
         [HttpGet("{id:int}")]
+        [Authorize(Roles = "Doctor")]
         public async Task<IActionResult> GetUserById(int id) // Method for get a specific user.
         {
             try
@@ -68,7 +71,8 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP Get requests.
         [HttpGet("patient/{hospitalId:int}")]
-        public async Task<IActionResult> GetAllPatientFromHosptal(int hospitalId) // Method for get the complete list of all patient from a specific hospital.
+        [Authorize(Roles = "Doctor")]
+        public async Task<IActionResult> GetAllPatientFromHospital(int hospitalId) // Method for get the complete list of all patient from a specific hospital.
         {
             try
             {
@@ -90,6 +94,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP POST requests.
         [HttpPost("doctor")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateDoctor([FromBody] CreateDoctorDTO createDoctorDTO) // Method for creating a doctor, accepting a CreateDoctorDTO object from the request body.
         {
             try
@@ -112,6 +117,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP POST requests.
         [HttpPost("patient")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreatePatient([FromBody] CreatePatientDTO createPatientDTO) // Method for creating a patient, accepting a CreatePatientDTO object from the request body.
         {
             try
@@ -134,6 +140,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP POST requests.
         [HttpPost("admin")]
+        [Authorize(Roles = "Admin, SuperAdmin")]
         public async Task<IActionResult> CreateAdmin([FromBody] CreateAdminDTO createAdminDTO) // Method for creating an admin, accepting a CreateAdminDTO object from the request body.
         {
             try
@@ -156,6 +163,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP POST requests.
         [HttpPost("externalprovider")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateExternalProvider([FromBody] CreateExternalProviderDTO createExternalProviderDTO) // Method for creating an external provider, accepting a CreateExternalProviderDTO object from the request body.
         {
             try
@@ -200,6 +208,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP Put requests.
         [HttpPatch("doctor/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateDoctor (int id, [FromBody] UpdateDoctorDTO updateDoctorDTO) // Method for update a doctor, accepting a UpdateDoctorDTO object from the request body.
         {
             try
@@ -222,6 +231,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP Put requests.
         [HttpPatch("patient/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdatePatient(int id, [FromBody] UpdatePatientDTO updatePatientDTO) // Method for update a patient, accepting a UpdatePatientDTO object from the request body.
         {
             try
@@ -244,6 +254,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP Put requests.
         [HttpPatch("admin/{id:int}")]
+        [Authorize(Roles = "Admin, SuperAdmin")]
         public async Task<IActionResult> UpdateAdmin(int id, [FromBody] UpdateAdminDTO updateAdminDTO) // Method for update an admin, accepting a UpdateAdminDTO object from the request body.
         {
             try
@@ -266,6 +277,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP Put requests.
         [HttpPatch("externalprovider/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateExternalProvider(int id, [FromBody] UpdateExternalProviderDTO updateExternalProviderDTO) // Method for update an external provider, accepting a UpdateExternalProviderDTO object from the request body.
         {
             try
@@ -310,6 +322,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP Delete requests.
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin, SuperAdmin")]
         public async Task<IActionResult> DeleteUser(int id) // Method for deleting a specific users.
         {
             try

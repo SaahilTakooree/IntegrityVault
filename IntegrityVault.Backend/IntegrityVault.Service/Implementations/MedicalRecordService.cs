@@ -1,14 +1,13 @@
-﻿
-// Import dependencies needed.
+﻿// Import dependencies needed.
 using IntegrityVault.Repository.Contexts; // Import the context class for interacting with the database.
 using IntegrityVault.Repository.Interfaces; // Import the interface for the required to create and update the medical record.
 using IntegrityVault.Service.Interfaces; // Import the interface for services.
 using IntegrityVault.Common.Entities; // Import the entity class for required to create and update the medical record.
 using IntegrityVault.Common.DTOs; // Import the data transfer objects (DTOs) used in the service layer.
 using System.Text.Json; // Provides functionality for JSON serialisation and deserialisation.
-using IntegrityVault.Service.Mappers;
-using Microsoft.EntityFrameworkCore.Storage;
-using IntegrityVault.Common.Enums;
+using IntegrityVault.Service.Mappers; // Import the mapping utilities.
+using Microsoft.EntityFrameworkCore.Storage; // Provides support for database transactions.
+using IntegrityVault.Common.Enums; // Import enumerations used across the application.
 using System.Security.Cryptography; // Provides functionality for JSON serialisation and deserialisation.
 
 
@@ -242,6 +241,24 @@ namespace IntegrityVault.Service.Implementations
                 var doctorLookup = doctors.ToDictionary(d => d.ID);
                 var patientLookup = patients.ToDictionary(p => p.ID);
 
+                var providerLookup = new Dictionary<int, ExternalProvider>();
+                var hospitalLookup = new Dictionary<int, Hospital>();
+
+                foreach (var id in accessLogUserIDs)
+                {
+                    if (doctorLookup.ContainsKey(id) || patientLookup.ContainsKey(id)) continue;
+
+                    var provider = await _userRepository.GetExternalProviderByIdAsync(id);
+                    if (provider != null)
+                    {
+                        var hosp = await _hospitalRepository.GetHospitalByIdAsync(provider.BelongsToID);
+                        if (hosp != null)
+                        {
+                            hospitalLookup[id] = hosp;
+                        }
+                    }
+                }
+
                 // Define the full name of the patient.
                 var patientName = $"{patient.FirstName}{patient.MiddleName ?? ""}{patient.LastName}";
 
@@ -302,7 +319,7 @@ namespace IntegrityVault.Service.Implementations
                                 VisitDate = record.VisitDate,
                                 CurrentVersion = record.CurrentVersion,
                                 Versions = [.. BuildVersionList(record, patientName, chiefComplaint, vNum).OrderByDescending(v => v.Version)], // Versions descending.
-                                AccessLogs = BuildAccessLogList(record, doctorLookup, patientLookup) // Access logs ascending chronological.
+                                AccessLogs = BuildAccessLogList(record, doctorLookup, patientLookup, hospitalLookup) // Access logs ascending chronological.
                             };
 
                             episodeDTO.Records.Add(recordDTO);
@@ -366,6 +383,24 @@ namespace IntegrityVault.Service.Implementations
                 var doctorLookup = accessDocs.ToDictionary(d => d.ID);
                 var accessPatLookup = accessPats.ToDictionary(p => p.ID);
 
+                var providerLookup = new Dictionary<int, ExternalProvider>();
+                var hospitalLookup = new Dictionary<int, Hospital>();
+
+                foreach (var id in accessLogUserIDs)
+                {
+                    if (doctorLookup.ContainsKey(id) || patientLookup.ContainsKey(id)) continue;
+
+                    var provider = await _userRepository.GetExternalProviderByIdAsync(id);
+                    if (provider != null)
+                    {
+                        var hosp = await _hospitalRepository.GetHospitalByIdAsync(provider.BelongsToID);
+                        if (hosp != null)
+                        {
+                            hospitalLookup[id] = hosp;
+                        }
+                    }
+                }
+
                 // Group by PatientID.
                 var groupedByPatient = records
                     .GroupBy(m => m.Episode!.PatientID)
@@ -420,7 +455,7 @@ namespace IntegrityVault.Service.Implementations
                                 VisitDate = record.VisitDate,
                                 CurrentVersion = record.CurrentVersion,
                                 Versions = [.. BuildVersionList(record, patientName, chiefComplaint, vNum).OrderByDescending(v => v.Version)],
-                                AccessLogs = BuildAccessLogList(record, doctorLookup, accessPatLookup)
+                                AccessLogs = BuildAccessLogList(record, doctorLookup, accessPatLookup, hospitalLookup)
                             };
 
                             episodeDTO.Records.Add(recordDTO);
@@ -989,7 +1024,7 @@ namespace IntegrityVault.Service.Implementations
 
 
         // Private method to resolves access log entries.
-        private static List<RecordAccessLogItemDTO> BuildAccessLogList(MedicalRecord record, Dictionary<int, Doctor> doctorLookup, Dictionary<int, Patient> patientLookup)
+        private static List<RecordAccessLogItemDTO> BuildAccessLogList(MedicalRecord record, Dictionary<int, Doctor> doctorLookup, Dictionary<int, Patient> patientLookup, Dictionary<int, Hospital> hospitalLookup)
         {
             return record.AccessLogs
                 .OrderBy(a => a.Timestamp)
@@ -1007,6 +1042,11 @@ namespace IntegrityVault.Service.Implementations
                     {
                         name = $"{pat.FirstName} {pat.MiddleName ?? ""} {pat.LastName}";
                         role = "Patient";
+                    }
+                    else if (hospitalLookup.TryGetValue(a.AccessedByUserID, out var prov))
+                    {
+                        name = prov.Name ?? "Associated Hospital";
+                        role = "External Provider";
                     }
                     else
                     {

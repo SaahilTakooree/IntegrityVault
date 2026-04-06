@@ -1,11 +1,3 @@
-C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\IntegrityVault.Api.csproj.AssemblyReference.cache
-C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\IntegrityVault.Api.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\IntegrityVault.Api.AssemblyInfoInputs.cache
-C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\IntegrityVault.Api.AssemblyInfo.cs
-C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\IntegrityVault.Api.csproj.CoreCompileInputs.cache
-C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\IntegrityVault.Api.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\IntegrityVault.Api.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\IntegrityVault.Api.sourcelink.json
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\bin\Debug\net9.0\appsettings.Development.json
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\bin\Debug\net9.0\appsettings.json
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\bin\Debug\net9.0\IntegrityVault.Api.staticwebassets.endpoints.json
@@ -237,6 +229,14 @@ C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backen
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\bin\Debug\net9.0\IntegrityVault.Common.pdb
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\bin\Debug\net9.0\IntegrityVault.Repository.pdb
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\bin\Debug\net9.0\IntegrityVault.Service.pdb
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\IntegrityVault.Api.csproj.AssemblyReference.cache
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\IntegrityVault.Api.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\IntegrityVault.Api.AssemblyInfoInputs.cache
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\IntegrityVault.Api.AssemblyInfo.cs
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\IntegrityVault.Api.csproj.CoreCompileInputs.cache
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\IntegrityVault.Api.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\IntegrityVault.Api.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\IntegrityVault.Api.sourcelink.json
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\scopedcss\bundle\IntegrityVault.Api.styles.css
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\staticwebassets.build.json
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\staticwebassets.development.json
@@ -247,7 +247,6 @@ C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backen
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\staticwebassets\msbuild.buildMultiTargeting.IntegrityVault.Api.props
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\staticwebassets\msbuild.buildTransitive.IntegrityVault.Api.props
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\staticwebassets.pack.json
-C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\Integrit.BC6E3215.Up2Date
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\IntegrityVault.Api.dll
 C:\Users\mehar\OneDrive\Documents\Middlesex\IntegrityVault\IntegrityVault.Backend\IntegrityVault.Api\obj\Debug\net9.0\refint\IntegrityVault.Api.dll

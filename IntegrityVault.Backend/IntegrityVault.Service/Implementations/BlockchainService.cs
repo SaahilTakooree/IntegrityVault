@@ -220,7 +220,17 @@ namespace IntegrityVault.Service.Implementations
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(_rpcUrl))
+                    throw new InvalidOperationException("RPC URL is not configured.");
+
+                if (string.IsNullOrWhiteSpace(_contractAddress))
+                    throw new InvalidOperationException("Contract address is not configured.");
+
                 var web3 = new Web3(_rpcUrl);
+
+                await web3.Net.Version.SendRequestAsync();
+
+
                 var function = web3.Eth.GetContract(HospitalManagementABI.Value, _contractAddress).GetFunction("getRecord");
                 var result = await function.CallDeserializingToObjectAsync<RecordEntryOutput>(
                     (BigInteger)recordId,
@@ -240,7 +250,16 @@ namespace IntegrityVault.Service.Implementations
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(_rpcUrl))
+                    throw new InvalidOperationException("RPC URL is not configured.");
+
+                if (string.IsNullOrWhiteSpace(_contractAddress))
+                    throw new InvalidOperationException("Contract address is not configured.");
+
                 var web3 = new Web3(_rpcUrl);
+
+                await web3.Net.Version.SendRequestAsync();
+
                 var function = web3.Eth.GetContract(HospitalManagementABI.Value, _contractAddress).GetFunction("getLatestRecord");
                 var result = await function.CallDeserializingToObjectAsync<RecordEntryOutput>(
                     (BigInteger)recordId

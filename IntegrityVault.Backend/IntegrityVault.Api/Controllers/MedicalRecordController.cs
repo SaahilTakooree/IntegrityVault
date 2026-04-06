@@ -15,6 +15,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP POST requests.
         [HttpPost]
+        [Authorize(Roles = "Doctor")]
         public async Task<IActionResult> CreateNewMedicalRecordAndEpisode([FromBody] CreateMedicalRecordDTO createMedicalRecordDTO) // Method for creating a new medical and an episode, accepting a CreateMedicalRecordDTO object from the request body.
         {
             try
@@ -37,6 +38,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP POST requests by ID.
         [HttpPost("episode/{episodeID:int}")]
+        [Authorize(Roles = "Doctor")]
         public async Task<IActionResult> AddMedicalRecordToEpisode(int episodeID, [FromBody] CreateMedicalRecordDTO createMedicalRecordDTO) // Method for creating a new medical for an existing episode, accepting a CreateMedicalRecordDTO object from the request body.
         {
             try
@@ -59,6 +61,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP Patch requests.
         [HttpPatch("episode/{episodeID:int}/{medicalRecordID:int}")]
+        [Authorize(Roles = "Doctor")]
         public async Task<IActionResult> UpdateMedicalrecord(int medicalRecordID, int episodeID, [FromBody] CreateMedicalRecordDTO createMedicalRecordDTO) // Method for update a medical record, accepting a CreateMedicalRecordDTO object from the request body.
         {
             try
@@ -81,6 +84,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP GET requests.
         [HttpGet("patient/{patientID:int}/history")]
+        [Authorize(Roles = "Patient")]
         public async Task<IActionResult> GetPatientMedicalHistory(int patientID) // Method that get patient full medcial history.
         {
             try
@@ -103,6 +107,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP GET requests.
         [HttpGet("doctor/{doctorID:int}/history")]
+        [Authorize(Roles = "Doctor")]
         public async Task<IActionResult> GetDoctorMedicalHistory(int doctorID)
         {
             try
@@ -125,6 +130,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP PATCH requests.
         [HttpPatch("episode/{episodeID:int}/status")]
+        [Authorize(Roles = "Doctor")]
         public async Task<IActionResult> SetEpisodeStatus(int episodeID, [FromBody] int doctorID)
         {
             try
@@ -147,6 +153,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP GET requests.
         [HttpGet("ipfs/{cid}/user/{userID:int}")]
+        [Authorize(Roles = "Doctor, Patient")]
         public async Task<IActionResult> GetMedicalRecordInformFromCID(string cid, int userID) // Method that retrieves a medical record from IPFS using CID and user ID.
         {
             try
@@ -177,6 +184,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP GET requests.
         [HttpGet("ipfs/{cid}/user/{userID:int}/tamper-check")]
+        [Authorize(Roles = "Doctor, Patient")]
         public async Task<IActionResult> CheckIfMedicalRecordTampered(string cid, int userID) // Method that checks whether a medical record stored in IPFS has been tampered with.
         {
             try
@@ -200,6 +208,7 @@ namespace IntegrityVault.Api.Controllers
 
         // Specifies that this method will handle HTTP POST requests.
         [HttpPost("pdf/tamper-check/user/{userID:int}")]
+        [Authorize(Roles = "Doctor, ExternalProvider, Patient")]
         public async Task<IActionResult> VerifyPdfTampering(int userID, IFormFile file) // Method that receives a PDF file and checks whether the medical record has been tampered with.
         {
             try
@@ -230,6 +239,7 @@ namespace IntegrityVault.Api.Controllers
 
 
         [HttpGet("ipfs/{cid}/user/{userID:int}/download")]
+        [Authorize(Roles = "Patient")]
         public async Task<IActionResult> DownloadMedicalRecord(string cid, int userID)
         {
             try

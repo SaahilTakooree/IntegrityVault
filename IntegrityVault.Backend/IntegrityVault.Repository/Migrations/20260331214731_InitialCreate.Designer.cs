@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IntegrityVault.Repository.Migrations
 {
     [DbContext(typeof(IntegrityVaultDbContext))]
-    [Migration("20260324135442_InitialCreate")]
+    [Migration("20260331214731_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

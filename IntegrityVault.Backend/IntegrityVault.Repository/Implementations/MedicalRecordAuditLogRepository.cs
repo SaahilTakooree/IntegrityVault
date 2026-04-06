@@ -50,8 +50,8 @@ namespace IntegrityVault.Repository.Implementations
                     NewContentHash = createMedicalRecordAuditDTO.NewContentHash,
                     NewVersionHash = createMedicalRecordAuditDTO.NewVersionHash,
                     PreviousContentHash = createMedicalRecordAuditDTO.PreviousContentHash,
-                    PreviousVersionHash = createMedicalRecordAuditDTO.PreviousVersionHash
-
+                    PreviousVersionHash = createMedicalRecordAuditDTO.PreviousVersionHash,
+                    BlockchainTxHash = createMedicalRecordAuditDTO.BlockchainTxHash
                 };
 
             // Insert the new record into the database.
