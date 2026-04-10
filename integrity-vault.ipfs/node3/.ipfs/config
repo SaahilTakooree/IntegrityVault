@@ -1,0 +1,156 @@
+{
+  "Identity": {
+    "PeerID": "12D3KooWQ1GQnLS2TPKyToePxsg4857jiYtjwAwx9MtP7CRftHAr",
+    "PrivKey": "CAESQFcuvQHxvchrTQOEcrsEnp8zjwcVuKBH/w4CrDgPlVJv0s5+zQ/g6iUg7bHDWpPZmLZz6CgBc23sYCOmQM8WqZM="
+  },
+  "Datastore": {
+    "StorageMax": "10GB",
+    "StorageGCWatermark": 90,
+    "GCPeriod": "1h",
+    "Spec": {
+      "mounts": [
+        {
+          "mountpoint": "/blocks",
+          "path": "blocks",
+          "prefix": "flatfs.datastore",
+          "shardFunc": "/repo/flatfs/shard/v1/next-to-last/2",
+          "sync": false,
+          "type": "flatfs"
+        },
+        {
+          "compression": "none",
+          "mountpoint": "/",
+          "path": "datastore",
+          "prefix": "leveldb.datastore",
+          "type": "levelds"
+        }
+      ],
+      "type": "mount"
+    },
+    "HashOnRead": false,
+    "BloomFilterSize": 0,
+    "BlockKeyCacheSize": null
+  },
+  "Addresses": {
+    "Swarm": [
+      "/ip4/127.0.0.1/tcp/4004",
+      "/ip6/::/tcp/4004",
+      "/ip4/127.0.0.1/udp/4004/webrtc-direct",
+      "/ip4/127.0.0.1/udp/4004/quic-v1",
+      "/ip4/127.0.0.1/udp/4004/quic-v1/webtransport",
+      "/ip6/::/udp/4004/webrtc-direct",
+      "/ip6/::/udp/4004/quic-v1",
+      "/ip6/::/udp/4004/quic-v1/webtransport"
+    ],
+    "Announce": [],
+    "AppendAnnounce": [],
+    "NoAnnounce": [],
+    "API": "/ip4/127.0.0.1/tcp/5004",
+    "Gateway": "/ip4/127.0.0.1/tcp/8084"
+  },
+  "Mounts": {
+    "IPFS": "/ipfs",
+    "IPNS": "/ipns",
+    "MFS": "/mfs",
+    "FuseAllowOther": false
+  },
+  "Discovery": {
+    "MDNS": {
+      "Enabled": false
+    }
+  },
+  "Routing": {
+    "Type": "dht"
+  },
+  "Ipns": {
+    "RepublishPeriod": "",
+    "RecordLifetime": "",
+    "ResolveCacheSize": 128
+  },
+  "Bootstrap": [],
+  "Gateway": {
+    "HTTPHeaders": {},
+    "RootRedirect": "",
+    "NoFetch": false,
+    "NoDNSLink": false,
+    "DeserializedResponses": null,
+    "AllowCodecConversion": null,
+    "DisableHTMLErrors": null,
+    "PublicGateways": null,
+    "ExposeRoutingAPI": null
+  },
+  "API": {
+    "HTTPHeaders": {}
+  },
+  "Swarm": {
+    "AddrFilters": null,
+    "DisableBandwidthMetrics": false,
+    "DisableNatPortMap": true,
+    "RelayClient": {},
+    "RelayService": {},
+    "Transports": {
+      "Network": { "Websocket": false },
+      "Security": {},
+      "Multiplexers": {}
+    },
+    "ConnMgr": {},
+    "ResourceMgr": {}
+  },
+  "AutoNAT": {},
+  "AutoTLS": { "Enabled": false },
+  "Pubsub": {
+    "Router": "",
+    "DisableSigning": false,
+    "Enabled": true
+  },
+  "Peering": {
+    "Peers": null
+  },
+  "DNS": {
+    "Resolvers": {}
+  },
+  "Migration": {},
+  "AutoConf": { "Enabled": false },
+  "Provide": {
+    "Strategy": "all",
+    "DHT": {
+        "Interval": "12h"
+    }
+  },
+  "Provider": {},
+  "Reprovider": {},
+  "HTTPRetrieval": {},
+  "Experimental": {
+    "FilestoreEnabled": false,
+    "UrlstoreEnabled": false,
+    "Libp2pStreamMounting": false,
+    "P2pHttpProxy": false,
+    "OptimisticProvide": false,
+    "OptimisticProvideJobsPoolSize": 0
+  },
+  "Plugins": {
+    "Plugins": null
+  },
+  "Pinning": {
+    "RemoteServices": {}
+  },
+  "Import": {
+    "CidVersion": null,
+    "UnixFSRawLeaves": null,
+    "UnixFSChunker": null,
+    "HashFunction": null,
+    "UnixFSFileMaxLinks": null,
+    "UnixFSDirectoryMaxLinks": null,
+    "UnixFSHAMTDirectoryMaxFanout": null,
+    "UnixFSHAMTDirectorySizeThreshold": null,
+    "UnixFSHAMTDirectorySizeEstimation": null,
+    "UnixFSDAGLayout": null,
+    "BatchMaxNodes": null,
+    "BatchMaxSize": null,
+    "FastProvideRoot": null,
+    "FastProvideWait": null
+  },
+  "Version": {},
+  "Internal": {},
+  "Bitswap": {}
+}

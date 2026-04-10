@@ -931,7 +931,7 @@ namespace IntegrityVault.Service.Implementations
             var ipfsCid = await _ipfsService.AddFileAsync(pdfBytes);
 
             // Compute a temporary VersionHash using recordID.
-            var previousVersionHashBytes = new byte[32]; // 32 zero bytes — no prior version.
+            var previousVersionHashBytes = new byte[32]; // 32 zero bytes.
             var tempVersionHashBytes = ComputeVersionHash(contentHashBytes, previousVersionHashBytes, version: 1, recordID: 0);
             var tempVersionHashHex = Convert.ToHexString(tempVersionHashBytes).ToLowerInvariant();
 

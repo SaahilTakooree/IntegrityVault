@@ -17,7 +17,7 @@ export default {
       }
     },
     sepolia: {
-      url: process.env.ALCHEMY_URL,
+      url: process.env.SEPOLIA_RPC_URL,
       accounts: [process.env.PRIVATE_KEY]
     }
   }

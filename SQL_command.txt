@@ -1,0 +1,276 @@
+USE [IntegritryVaultDb];
+GO
+
+-- Delete in order to avoid Foreign Key conflicts
+DELETE FROM [dbo].[RecordAccessLogs];
+DELETE FROM [dbo].[MedicalRecordAuditLogs];
+DELETE FROM [dbo].[MedicalRecords];
+DELETE FROM [dbo].[Episodes];
+DELETE FROM [dbo].[Patients];
+DELETE FROM [dbo].[Doctors];
+DELETE FROM [dbo].[Admins];
+DELETE FROM [dbo].[SuperAdmins];
+DELETE FROM [dbo].[ExternalProviders];
+DELETE FROM [dbo].[Users];
+DELETE FROM [dbo].[HospitalIpAddresses];
+DELETE FROM [dbo].[Hospitals];
+GO
+
+
+
+USE [IntegritryVaultDb];
+GO
+
+-- Step 1: Enable manual ID insertion
+SET IDENTITY_INSERT [dbo].[Hospitals] ON;
+
+-- Step 2: Insert the data
+INSERT INTO [dbo].[Hospitals] ([ID], [Name], [WalletAddress], [EncryptedPrivateKey])
+VALUES 
+(1, N'Nova Med', '0xfbE180B05ECEE0010B99674a91CCC3570559562c', 0xE3B0C44298FC1C149AFBF4C821116885C47942544B7254AE68791CDC),
+(2, N'Arc Care', '0x1459c5fFdefDB27A76bBA50E9686c9C2D4DCBbd3', 0xC4627EA934C9AA76386456F0CAAD83D21A6DC0231092A3C8F6963C1DBECFD4851A3B8E355461E64F55009F7D94E7725B09B0959CA9BEA04BE68F5B09093638640C8B4A3A2733274B5DB7B50D5D9342E65CF4049294B891425F5C4D17),
+(3, N'Oak Ward', '0xf9c66CA8112Faa43916Ee66b78D7f8a22e6E804D', 0x8917918E4C5ACAA659F7785A59368839A890A96FEB5CBA08222A2D9508FFBED7804ED46D90483AA1303123785AC1C143BD5F655AF5A4B5A41E7119BF0CC2842E80F46AD339387EF096BB1BEB377799B6AF462D8789B9F64838FB060D);
+
+-- Step 3: Disable manual ID insertion
+SET IDENTITY_INSERT [dbo].[Hospitals] OFF;
+GO
+
+
+
+USE [IntegritryVaultDb];
+GO
+
+-- Enable manual ID insertion for the HospitalIpAddresses table
+SET IDENTITY_INSERT [dbo].[HospitalIpAddresses] ON;
+
+INSERT INTO [dbo].[HospitalIpAddresses] ([ID], [HospitalID], [IpAddress])
+VALUES 
+(4, 1, '102.113.117.145'),
+(8, 1, '102.113.177.16'),
+(5, 2, '102.113.117.145'),
+(2, 2, '102.113.177.16'),
+(6, 3, '102.113.117.145'),
+(3, 3, '102.113.177.16');
+
+-- Disable manual ID insertion
+SET IDENTITY_INSERT [dbo].[HospitalIpAddresses] OFF;
+GO
+
+
+
+-- Enable manual ID insertion for the Users table
+SET IDENTITY_INSERT [dbo].[Users] ON;
+
+INSERT INTO [dbo].[Users] ([ID], [Username], [Email], [Password], [Role], [JoinDate], [HospitalID])
+VALUES 
+(1, 'superadmin', 'superadmin@integrityvault.com', '$2a$11$osJnNws69wJM6bPr/0TPv.4raPoV6IVZGW04VbPirHYE.U8UU9lEW', 4, '2026-03-31', NULL),
+(2, 'admin1', 'admin1@novamed.com', '$2a$11$rVOrilxwMY6FYP8n1.xpbezfEJW9.OPjJx/ulJF9WXzCBgBfuHiua', 0, '2026-03-31', 1),
+(3, 'admin2', 'admin2@arccare.com', '$2a$11$ISrPu9s6EmfKuiWJFCQcAe7uxKIoxqBNahUHLF830sH1bwisSCuC.', 0, '2026-03-31', 2),
+(4, 'admin3', 'admin3@oakward.com', '$2a$11$wcTrTv3nnNQ/ypUcEAN5z.s9SP9HLf3LjMRVO17crOkAlGwWHOkXS', 0, '2026-03-31', 3),
+(5, 'external.arc', 'external.arc@novamed.com', '$2a$11$3jCIkq875SDmqf6BMj88Ze3v1yha8XmS715MpnNlYF9n3Vw6ekcE.', 2, '2026-03-31', 1),
+(6, 'external.oak', 'external.oak@novamed.com', '$2a$11$8/pVRK8sScaspnpjKN8WdOqxDWPR6PfSv3WUVLTnoifmZ142yDoca', 2, '2026-03-31', 1),
+(7, 'doctor1.nova', 'doctor1.nova@novamed.com', '$2a$11$EkIubvaR9VgbVx5WITtiweuCvDEpqpZO2Tq5zrOlYivGQW6A1utOu', 1, '2026-03-31', 1),
+(8, 'patient1.nova', 'patient1.nova@novamed.com', '$2a$11$8Z5gbk8DQAmZ6z7YJGA85eBiCFEJ50hqgpZgB9YfK.7QGwEMcEyXG', 3, '2026-03-31', 1),
+(9, 'patient2.nova', 'patient2.nova@novamed.com', '$2a$11$AGl6./0Myeecm1sLXICd.uzq/4/yxU4xrNZt/4LkXe2Fm.VFFsk7C', 3, '2026-03-31', 1),
+(10, 'external1.nova', 'external1.nova@arccare.com', '$2a$11$JOJjsHHKlyckTw43.IxOIuo0BQkWWPGs5kBST7JJPQmD937rxMG1m', 2, '2026-03-31', 2),
+(11, 'external2.oak', 'external2.oak@arccare.com', '$2a$11$q3bAaDVGiszrr9W2D4PrF.XPNCWp9RrGQ2ZRdu4.y95QuVhTG6euC', 2, '2026-03-31', 2),
+(12, 'doctor1.arc', 'doctor1.arc@arccare.com', '$2a$11$/AU5nva9tMfpYoqWCjBCkOnGyc33KFL.DRA.cSLqSy9RFB.wAL5TW', 1, '2026-03-31', 2),
+(13, 'patient1.arc', 'patient1.arc@arccare.com', '$2a$11$PkqQ8guAIAaTDPJXJonOieOZv5JeXxPx4f/BT31G4zUIO6AWMMu52', 3, '2026-03-31', 2),
+(14, 'patient2.arc', 'patient2.arc@arccare.com', '$2a$11$EIsnbytyViH7lbe5pwwOnOPze6SUWcXzocuZhV.5X0Rx06qqms1RO', 3, '2026-03-31', 2),
+(15, 'external1.arc', 'external1.arc@oakward.com', '$2a$11$5.K5QN77WDUlIxUn8lICOu8OmXRurFjOIWCR6A9EYU7MohFw3LsPq', 2, '2026-03-31', 3),
+(16, 'external2.nova', 'external2.nova@oakward.com', '$2a$11$L0soc9OD1e9ODsgig3z3b.8s9Cl2bajizt1BPTg2UfrlVIvp8g1Mq', 2, '2026-03-31', 3),
+(17, 'doctor1.oak', 'doctor1.oak@oakward.com', '$2a$11$4hZMcHrwLu0cS1RzzF.Ki.SQy0rTREEnIBSmNEjzrsAuRBm1lBnoO', 1, '2026-03-31', 3),
+(18, 'patient1.oak', 'patient1.oak@oakward.com', '$2a$11$QMBWlzRC2Ua.EvKsA5C1fucg85JDCq/q4xC4L9WdSyL6yVArMAdse', 3, '2026-03-31', 3),
+(19, 'patient2.oak', 'patient2.oak@oakward.com', '$2a$11$haqsMdt3EAMcbJhaOAbKOOt0XCBoUlHDZkO72TREmCihySOScDVUu', 3, '2026-03-31', 3);
+
+-- Disable manual ID insertion
+SET IDENTITY_INSERT [dbo].[Users] OFF;
+GO
+
+
+
+USE [IntegritryVaultDb];
+GO
+
+INSERT INTO [dbo].[Admins] ([ID])
+VALUES 
+(2),
+(3),
+(4);
+
+GO
+
+
+
+USE [IntegritryVaultDb];
+GO
+
+INSERT INTO [dbo].[ExternalProviders] ([ID], [BelongsToID])
+VALUES 
+(10, 1),
+(16, 1),
+(5, 2),
+(15, 2),
+(6, 3),
+(11, 3);
+
+GO
+
+
+
+USE [IntegritryVaultDb];
+GO
+
+INSERT INTO [dbo].[Doctors] ([ID], [FirstName], [MiddleName], [LastName], [Specialty])
+VALUES 
+(7, N'Alex', N'', N'Vance', 0),
+(12, N'Leila', N'Sofia', N'Amari', 3),
+(17, N'Marco', N'', N'Rossi', 1);
+
+GO
+
+
+
+USE [IntegritryVaultDb];
+GO
+
+INSERT INTO [dbo].[Patients] ([ID], [FirstName], [MiddleName], [LastName], [DOB], [Gender])
+VALUES 
+(8, N'Jorge', N'Luis', N'Martinez', '1995-05-15', 1),
+(9, N'Sarah', N'', N'Smith', '1985-11-22', 0),
+(13, N'Kevin', N'Andrew', N'Thompson', '1990-08-15', 1),
+(14, N'Priya', N'', N'Sharma', '1975-01-03', 0),
+(18, N'Wei', N'Jun', N'Li', '1977-12-08', 1),
+(19, N'Claire', N'', N'Dupont', '1988-02-14', 0);
+
+GO
+
+
+
+USE [IntegritryVaultDb];
+GO
+
+INSERT INTO [dbo].[SuperAdmins] ([ID], [WalletAddress], [EncryptedPrivateKey])
+VALUES (1, '0xc220F2e826d9F791B0a631ffeF8b199c35853e9B', 0xB3326382C9E0EEE45F5B25EB92CBE9214891162BAA3358B7295CFA3E9929E457E97AD8B824E64E8DF080E9811CC07AA70F19E538F6E54D1221C5ABE7BAB458ACB2037078D69CB150ACF016A5034C2A97DAC81879E3AFCCE662BE8810);
+
+GO
+
+
+
+USE [IntegritryVaultDb];
+GO
+
+-- Enable manual ID insertion for the Episodes table
+SET IDENTITY_INSERT [dbo].[Episodes] ON;
+
+INSERT INTO [dbo].[Episodes] ([ID], [PatientID], [DoctorID], [Specialty], [Title], [IsActive], [CreatedAt])
+VALUES 
+(1, 8, 7, 0, N'Sharp chest pain and shortness of breath during exercise.', 1, '2026-03-31 23:29:33.5606948'),
+(2, 9, 7, 0, N'Heart palpitations, "fluttering" sensation in chest, and mild fatigue.', 0, '2026-03-31 23:37:42.8856867'),
+(3, 9, 7, 0, N'Occasional dull headaches, "pounding" sensation in the ears, and blurred vision after work.', 1, '2026-03-31 23:43:05.5433764');
+
+-- Disable manual ID insertion
+SET IDENTITY_INSERT [dbo].[Episodes] OFF;
+GO
+
+
+
+USE [IntegritryVaultDb];
+GO
+
+-- Enable manual ID insertion for the MedicalRecords table
+SET IDENTITY_INSERT [dbo].[MedicalRecords] ON;
+
+INSERT INTO [dbo].[MedicalRecords] ([ID], [EpisodeID], [VisitDate], [IPFS_CID], [ContentHash], [VersionHash], [PreviousVersionHash], [BlockchainTxHash], [CurrentVersion], [CreatedAt], [UpdatedAt])
+VALUES 
+(1, 1, '2026-03-31', 'QmY3P7UfZZDRfeAiv1hKyVShLCxpBScjrEMeDMPckgUkEC', '28818096e0e44bed4892ddb6ed8e953adc042104843203ff4d60ed604884c33e', 'dd192e11e3c90fc5ef0fd76eb3311dd98449b4bcc5ec3d7ce1264d09500b4af9', '1dac93d04ced104bb879503f3f75a074175fd19833349f6f4ad2d8a5624d0d1a', '0x12be939197134d49f3d5fa889507a2b8d356af8c85be1a73670ffe2c31faad06', 2, '2026-03-31 23:29:33.5606948', '2026-03-31 23:32:14.1012627'),
+(2, 1, '2026-03-31', 'QmcTaHpw1CdXo3aaGnhvhfZtiq3J2i6QQ1i4nTLYiMGRbn', '5c061e41a4c14879cc03bf16d519c6cf531126e5d038fd8f58e87f18c7b322aa', 'f4772087f912c1070dfca0bb3792340c21277a05ef3b3de1c159b8904c44ad9e', NULL, '0x63155335c0ffa753331d40a2b50221affb7862e36c10a5000f51d81e4c4d7383', 1, '2026-03-31 23:33:33.0765516', '2026-03-31 23:33:33.0765516'),
+(3, 2, '2026-03-31', 'QmeF4weAuTS4sf9nMqJjFAFJ76JyAyYcoeSRHfZLjLRcW6', '1929178463eb50067473f17dfa2732cf711428dd368d3f45540cfdfc16d8a4f9', 'ac8d268c13e8eef14f390974bc2bed1ca6158d379eca60df121438dd2588c1dd', NULL, '0xe42cbcd366c9c06c269615389803cc69f9b0171853ae7a8366216027dee44ccd', 1, '2026-03-31 23:37:42.8856867', '2026-03-31 23:37:42.8856867'),
+(4, 2, '2026-03-31', 'QmW5MAT82x6xkQA5qPhrp2m8PxhJcZxCWDNx9h3dMMCMp2', '58210fa251231e4dcde34f77959c134bc582776a18c298671d1e121f3a5ef8a9', 'e663f8380b15f9bbc41866a345b1994c359cc8f4e37500909ad2d6cc2457f9d7', NULL, '0x2110078c8765f409706a73c740dcf619b641718cc07eef12c35aaa62c024fc6f', 1, '2026-03-31 23:38:54.6366470', '2026-03-31 23:38:54.6366470'),
+(5, 2, '2026-03-31', 'QmSTfQPbaX5tv5ct3bhK3cAjAJSXzeYJzwZV1WcRTPoWBE', '42a8bb187000d13f9f01d6c0595f72074df9310e602bdb4bcc2becb280064e6d', '545583a8a815b131e09fb720c491db044b7a70c9c54798ef2a0b14f32c43412d', NULL, '0xb861a5a0755b37c67e05946a10dbd44cd025fb54db79adfa5181a1af6f0b7cc1', 1, '2026-03-31 23:39:45.3296610', '2026-03-31 23:39:45.3296610'),
+(6, 3, '2026-03-31', 'QmeE7M6TuFErLd4WdH8X5wcVxxsajAjKWPNP2XBzgzsg4o', '6e54fa87444c4a330c90eaecf1cfc828fb4e24584d8f3eebf052507a0b640000', '82176c824ea7a0fa2f8f5325691974b090c8593c0d491820fdaa157a1f2b4102', NULL, '0x92100bf6ae2d156506102584f958a402f99832313b1e603ade4ac11eddd1d3ce', 1, '2026-03-31 23:43:05.5433764', '2026-03-31 23:43:05.5433764'),
+(7, 3, '2026-03-31', 'QmRzzqor1J6nrz6CznJQ5Y6uuRuP1mvNFNSAn9ryhJ7P5b', '70bce904c7601ceeac4a12e54891d39c58f36c179b142667a33af764005eeb31', '6dff213f1eaccc256586e0346e051a15155497b5d9aeab40bda8ba74d0bd159c', NULL, '0x3bfa52df8af9df6e0b7716fd180415a97a1676456c96acd30e9a045e7b3fb33f', 1, '2026-03-31 23:44:24.8032830', '2026-03-31 23:44:24.8032830');
+
+-- Disable manual ID insertion
+SET IDENTITY_INSERT [dbo].[MedicalRecords] OFF;
+GO
+
+
+
+USE [IntegritryVaultDb];
+GO
+
+-- Enable manual ID insertion for the MedicalRecordAuditLogs table
+SET IDENTITY_INSERT [dbo].[MedicalRecordAuditLogs] ON;
+
+INSERT INTO [dbo].[MedicalRecordAuditLogs] ([ID], [RecordID], [UpdatedByDoctorID], [PreviousIPFS_CID], [NewIPFS_CID], [PreviousContentHash], [NewContentHash], [PreviousVersionHash], [NewVersionHash], [BlockchainTxHash], [Version], [UpdatedAt])
+VALUES 
+(1, 1, 7, 
+ 'QmQuGWARDncCperYms9KXhnPUc4LjkC8uw3WB1VQ8u2koq', 
+ 'QmY3P7UfZZDRfeAiv1hKyVShLCxpBScjrEMeDMPckgUkEC', 
+ 'e8051b8c7d4e066ebc28fc26a77be82ab7c7ed59541e828a22c15e9a165bdbe2', 
+ '28818096e0e44bed4892ddb6ed8e953adc042104843203ff4d60ed604884c33e', 
+ '1dac93d04ced104bb879503f3f75a074175fd19833349f6f4ad2d8a5624d0d1a', 
+ 'dd192e11e3c90fc5ef0fd76eb3311dd98449b4bcc5ec3d7ce1264d09500b4af9', 
+ '0x12be939197134d49f3d5fa889507a2b8d356af8c85be1a73670ffe2c31faad06', 
+ 2, '2026-03-31 23:32:14.1012627');
+
+-- Disable manual ID insertion
+SET IDENTITY_INSERT [dbo].[MedicalRecordAuditLogs] OFF;
+GO
+
+
+
+USE [IntegritryVaultDb];
+GO
+
+-- Enable manual ID insertion for the RecordAccessLogs table
+SET IDENTITY_INSERT [dbo].[RecordAccessLogs] ON;
+
+INSERT INTO [dbo].[RecordAccessLogs] ([ID], [RecordID], [AccessedByUserID], [AccessType], [Timestamp])
+VALUES 
+(1, 1, 7, 0, '2026-03-31 23:29:33.5606948'),
+(2, 1, 7, 4, '2026-03-31 23:31:20.8425707'),
+(3, 1, 7, 2, '2026-03-31 23:32:14.1012627'),
+(4, 2, 7, 0, '2026-03-31 23:33:33.0765516'),
+(5, 3, 7, 0, '2026-03-31 23:37:42.8856867'),
+(6, 4, 7, 0, '2026-03-31 23:38:54.6366470'),
+(7, 5, 7, 0, '2026-03-31 23:39:45.3296610'),
+(8, 6, 7, 0, '2026-03-31 23:43:05.5433764'),
+(9, 7, 7, 0, '2026-03-31 23:44:24.8032830'),
+(10, 6, 7, 3, '2026-03-31 23:44:49.6271964'),
+(11, 1, 7, 4, '2026-03-31 23:44:59.9182182'),
+(12, 5, 9, 1, '2026-03-31 23:53:44.1790652'),
+(13, 5, 16, 3, '2026-03-31 23:54:27.0122269'),
+(14, 3, 7, 3, '2026-04-01 06:03:08.6303362'),
+(15, 1, 7, 4, '2026-04-01 06:16:39.9391704'),
+(16, 1, 7, 3, '2026-04-01 06:19:24.0073591'),
+(17, 5, 9, 1, '2026-04-01 06:26:10.3507927'),
+(18, 5, 9, 3, '2026-04-01 06:29:12.0901472'),
+(19, 1, 7, 4, '2026-04-06 18:20:47.8068991'),
+(20, 6, 7, 3, '2026-04-06 18:23:49.0635749'),
+(21, 7, 7, 3, '2026-04-06 18:25:11.5110481'),
+(22, 5, 7, 3, '2026-04-06 18:26:40.4504193'),
+(23, 1, 8, 4, '2026-04-06 18:30:27.9105198'),
+(24, 2, 8, 3, '2026-04-06 18:31:07.5153530'),
+(25, 2, 8, 4, '2026-04-06 18:33:04.2751444'),
+(26, 2, 8, 4, '2026-04-06 18:33:57.9254562'),
+(27, 2, 8, 3, '2026-04-06 18:34:11.4164944'),
+(28, 2, 8, 3, '2026-04-06 18:34:21.4637509'),
+(29, 2, 8, 4, '2026-04-06 18:35:32.7934924'),
+(30, 5, 10, 3, '2026-04-06 18:38:54.1948083'),
+(31, 2, 7, 4, '2026-04-06 22:42:41.9439951'),
+(32, 1, 7, 4, '2026-04-06 22:42:51.4717057'),
+(33, 1, 7, 3, '2026-04-06 22:43:08.0815445'),
+(34, 5, 7, 3, '2026-04-06 22:43:29.6212789'),
+(35, 6, 9, 4, '2026-04-06 22:44:32.2061570'),
+(36, 4, 9, 1, '2026-04-06 22:44:37.9456486'),
+(37, 3, 9, 3, '2026-04-06 22:44:49.6561022'),
+(38, 4, 9, 3, '2026-04-06 22:44:59.5142981'),
+(39, 4, 16, 3, '2026-04-06 22:45:41.3731154'),
+(40, 1, 7, 3, '2026-04-06 23:18:08.9390334'),
+(41, 2, 7, 3, '2026-04-06 23:19:49.1865257');
+
+-- Disable manual ID insertion
+SET IDENTITY_INSERT [dbo].[RecordAccessLogs] OFF;
+GO

@@ -293,7 +293,8 @@ namespace IntegrityVault.Service.Implementations
         private async Task<Web3> BuildHospitalWeb3Async(int hospitalId)
         {
             // Get the hospital record.
-            var hospital = await _hospitalRepository.GetHospitalByIdAsync(hospitalId) ?? throw new InvalidOperationException($"Hospital {hospitalId} not found in database.");
+            var hospital = await _hospitalRepository.GetHospitalByIdAsync(hospitalId) 
+                ?? throw new InvalidOperationException($"Hospital {hospitalId} not found in database.");
 
             // Decrypt the stored private key.
             string privateKey = _cryptoService.Decrypt(hospital.EncryptedPrivateKey);
@@ -330,7 +331,7 @@ namespace IntegrityVault.Service.Implementations
             // Get current gas price from the network.
             var gasPrice = await web3.Eth.GasPrice.SendRequestAsync();
 
-            // Calculate total cost: gas limit * gas price.
+            // Calculate total cost.
             var totalCost = estimatedGas.Value * gasPrice.Value;
 
             if (balance.Value < totalCost)
