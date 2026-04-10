@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("IntegrityVault.Service")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c3b6b10c1f4e6e4a7422df0edcfdef0e8950180f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+41b89c90a9a5ef06388ff2a25101ebaa1591d2eb")]
 [assembly: System.Reflection.AssemblyProductAttribute("IntegrityVault.Service")]
 [assembly: System.Reflection.AssemblyTitleAttribute("IntegrityVault.Service")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

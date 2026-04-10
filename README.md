@@ -552,7 +552,7 @@ This can be used to manually transfer ownership on the Sepolia Testnet.
 
 #### i) Go to Hardhat Project
 
-Open VS Code terminal:
+Open Visual Studio Code terminal:
 
 ```bash
 cd <PATH_TO_ROOT_FOLDER>\integrity-vault.chain
@@ -754,7 +754,7 @@ a)  Check Node.js
 
 b)  Check npm
 
-* In the VS Code terminal, run:
+* In the Visual Studio Code terminal, run:
 
   ```bash
   npm -v
@@ -802,7 +802,7 @@ c)  Install or Verify Angular CLI
 
 d)  Install or Verify Hardhat
 
-* Make sure you are in the project folder in VS Code terminal.
+* Make sure you are in the project folder in Visual Studio Code terminal.
 * Check Hardhat version:
 
   ```bash
@@ -834,7 +834,7 @@ d)  Install or Verify Hardhat
 
 ## Step 4: Open the Project
 
-a) Open Project Root in VS Code
+a) Open Project Root in Visual Studio Code
 
 * Open Visual Studio Code.
 * Go to File -> Open Folder…
@@ -844,8 +844,8 @@ a) Open Project Root in VS Code
 <PATH_TO_ROOT_FOLDER>\IntegrityVault
 ```
 
-* Opening the root folder allows access to all sub-projects (frontend, backend, IPFS, etc.) from VS Code.
-> Do not close VS Code after this step. Keeping it open will make it easier to run frontend commands and navigate the project later.
+* Opening the root folder allows access to all sub-projects (frontend, backend, IPFS, etc.) from Visual Studio Code.
+> Do not close Visual Studio Code after this step. Keeping it open will make it easier to run frontend commands and navigate the project later.
 
 <br>
 
@@ -873,7 +873,7 @@ IntegrityVault.Backend.sln
 
 ## Step 5: Restore Backend Dependencies
 
-* Make sure the backend solution (`IntegrityVault.Backend.sln`) is open in Visual Studio 2022, not VS Code.
+* Make sure the backend solution (`IntegrityVault.Backend.sln`) is open in Visual Studio 2022, not Visual Studio Code.
 * Open the NuGet Package Manager Console in Visual Studio:
 
   * Go to Tools -> NuGet Package Manager -> Package Manager Console
@@ -914,7 +914,7 @@ d) Once connected, keep SSMS open for database setup and queries in the next ste
 
 ## Step 7: Configure Database Connection
 
-a) Make sure the backend solution (`IntegrityVault.Backend.sln`) is open in Visual Studio 2022, not VS Code.
+a) Make sure the backend solution (`IntegrityVault.Backend.sln`) is open in Visual Studio 2022, not Visual Studio Code.
 
 b) In Visual Studio, open the IntegrityVault.Api project.
 
@@ -1078,7 +1078,7 @@ ipfs version 0.40.1
 
 ### a) Angular Frontend
 
-i) Open the project in VS Code
+i) Open the project in Visual Studio Code
 
 * Open Visual Studio Code.
 * Open the terminal (`Ctrl + ` or Terminal -> New Terminal).
@@ -1090,7 +1090,7 @@ cd <PATH_TO_ROOT_FOLDER>\integrity-vault.web\
 
 ii) Install dependencies
 
-* In the VS Code terminal, run:
+* In the Visual Studio Code terminal, run:
 
 ```bash
 npm install
@@ -1102,7 +1102,7 @@ npm install
 
 i) Navigate to Hardhat project folder
 
-* Open a new terminal in VS Code (or use the same one).
+* Open a new terminal in Visual Studio Code (or use the same one).
 * Go to your Hardhat project folder:
 
 ```bash
@@ -1528,7 +1528,7 @@ As of now, the easiest way to enable Sepolia is:
 
 ### b) Configure Hardhat Environment
 
-i) Open VS Code.
+i) Open Visual Studio Code.
 ii) Navigate to the Hardhat project folder:
 
 ```bash
@@ -1607,7 +1607,7 @@ main().catch((error) => {
 
 ### e) Deploy to Sepolia
 
-i) In the VS Code terminal, ensure you are in the Hardhat folder:
+i) In the Visual Studio Code terminal, ensure you are in the Hardhat folder:
 
 ```bash
 cd <PATH_TO_ROOT_FOLDER>\integrity-vault.chain
@@ -1692,7 +1692,7 @@ dotnet build
 ## Step 7: Reconfigure IPFS (Clean Reset of Old Data)
 
 
-### a) Open VS Code Terminal
+### a) Open Visual Studio Code Terminal
 
 1. Open Visual Studio Code
 2. Open a new terminal:
@@ -1805,3 +1805,98 @@ Although the system may technically allow creating multiple Super Admin records 
 > As a result, creating additional Super Admin accounts does not provide any additional blockchain privileges and is effectively redundant from a system authority perspective.
 
 > Store the credentials securely. Losing this account may result in loss of administrative access.
+
+
+Your “testing section” is clear in intent, but it’s a bit rough and inconsistent compared to the structured style of the rest of your document. Here’s a cleaner, professional version that matches your earlier sections and is easier for others to follow.
+
+---
+---
+
+<br><br><br><br>
+
+# Section 5 Running Tests
+
+## Step 1: Run Frontend Tests (Angular)
+
+i) Open Visual Studio Code.
+
+ii) Open the frontend project folder:
+
+```bash
+cd <PATH_TO_ROOT_FOLDER>\integrity-vault.web\
+```
+
+iii) Run the Angular test command:
+
+```bash
+npm test
+```
+
+or
+
+```bash
+ng test
+```
+
+iv) The test runner will start automatically.
+
+v) To stop the tests:
+
+   * Press `Ctrl + C`, or
+   * Close the terminal.
+
+---
+
+## Step 2: Run Blockchain Tests (Hardhat)
+
+i) Open Visual Studio Code.
+
+ii) Navigate to the blockchain project folder:
+
+```bash
+cd <PATH_TO_ROOT_FOLDER>\integrity-vault.chain\
+```
+
+iii) Run the Hardhat test command:
+
+```bash
+npx hardhat test
+```
+
+iv) Wait for all smart contract tests to execute.
+
+---
+
+## Step 3: Run Backend Tests (.NET)
+
+i) Open Visual Studio 2022.
+
+ii) Open the solution file in <PATH_TO_ROOT_FOLDER>\IntegrityVault.Backend:
+
+```
+IntegrityVault.Backend.sln
+```
+
+3. Open the NuGet Package Manager Console:
+
+   * Go to: `Tools → NuGet Package Manager → Package Manager Console`
+
+4. Run the test command:
+
+```powershell
+dotnet test
+```
+
+5. Review the test results in the console output.
+
+---
+
+## Notes
+
+* Ensure all dependencies are installed before running tests:
+
+  * `npm install` (frontend)
+  * `npm install` (Hardhat project)
+  * `.NET restore` (backend, if needed)
+
+  > See Section 1 step 3 and Section 1 setp 5 for deatil
