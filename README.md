@@ -1,8 +1,22 @@
 # READ THIS FIRST: Critical Project Notice
 
 ## Blockchain Sync & Data Integrity Warning
-This project uses a shared test account and a public blockchain (Sepolia). Because the blockchain is a "single source of truth," if Person A tests the system, the blockchain moves to State Z. If Person B then starts with a fresh local database, their system will try to write State Z again, but the blockchain will reject it as a duplicate or out-of-sync operation.
-* The Fix: If you encounter sync issues, you must follow Section 4: Fresh Start to redeploy your own contract and reset your local database to ensure they are synchronised.
+
+This project uses a shared test account and a public blockchain (Sepolia). Because the blockchain acts as a single source of truth, conflicts can occur between your local database and the blockchain state.
+
+For example:
+If Person A tests the system, the blockchain advances to State Z. If Person B then starts with a fresh local database, their system may attempt to write State Z again. The blockchain will reject this as a duplicate or out-of-sync operation.
+
+## Important Behavior to Watch For
+
+These sync issues may not be immediately apparent. The system may appear to work normally at first, but later you might encounter problems such as:
+
+* Verification of medical records failing (all or some records may show as “tampered with”)
+* Inability to add new medical records
+* Partial system functionality where some features work and others fail unexpectedly
+
+### The Fix: Fresh Start Required
+If you encounter sync issues, you must follow Section 4: Fresh Start to redeploy your own contract and reset your local database to ensure they are synchronised.
 
 ## Pre-configured Account Credentials
 * Default Password: All pre-seeded users (Super Admin, Admins, Doctors, Patient, and External Provider) use the password: `Qwerty!2`
@@ -75,6 +89,20 @@ Follow:
 Follow:
 * "Add Hospital" section
 
+---
+
+## Want to run testing script?
+
+Before running tests, make sure you have completed:
+
+* Section 1: Setup Environment - Steps 2, 3, 4, 5, and 8
+
+Then follow:
+
+* Section 5: Running Tests
+
+---
+
 ## Want Sepolia ETH (test funds)?
 
 Follow:
@@ -141,6 +169,15 @@ If previous blockchain data exists:
 Recommended:
 
 * Section 4: Fresh Start (Complete Reset)
+
+---
+
+## Want to Monitor Infura?
+
+> contains your Project ID/API key to connect and monitor requests.
+
+* Using pre-configured test account: See Test Account Credentials section for login info*.
+* Using your own account because did section 4 (Complete Reset): *Use your created account* Use (contains your Project ID / API key) to connect and monitor requests.
 
 ---
 
@@ -232,7 +269,11 @@ If you are using the pre-configured setup (Section 1 and 2), the following addre
 
 # How to Get Sepolia Test ETH 
 
-If you are using your own MetaMask wallet (not the pre-configured account), you will need Sepolia test ETH to perform blockchain transactions.
+*Who needs Sepolia test ETH?*
+
+* Any MetaMask wallet (personal or preconfigured) that will interact with Sepolia and needs to pay for transactions (gas).
+* Preconfigured accounts provided by development environments can also require top-ups if their balance is depleted.
+
 
 You can obtain test ETH using the Sepolia faucet:
 
@@ -290,15 +331,23 @@ or
 
 
 # Test Account Credentials
-The following account has been pre-configured to simplify testing of blockchain-related features in this system.
 
-> IMPORTANT: This account is provided strictly for testing and evaluation purposes. It is publicly shared.
+## Test Account Notice
+
+> Important: This account is pre-configured strictly for testing purposes. It may already be compromised, is publicly shared, and should never be used to store real funds or for production activities. Treat it as fully unsafe.
+
 ---
 
-##  Infura / MetaMask Account
+## Infura / MetaMask Account Access
 
-* Email: `superadminintergrityvault@gmail.com`
-* Password: `Qwerty!2`
+This account can be used to simplify testing blockchain features in this system.
+
+* Google Account for Infura
+
+  * Email: `superadminintergrityvault@gmail.com`
+  * Password: `Qwerty!2`
+
+> Note: To use Infura, log in to this Google account first, then use the same Google login to access Infura.
 
 ---
 
@@ -314,12 +363,12 @@ coyote unknown castle kid actress woman gossip system sketch smoke choice phone
 
 ---
 
-## Security Warning
+## Security Warnings
 
-* This wallet is NOT SECURE and may already be compromised.
-* Do NOT store real funds in this account.
-* Do NOT reuse this wallet for personal or production use.
-* Anyone with access to this document can control this wallet.
+* This wallet is not secure and may already be compromised.
+* Do not store real funds here.
+* Do not reuse this wallet for personal or production use.
+* Anyone with access to this document can fully control the wallet.
 
 ---
 ---
@@ -670,9 +719,10 @@ For clean system structure:
 
 
 # Section 1 Setup Environment
+
 ## Step 1: System Specification
 
-The project was developed and tested using the following environment:
+TThe project was developed and tested using the following environment. While it's highly recommended to use these specific versions for optimal compatibility, you may use later versions as well. However, if you choose to do so, be aware that there could be unexpected behaviors or issues that may require additional troubleshooting.
 
 a) Operating System
 
@@ -707,28 +757,47 @@ f) Storage
 
 ## Step 2: Install Required Software
 
-Before running the project, install the following software on your machine:
-   - Visual Studio 2022 Community
-   - Visual Studio Code
-   - SQL Server 2022 (Developer Edition)
-   - SQL Server Management Studio (SSMS)
+Before running the project, make sure to install the following software on your machine:
+* Visual Studio 2022 Community
+* Visual Studio Code
+* SQL Server 2022 (Developer Edition) 
+* SQL Server Management Studio (SSMS)
+* .NET 9.0 SDK (Make sure to install the correct version of .NET SDK for compatibility with the project)
 
-The versions used during development are listed in Step 1. It is recommended to install the same versions if possible. However, if those versions are not available, you can install the latest versions, as they should still be compatible.
+> Note: While you must install .NET 9.0 SDK (as specified), you can use the latest versions for all other software listed. However, if you choose to install newer versions, it may be because:
+>   - You couldn’t find the specific version required,
+>   - The version is no longer supported,
+>   - Or you already have the software installed, but with a different version, and prefer not to change it.
+>
+> Be aware that newer versions may lead to differences in windows, commands, or steps, and could require troubleshooting.
 
-<br>
+Important (Visual Studio Setup):
 
-### Important (Visual Studio Setup)
 When installing Visual Studio 2022, make sure to select the required workloads:
-   - ASP.NET and web development
-   - Ensure that .NET 9.0 SDK is installed
-Without these components, the backend project will not run correctly.
 
-<br>
+* ASP.NET and web development
+* Ensure that .NET 9.0 SDK is installed.
+  Without these components, the backend project will not run correctly.
 
-### Important (SQL Server Password)
+Important (SQL Server Password):
 
-* During SQL Server 2022 installation, you will be asked to create a password for your SQL Server account.
-* Remember this password carefully — if you forget it, there is no easy recovery. 
+* During SQL Server 2022 installation, you may be asked to create a password for your SQL Server account.
+* Remember this password carefully—if you forget it, recovery is difficult.
+
+
+### Video Guides for Installation:
+
+To make the process easier, you can follow these step-by-step video tutorials:
+
+1. SQL Server 2022 and SSMS Installation (Step-by-Step)
+   Published by askadba
+   [Watch here](https://www.youtube.com/watch?v=C8n_Iu_IceE)
+
+2. Install .NET 9 & Visual Studio Community 2022 (Windows 11 Setup)
+   Published by GuyCre8ive
+   [Watch here](https://www.youtube.com/watch?v=81S_BNEBA_M)
+
+These videos will guide you through installing all the required software for the project setup.
 
 ---
 
@@ -893,15 +962,17 @@ a) Open SQL Server Management Studio (SSMS).
 
 b) In the Connect to Server window:
 
-   * Server type: Select Database Engine
-   * Server name: Click the drop-down arrow and choose <Browse for more…>
+* Server type: Select Database Engine.
+* Server name: Click the drop-down arrow and choose <Browse for more…>
 
-     * In the new window, expand Database Engine.
-     * SSMS will list all SQL Server instances it can find on your network or locally.
-     * Pick the one you want to connect to.
-   * Authentication: Choose SQL Server Authentication (if you set a SQL password) or Windows Authentication
-   * Login: Enter your username (usually `sa` for SQL Authentication)
-   * Password: Enter the password you created during installation
+  > Note: The steps to browse for more servers may differ depending on the version of SSMS you’re using. In some versions, the Browse for more… option might not be available, and you'll need to manually enter the server name or use the SQL Server Browser service to find the server.
+
+  * In the new window, expand Database Engine.
+  * SSMS will list all SQL Server instances it can find on your network or locally.
+  * Pick the one you want to connect to.
+* Authentication: Choose SQL Server Authentication (if you set a SQL password) or Windows Authentication.
+* Login: Enter your username (usually `sa` for SQL Authentication).
+* Password: Enter the password you created during installation.
 
 Remember both the server name and password. You will need them later, and forgetting them may require reinstalling SQL Server.
 
@@ -909,7 +980,10 @@ c) Click Connect.
 
 d) Once connected, keep SSMS open for database setup and queries in the next steps.
 
+Certainly! Here's an updated version with the additional note about potential differences across versions:
+
 ---
+
 
 
 ## Step 7: Configure Database Connection
@@ -974,28 +1048,70 @@ a) In the NuGet Package Manager Console, ensure:
    * Package source: set to All
    * Default project: set to IntegrityVault.Api
 
-b) Run the migration update command first:
+b) Run the Migration Update Command:
+
+Run this command first:
 
 ```powershell
 dotnet ef database update --project IntegrityVault.Repository --startup-project IntegrityVault.Api
 ```
 
-c) If it fails:
-
-   * Navigate to the `IntegrityVault.Repository` folder and delete the Migrations folder.
-   * Run the commands in this order:
+* If the migration doesn’t work, try:
 
 ```powershell
-# Create migration
-dotnet ef migrations add InitialCreate --project IntegrityVault.Repository --startup-project IntegrityVault.Api
-
-# Apply migration
-dotnet ef database update --project IntegrityVault.Repository --startup-project IntegrityVault.Api
+Update-Database
 ```
 
-> If it still fails, double-check your connection string in Step 7.
+c) If it Still Fails:
 
-d) If migration succeeds:
+1. Navigate to the `IntegrityVault.Repository` folder and delete the Migrations folder.
+
+2. Run the commands in this order:
+
+   Create Migration:
+
+   ```powershell
+   dotnet ef migrations add InitialCreate --project IntegrityVault.Repository --startup-project IntegrityVault.Api
+   ```
+
+   Apply Migration:
+
+   ```powershell
+   dotnet ef database update --project IntegrityVault.Repository --startup-project IntegrityVault.Api
+   ```
+
+d) If the Migration Still Fails:
+
+If the migration fails again after following the above steps, you can manually create the database and then apply migrations.
+
+1. Manually create the database (if necessary):
+
+```powershell
+Add-Database -Name IntegrityVaultDb
+```
+
+2. Update the database:
+
+```powershell
+Update-Database
+```
+
+> Note: If Add-Database is not recognised, it likely means that EF Core tools are not installed or not properly set up. Follow the next steps to install EF Core tools and retry the migration process.
+
+#### e) If EF Core tools are not installed, install them by following these steps:
+
+1. Install EF Core CLI Tools globally using this command:
+
+   ```bash
+   dotnet tool install --global dotnet-ef
+   ```
+
+2. After installation, retry steps (b) to (c) to generate and apply migrations.
+
+> Still failing? Double-check your connection string in Step 7. Ensure it’s correctly configured for your environment and points to the right database.
+
+
+f) If migration succeeds:
 
    * Open SSMS.
    * Expand Databases -> you should see `IntegrityVaultDb`.
@@ -1082,7 +1198,7 @@ i) Open the project in Visual Studio Code
 
 * Open Visual Studio Code.
 * Open the terminal (`Ctrl + ` or Terminal -> New Terminal).
-* Navigate to your Angular frontend folder. For example:
+* Navigate to your Angular frontend folder.
 
 ```bash
 cd <PATH_TO_ROOT_FOLDER>\integrity-vault.web\
@@ -1145,12 +1261,11 @@ ii) Create a new query window
 * Make sure the correct database is selected from the drop-down (for example, `master` or your `IntegrityVaultDb` depending on the script).
 
 
-iii) Copy and paste the SQL script
-
-* Open the text file containing the SQL commands.
-* Select all content (`Ctrl + A`) and copy it (`Ctrl + C`).
-* Go to SSMS query window and paste the content (`Ctrl + V`).
-
+iii) Copy and Paste the SQL Script
+* Locate the `SQL_command.txt` file in the root directory of the project.
+* Open the `SQL_command.txt` file that contains the SQL commands.
+* Select all content in the file (Ctrl + A), then copy it (Ctrl + C).
+* Go to the SSMS query window and paste the content (Ctrl + V).
 
 iv) Run the query
 
@@ -1225,7 +1340,7 @@ cd <PATH_TO_ROOT_FOLDER>\integrity-vault.ipfs
 * Run the script to start IPFS nodes:
 
 ```powershell
-./start-ipfs-nodes.ps1
+powershell -ExecutionPolicy Bypass -File .\start-ipfs-nodes.ps1
 ```
 
 * Allow any pop up network specific pop up that you might be prompted to.
@@ -1256,7 +1371,26 @@ http://localhost:4200
 ```
 > DO NOT CLOSE THAT TERMINAL WHEN YOU ARE TRYING TO RUN THE PROJECT.
 
-## Step 7: IMPORTANT – IP Access Restriction (Login Issues)
+## Step 7: Login Instructions
+
+* If this is the first time you are running the project and you are using the pre-configured test account:
+
+  * Username: `superadmin`
+  * Password: `Qwerty!2`
+
+> Use this account to see all other account in the system. All preconfigured account has password set to Qwerty!2
+
+* *If you have modify the pre configuration setup or did section 4 (Complete Reset)*:
+
+  * Log in using your own Super Admin credentials.
+
+* If this is not the first time running the system:
+
+  * You can log in with any account that exists in the system, either pre-configured or one you have created yourself.
+
+
+
+### IMPORTANT – IP Access Restriction (Login Issues)
 
 If you attempt to log in as a Doctor, Hospital Admin, or External Provider and get an "Invalid Credentials" error—even if the username and password are correct—it is because of the IP Security Filter.
 
@@ -1310,7 +1444,7 @@ There are two ways to safely stop IPFS:
 * In the terminal where you ran:
 
 ```powershell
-./start-ipfs-nodes.ps1
+powershell -ExecutionPolicy Bypass -File .\start-ipfs-nodes.ps1
 ```
 
 * Type:
@@ -1333,7 +1467,7 @@ cd <PATH_TO_ROOT_FOLDER>\integrity-vault.ipfs
 * Run the stop script:
 
 ```powershell
-./stop-ipfs-nodes.ps1
+powershell -ExecutionPolicy Bypass -File .\stop-ipfs-nodes.ps1
 ```
 
 * You will be asked to confirm. Type `YES` to stop all nodes.
@@ -1716,7 +1850,7 @@ cd <PATH_TO_ROOT_FOLDER>\integrity-vault.ipfs
 Execute the reset script:
 
 ```powershell
-./setup-ipfs-folder.ps1
+powershell -ExecutionPolicy Bypass -File .\setup-ipfs-nodes.ps1
 ```
 
 ---
